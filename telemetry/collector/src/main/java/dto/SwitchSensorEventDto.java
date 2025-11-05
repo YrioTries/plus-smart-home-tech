@@ -9,7 +9,7 @@ import ru.yandex.practicum.kafka.telemetry.event.ConditionType;
 @Setter
 @ToString(callSuper = true)
 public class SwitchSensorEventDto extends SensorEventDto {
-    Boolean state;
+    private Boolean state;
 
     @Override
     public ConditionType getType() {
