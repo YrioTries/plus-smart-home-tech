@@ -9,9 +9,9 @@ import ru.yandex.practicum.kafka.telemetry.event.ConditionType;
 @Setter
 @ToString(callSuper = true)
 public class ClimateSensorEventDto extends SensorEventDto {
-    private int temperatureC;
-    private int humidity;
-    private int co2Level;
+    private Integer temperatureC;
+    private Integer humidity;
+    private Integer co2Level;
 
     @Override
     public ConditionType getType() {
