@@ -18,6 +18,7 @@ import java.time.Instant;
         property = "type",
         visible = true
 )
+
 @JsonSubTypes({
         @JsonSubTypes.Type(value = LightSensorEventDto.class, name = "LIGHT_SENSOR_EVENT"),
         @JsonSubTypes.Type(value = ClimateSensorEventDto.class, name = "CLIMATE_SENSOR_EVENT"),
