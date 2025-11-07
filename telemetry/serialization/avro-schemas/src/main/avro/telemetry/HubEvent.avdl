@@ -16,6 +16,10 @@ protocol HubEventProtocol {
 		ACTIVATE, DEACTIVATE, INVERSE, SET_VALUE
 	}
 
+	enum HubEventType {
+		DEVICE_ADDED, DEVICE_REMOVED, SCENARIO_ADDED, SCENARIO_REMOVED
+	}
+
 	record ScenarioCondition {
 		string sensorId;
 		ConditionType type;
@@ -31,7 +35,7 @@ protocol HubEventProtocol {
 
 	record DeviceAddedEvent {
 		string id;
-		DeviceType type;
+		DeviceType deviceType;
 	}
 
 	record DeviceRemovedEvent {
@@ -51,6 +55,7 @@ protocol HubEventProtocol {
 	record HubEvent {
 		string hubId;
 		long timestamp;
+		HubEventType type;
 		union {
 			DeviceAddedEvent,
 			DeviceRemovedEvent,
