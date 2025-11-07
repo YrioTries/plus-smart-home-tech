@@ -1,18 +1,14 @@
 @namespace("ru.yandex.practicum.kafka.telemetry.event")
 protocol HubEventProtocol {
-
 	enum DeviceType {
 		MOTION_SENSOR, TEMPERATURE_SENSOR, LIGHT_SENSOR, CLIMATE_SENSOR, SWITCH_SENSOR
 	}
 
-	enum ScenarioConditionType {
+	enum ConditionType {
 		MOTION, LUMINOSITY, SWITCH, TEMPERATURE, CO2LEVEL, HUMIDITY
 	}
 
-	enum DeviceHubEventType {
-		DEVICE_ADDED, DEVICE_REMOVED, SCENARIO_ADDED, SCENARIO_REMOVED
-	}
-	enum OperationsType {
+	enum ConditionOperation {
 		EQUALS, GREATER_THAN, LOWER_THAN
 	}
 
@@ -20,48 +16,46 @@ protocol HubEventProtocol {
 		ACTIVATE, DEACTIVATE, INVERSE, SET_VALUE
 	}
 
-	record DeviceAddedEvent {
-		string id;
-		string hubId;
-		timestamp_ms timestamp;
-		DeviceType deviceType;
-		DeviceHubEventType type;
-	}
-
-	record DeviceRemovedEvent {
-		string id;
-		string hubId;
-		timestamp_ms timestamp;
-		DeviceType deviceType;
-		DeviceHubEventType type;
+	record ScenarioCondition {
+		string sensorId;
+		ConditionType type;
+		ConditionOperation operation;
+		union { null, int, boolean } value = null;
 	}
 
 	record DeviceAction {
 		string sensorId;
 		ActionType type;
-		int value;
+		int? value = null;
 	}
 
-	record ScenarioCondition {
-		string sensorId;
-		ScenarioConditionType type;
-		OperationsType operation;
-		int value;
+	record DeviceAddedEvent {
+		string id;
+		DeviceType type;
+	}
+
+	record DeviceRemovedEvent {
+		string id;
 	}
 
 	record ScenarioAddedEvent {
-		string hubId;
-		timestamp_ms timestamp;
 		string name;
 		array<ScenarioCondition> conditions;
 		array<DeviceAction> actions;
-		DeviceHubEventType type;
 	}
 
 	record ScenarioRemovedEvent {
-		string hubId;
-		timestamp_ms timestamp;
 		string name;
-		DeviceHubEventType type;
+	}
+
+	record HubEvent {
+		string hubId;
+		long timestamp;
+		union {
+			DeviceAddedEvent,
+			DeviceRemovedEvent,
+			ScenarioAddedEvent,
+			ScenarioRemovedEvent
+		} payload;
 	}
 }

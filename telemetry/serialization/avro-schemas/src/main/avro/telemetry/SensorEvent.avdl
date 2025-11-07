@@ -1,54 +1,50 @@
 @namespace("ru.yandex.practicum.kafka.telemetry.event")
 protocol SensorEventProtocol {
-
-	enum ConditionType {
-		MOTION_SENSOR_EVENT, TEMPERATURE_SENSOR_EVENT, LIGHT_SENSOR_EVENT, CLIMATE_SENSOR_EVENT, SWITCH_SENSOR_EVENT
+	enum SensorType {
+		MOTION_SENSOR_EVENT,
+		TEMPERATURE_SENSOR_EVENT,
+		LIGHT_SENSOR_EVENT,
+		CLIMATE_SENSOR_EVENT,
+		SWITCH_SENSOR_EVENT
 	}
 
-	record ClimateSensorEvent {
-		string id;
-		string hubId;
-		//@logicalType("timestamp-millis")
-		timestamp_ms timestamp;
+	record ClimateSensor {
 		int temperatureC;
 		int humidity;
 		int co2Level;
-		ConditionType type;
 	}
 
-	record LightSensorEvent {
-		string id;
-		string hubId;
-		timestamp_ms timestamp;
+	record LightSensor {
 		int linkQuality;
 		int luminosity;
-		ConditionType type;
 	}
 
-	record MotionSensorEvent {
-		string id;
-		string hubId;
-		timestamp_ms timestamp;
+	record MotionSensor {
 		int linkQuality;
 		boolean motion;
 		int voltage;
-		ConditionType type;
 	}
 
-	record SwitchSensorEvent {
-		string id;
-		string hubId;
-		timestamp_ms timestamp;
+	record SwitchSensor {
 		boolean state;
-		ConditionType type;
 	}
 
-	record TemperatureSensorEvent {
-		string id;
-		string hubId;
-		timestamp_ms timestamp;
+	record TemperatureSensor {
 		int temperatureC;
 		int temperatureF;
-		ConditionType type;
+	}
+
+	record SensorEvent {
+		string id;
+		string hubId;
+		long timestamp;
+		union {
+			ClimateSensor,
+			LightSensor,
+			MotionSensor,
+			SwitchSensor,
+			TemperatureSensor
+		} payload;
+		SensorType type;
 	}
 }
