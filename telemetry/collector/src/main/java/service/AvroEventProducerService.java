@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
+import ru.yandex.practicum.kafka.telemetry.event.HubEvent;
 import ru.yandex.practicum.kafka.telemetry.event.SensorEvent;
 
 @Slf4j
@@ -18,6 +19,16 @@ public class AvroEventProducerService {
                 .thenAccept(result -> log.info("Event sent: {}", event.getId()))
                 .exceptionally(failure -> {
                     log.error("Failed to send event: {}", event.getId(), failure);
+                    return null;
+                });
+    }
+
+    public void sendHubEvent(HubEvent event) {
+        String topic = "telemetry.hub";
+        avroKafkaTemplate.send(topic, event.getHubId(), event)
+                .thenAccept(result -> log.info("Event sent: {}", event.getHubId()))
+                .exceptionally(failure -> {
+                    log.error("Failed to send event: {}", event.getHubId(), failure);
                     return null;
                 });
     }

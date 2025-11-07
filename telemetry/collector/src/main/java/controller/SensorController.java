@@ -1,5 +1,6 @@
 package controller;
 
+import dto.hub.HubEventDto;
 import dto.sensor.SensorEventDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +18,13 @@ public class SensorController {
     @ResponseStatus(HttpStatus.OK)
     public String collectSensorEvent(@Valid @RequestBody SensorEventDto event) {
         sensorEventService.processSensorEvent(event);
+        return "Event processed successfully";
+    }
+
+    @PostMapping("/hubs")
+    @ResponseStatus(HttpStatus.OK)
+    public String collectHubEvent(@Valid @RequestBody HubEventDto event) {
+        sensorEventService.processHubEvent(event);
         return "Event processed successfully";
     }
 }

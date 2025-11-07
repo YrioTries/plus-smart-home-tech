@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
+import ru.yandex.practicum.kafka.telemetry.event.HubEvent;
 import ru.yandex.practicum.kafka.telemetry.event.SensorEvent;
 import ru.yandex.practicum.kafka.telemetry.event.SensorType;
 
@@ -47,6 +48,38 @@ public class AvroEventConsumerService {
                 break;
             default:
                 log.warn("Unknown sensor event type: {}", event.getType());
+        }
+    }
+
+    @KafkaListener(topics = "telemetry.hubs.v1")
+    public void consumeHubEvent(HubEvent event) {
+        switch (event.getType()) {
+            case DEVICE_ADDED:
+                ru.yandex.practicum.kafka.telemetry.event.DeviceAddedEvent payloadDeviceAdded =
+                        (ru.yandex.practicum.kafka.telemetry.event.DeviceAddedEvent) event.getPayload();
+                log.info("Received Device Added Event - Hub ID: {}, Device ID: {}, Device Type: {}",
+                        event.getHubId(), payloadDeviceAdded.getId(), payloadDeviceAdded.getDeviceType());
+                break;
+            case DEVICE_REMOVED:
+                ru.yandex.practicum.kafka.telemetry.event.DeviceRemovedEvent payloadDeviceRemoved =
+                        (ru.yandex.practicum.kafka.telemetry.event.DeviceRemovedEvent) event.getPayload();
+                log.info("Received Device Removed Event - Hub ID: {}, Device ID: {}",
+                        event.getHubId(), payloadDeviceRemoved.getId());
+                break;
+            case SCENARIO_ADDED:
+                ru.yandex.practicum.kafka.telemetry.event.ScenarioAddedEvent payloadScenarioAdded =
+                        (ru.yandex.practicum.kafka.telemetry.event.ScenarioAddedEvent) event.getPayload();
+                log.info("Received Scenario Added Event - Hub ID: {}, Scenario Name: {}",
+                        event.getHubId(), payloadScenarioAdded.getName());
+                break;
+            case SCENARIO_REMOVED:
+                ru.yandex.practicum.kafka.telemetry.event.ScenarioRemovedEvent payloadScenarioRemoved =
+                        (ru.yandex.practicum.kafka.telemetry.event.ScenarioRemovedEvent) event.getPayload();
+                log.info("Received Scenario Removed Event - Hub ID: {}, Scenario Name: {}",
+                        event.getHubId(), payloadScenarioRemoved.getName());
+                break;
+            default:
+                log.warn("Unknown hub event type: {}", event.getType());
         }
     }
 }
