@@ -4,45 +4,49 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
-import ru.yandex.practicum.kafka.telemetry.event.*;
+import ru.yandex.practicum.kafka.telemetry.event.SensorEvent;
+import ru.yandex.practicum.kafka.telemetry.event.SensorType;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class AvroEventConsumerService {
 
-    @KafkaListener(topics = "sensor-climate-events")
-    public void consumeClimateEvent(ClimateSensorEvent event) {
-        log.info("📥 Received Climate Event - ID: {}, Temp: {}, Humidity: {}",
-                event.getId(), event.getTemperatureC(), event.getHumidity());
-        // Здесь бизнес-логика обработки климатических событий
-    }
-
-    @KafkaListener(topics = "sensor-light-events")
-    public void consumeLightEvent(LightSensorEvent event) {
-        log.info("📥 Received Light Event - ID: {}, Luminosity: {}",
-                event.getId(), event.getLuminosity());
-        // Обработка событий освещения
-    }
-
-    @KafkaListener(topics = "sensor-motion-events")
-    public void consumeMotionEvent(MotionSensorEvent event) {
-        log.info("📥 Received Motion Event - ID: {}, Motion: {}",
-                event.getId(), event.getMotion());
-        // Обработка событий движения
-    }
-
-    @KafkaListener(topics = "sensor-switch-events")
-    public void consumeSwitchEvent(SwitchSensorEvent event) {
-        log.info("📥 Received Switch Event - ID: {}, State: {}",
-                event.getId(), event.getState());
-        // Обработка событий переключателей
-    }
-
-    @KafkaListener(topics = "sensor-temperature-events")
-    public void consumeTemperatureEvent(TemperatureSensorEvent event) {
-        log.info("📥 Received Temperature Event - ID: {}, TempC: {}, TempF: {}",
-                event.getId(), event.getTemperatureC(), event.getTemperatureF());
-        // Обработка температурных событий
+    @KafkaListener(topics = "telemetry.sensors")
+    public void consumeSensorEvent(SensorEvent event) {
+        switch (event.getType()) {
+            case CLIMATE_SENSOR_EVENT:
+                ru.yandex.practicum.kafka.telemetry.event.ClimateSensor payloadClimate =
+                        (ru.yandex.practicum.kafka.telemetry.event.ClimateSensor) event.getPayload();
+                log.info("Received Climate Event - ID: {}, Temp: {}, Humidity: {}",
+                        event.getId(), payloadClimate.getTemperatureC(), payloadClimate.getHumidity());
+                break;
+            case LIGHT_SENSOR_EVENT:
+                ru.yandex.practicum.kafka.telemetry.event.LightSensor payloadLight =
+                        (ru.yandex.practicum.kafka.telemetry.event.LightSensor) event.getPayload();
+                log.info("Received Light Event - ID: {}, Luminosity: {}",
+                        event.getId(), payloadLight.getLuminosity());
+                break;
+            case MOTION_SENSOR_EVENT:
+                ru.yandex.practicum.kafka.telemetry.event.MotionSensor payloadMotion =
+                        (ru.yandex.practicum.kafka.telemetry.event.MotionSensor) event.getPayload();
+                log.info("Received Motion Event - ID: {}, Motion: {}",
+                        event.getId(), payloadMotion.getMotion());
+                break;
+            case SWITCH_SENSOR_EVENT:
+                ru.yandex.practicum.kafka.telemetry.event.SwitchSensor payloadSwitch =
+                        (ru.yandex.practicum.kafka.telemetry.event.SwitchSensor) event.getPayload();
+                log.info("Received Switch Event - ID: {}, State: {}",
+                        event.getId(), payloadSwitch.getState());
+                break;
+            case TEMPERATURE_SENSOR_EVENT:
+                ru.yandex.practicum.kafka.telemetry.event.TemperatureSensor payloadTemperature =
+                        (ru.yandex.practicum.kafka.telemetry.event.TemperatureSensor) event.getPayload();
+                log.info("Received Temperature Event - ID: {}, TempC: {}, TempF: {}",
+                        event.getId(), payloadTemperature.getTemperatureC(), payloadTemperature.getTemperatureF());
+                break;
+            default:
+                log.warn("Unknown sensor event type: {}", event.getType());
+        }
     }
 }

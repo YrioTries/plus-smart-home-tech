@@ -8,28 +8,28 @@ protocol SensorEventProtocol {
 		SWITCH_SENSOR_EVENT
 	}
 
-	record ClimateSensor {
+	record ClimateSensorEvent {
 		int temperatureC;
 		int humidity;
 		int co2Level;
 	}
 
-	record LightSensor {
+	record LightSensorEvent {
 		int linkQuality;
 		int luminosity;
 	}
 
-	record MotionSensor {
+	record MotionSensorEvent {
 		int linkQuality;
 		boolean motion;
 		int voltage;
 	}
 
-	record SwitchSensor {
+	record SwitchSensorEvent {
 		boolean state;
 	}
 
-	record TemperatureSensor {
+	record TemperatureSensorEvent {
 		int temperatureC;
 		int temperatureF;
 	}
@@ -38,13 +38,13 @@ protocol SensorEventProtocol {
 		string id;
 		string hubId;
 		long timestamp;
-		union {
-			ClimateSensor,
-			LightSensor,
-			MotionSensor,
-			SwitchSensor,
-			TemperatureSensor
-		} payload;
 		SensorType type;
+		union {
+			ClimateSensorEvent,
+			LightSensorEvent,
+			MotionSensorEvent,
+			SwitchSensorEvent,
+			TemperatureSensorEvent
+		} payload;
 	}
 }

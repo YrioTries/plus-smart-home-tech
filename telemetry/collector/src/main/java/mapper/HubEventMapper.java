@@ -1,9 +1,7 @@
 package mapper;
 
-import dto.*;
 import dto.hub.*;
 import org.mapstruct.*;
-import ru.yandex.practicum.kafka.telemetry.*;
 import ru.yandex.practicum.kafka.telemetry.event.*;
 
 @Mapper(

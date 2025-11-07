@@ -41,5 +41,5 @@ public abstract class SensorEventDto {
 
     @NotNull
     @JsonProperty("type")
-    public abstract SensorType getType();  // Используем enum из Avro
+    public abstract SensorType getType();
 }

@@ -20,5 +20,5 @@ public interface SensorEventMapper {
     @Mapping(target = "hubId", source = "hubId")
     @Mapping(target = "timestamp", source = "timestamp")
     @Mapping(target = "type", source = "type")
-    Object toAvro(SensorEventDto dto);
+    SensorEvent toAvro(SensorEventDto dto);
 }

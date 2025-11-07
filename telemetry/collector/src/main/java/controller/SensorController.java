@@ -11,13 +11,12 @@ import service.SensorEventService;
 @RequiredArgsConstructor
 @RequestMapping("/events")
 public class SensorController {
-
     private final SensorEventService sensorEventService;
 
     @PostMapping("/sensors")
     @ResponseStatus(HttpStatus.OK)
     public String collectSensorEvent(@Valid @RequestBody SensorEventDto event) {
         sensorEventService.processSensorEvent(event);
-        return "Event processed successfully";  // Будет в теле ответа
+        return "Event processed successfully";
     }
 }
