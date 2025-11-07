@@ -1,6 +1,6 @@
 package service;
 
-import dto.SensorEventDto;
+import dto.sensor.SensorEventDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import mapper.SensorEventMapper;

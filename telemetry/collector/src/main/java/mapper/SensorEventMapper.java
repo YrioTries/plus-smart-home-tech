@@ -1,6 +1,6 @@
 package mapper;
 
-import dto.*;
+import dto.sensor.*;
 import org.mapstruct.InjectionStrategy;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

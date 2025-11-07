@@ -1,4 +1,4 @@
-package dto;
+package dto.sensor;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -8,13 +8,12 @@ import ru.yandex.practicum.kafka.telemetry.event.ConditionType;
 @Getter
 @Setter
 @ToString(callSuper = true)
-public class MotionSensorEventDto extends SensorEventDto {
+public class LightSensorEventDto extends SensorEventDto {
     private Integer linkQuality;
-    private Boolean motion;
-    private Integer voltage;
+    private Integer luminosity;
 
     @Override
     public ConditionType getType() {
-        return ConditionType.MOTION_SENSOR_EVENT;
+        return ConditionType.LIGHT_SENSOR_EVENT;
     }
 }

@@ -1,4 +1,4 @@
-package dto;
+package dto.sensor;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSubTypes;

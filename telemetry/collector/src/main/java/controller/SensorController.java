@@ -1,6 +1,6 @@
 package controller;
 
-import dto.SensorEventDto;
+import dto.sensor.SensorEventDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

@@ -1,6 +1,6 @@
 package service;
 
-import dto.SensorEventDto;
+import dto.sensor.SensorEventDto;
 
 import java.util.List;
 

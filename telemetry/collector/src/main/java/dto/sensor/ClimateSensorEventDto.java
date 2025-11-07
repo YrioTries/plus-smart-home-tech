@@ -1,4 +1,4 @@
-package dto;
+package dto.sensor;
 
 import lombok.Getter;
 import lombok.Setter;
