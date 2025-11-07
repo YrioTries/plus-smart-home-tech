@@ -16,32 +16,32 @@ public class AvroEventConsumerService {
     public void consumeSensorEvent(SensorEvent event) {
         switch (event.getType()) {
             case CLIMATE_SENSOR_EVENT:
-                ru.yandex.practicum.kafka.telemetry.event.ClimateSensor payloadClimate =
-                        (ru.yandex.practicum.kafka.telemetry.event.ClimateSensor) event.getPayload();
+                ru.yandex.practicum.kafka.telemetry.event.ClimateSensorEvent payloadClimate =
+                        (ru.yandex.practicum.kafka.telemetry.event.ClimateSensorEvent) event.getPayload();
                 log.info("Received Climate Event - ID: {}, Temp: {}, Humidity: {}",
                         event.getId(), payloadClimate.getTemperatureC(), payloadClimate.getHumidity());
                 break;
             case LIGHT_SENSOR_EVENT:
-                ru.yandex.practicum.kafka.telemetry.event.LightSensor payloadLight =
-                        (ru.yandex.practicum.kafka.telemetry.event.LightSensor) event.getPayload();
+                ru.yandex.practicum.kafka.telemetry.event.LightSensorEvent payloadLight =
+                        (ru.yandex.practicum.kafka.telemetry.event.LightSensorEvent) event.getPayload();
                 log.info("Received Light Event - ID: {}, Luminosity: {}",
                         event.getId(), payloadLight.getLuminosity());
                 break;
             case MOTION_SENSOR_EVENT:
-                ru.yandex.practicum.kafka.telemetry.event.MotionSensor payloadMotion =
-                        (ru.yandex.practicum.kafka.telemetry.event.MotionSensor) event.getPayload();
+                ru.yandex.practicum.kafka.telemetry.event.MotionSensorEvent payloadMotion =
+                        (ru.yandex.practicum.kafka.telemetry.event.MotionSensorEvent) event.getPayload();
                 log.info("Received Motion Event - ID: {}, Motion: {}",
                         event.getId(), payloadMotion.getMotion());
                 break;
             case SWITCH_SENSOR_EVENT:
-                ru.yandex.practicum.kafka.telemetry.event.SwitchSensor payloadSwitch =
-                        (ru.yandex.practicum.kafka.telemetry.event.SwitchSensor) event.getPayload();
+                ru.yandex.practicum.kafka.telemetry.event.SwitchSensorEvent payloadSwitch =
+                        (ru.yandex.practicum.kafka.telemetry.event.SwitchSensorEvent) event.getPayload();
                 log.info("Received Switch Event - ID: {}, State: {}",
                         event.getId(), payloadSwitch.getState());
                 break;
             case TEMPERATURE_SENSOR_EVENT:
-                ru.yandex.practicum.kafka.telemetry.event.TemperatureSensor payloadTemperature =
-                        (ru.yandex.practicum.kafka.telemetry.event.TemperatureSensor) event.getPayload();
+                ru.yandex.practicum.kafka.telemetry.event.TemperatureSensorEvent payloadTemperature =
+                        (ru.yandex.practicum.kafka.telemetry.event.TemperatureSensorEvent) event.getPayload();
                 log.info("Received Temperature Event - ID: {}, TempC: {}, TempF: {}",
                         event.getId(), payloadTemperature.getTemperatureC(), payloadTemperature.getTemperatureF());
                 break;
