@@ -8,7 +8,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import ru.yandex.practicum.kafka.telemetry.event.ConditionType;
+import ru.yandex.practicum.kafka.telemetry.event.SensorType;
 
 import java.time.Instant;
 
@@ -41,5 +41,5 @@ public abstract class SensorEventDto {
 
     @NotNull
     @JsonProperty("type")
-    public abstract ConditionType getType();  // Используем enum из Avro
+    public abstract SensorType getType();  // Используем enum из Avro
 }

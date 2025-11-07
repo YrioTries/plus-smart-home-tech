@@ -3,7 +3,7 @@ package dto.sensor;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import ru.yandex.practicum.kafka.telemetry.event.ConditionType;
+import ru.yandex.practicum.kafka.telemetry.event.SensorType;
 
 @Getter
 @Setter
@@ -12,7 +12,7 @@ public class SwitchSensorEventDto extends SensorEventDto {
     private Boolean state;
 
     @Override
-    public ConditionType getType() {
-        return ConditionType.SWITCH_SENSOR_EVENT;
+    public SensorType getType() {
+        return SensorType.SWITCH_SENSOR_EVENT;
     }
 }
