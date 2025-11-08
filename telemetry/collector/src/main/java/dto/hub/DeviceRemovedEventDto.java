@@ -4,6 +4,7 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import ru.yandex.practicum.kafka.telemetry.event.HubEventType;
 
 @Getter
 @Setter
@@ -13,7 +14,7 @@ public class DeviceRemovedEventDto extends HubEventDto {
     private String id;
 
     @Override
-    public String getType() {
-        return "DEVICE_REMOVED";
+    public HubEventType getType() {
+        return HubEventType.DEVICE_REMOVED;
     }
 }

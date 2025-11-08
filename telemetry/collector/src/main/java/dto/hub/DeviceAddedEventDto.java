@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import ru.yandex.practicum.kafka.telemetry.event.DeviceType;
+import ru.yandex.practicum.kafka.telemetry.event.HubEvent;
+import ru.yandex.practicum.kafka.telemetry.event.HubEventType;
 
 @Getter
 @Setter
@@ -17,7 +19,7 @@ public class DeviceAddedEventDto extends HubEventDto {
     private DeviceType deviceType;
 
     @Override
-    public String getType() {
-        return "DEVICE_ADDED";
+    public HubEventType getType() {
+        return HubEventType.DEVICE_ADDED;
     }
 }

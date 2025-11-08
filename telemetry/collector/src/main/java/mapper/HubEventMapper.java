@@ -1,31 +1,51 @@
 package mapper;
 
 import dto.hub.*;
-import org.mapstruct.*;
+import org.mapstruct.Mapper;
+import org.mapstruct.InjectionStrategy;
 import ru.yandex.practicum.kafka.telemetry.event.*;
 
-@Mapper(
-        componentModel = "spring",
-        injectionStrategy = InjectionStrategy.CONSTRUCTOR
-)
-public interface HubEventMapper {
+@Mapper(componentModel = "spring", injectionStrategy = InjectionStrategy.CONSTRUCTOR)
+public abstract class HubEventMapper {
 
-    @SubclassMapping(source = DeviceAddedEventDto.class, target = DeviceAddedEvent.class)
-    @SubclassMapping(source = DeviceRemovedEventDto.class, target = DeviceRemovedEvent.class)
-    @SubclassMapping(source = ScenarioAddedEventDto.class, target = ScenarioAddedEvent.class)
-    @SubclassMapping(source = ScenarioRemovedEventDto.class, target = ScenarioRemovedEvent.class)
-    @Mapping(target = "hubId", source = "hubId")
-    @Mapping(target = "timestamp", expression = "java(dto.getTimestamp().toEpochMilli())")
-    HubEvent toAvro(HubEventDto dto);
+    public HubEvent toAvro(HubEventDto dto) {
+        if (dto == null) return null;
 
-    @Mapping(target = "sensorId", source = "sensorId")
-    @Mapping(target = "type", source = "type")
-    @Mapping(target = "operation", source = "operation")
-    @Mapping(target = "value", source = "value")
-    ScenarioCondition toScenarioCondition(ScenarioConditionDto dto);
+        HubEvent event = new HubEvent();
+        event.setHubId(dto.getHubId());
+        event.setTimestamp(dto.getTimestamp() != null ? dto.getTimestamp().toEpochMilli() : 0);
 
-    @Mapping(target = "sensorId", source = "sensorId")
-    @Mapping(target = "type", source = "type")
-    @Mapping(target = "value", source = "value")
-    DeviceAction toDeviceAction(DeviceActionDto dto);
+        switch (dto.getType()) {
+            case DEVICE_ADDED:
+                event.setPayload(map((DeviceAddedEventDto) dto));
+                event.setType(HubEventType.DEVICE_ADDED);
+                break;
+            case DEVICE_REMOVED:
+                event.setPayload(map((DeviceRemovedEventDto) dto));
+                event.setType(HubEventType.DEVICE_REMOVED);
+                break;
+            case SCENARIO_ADDED:
+                event.setPayload(map((ScenarioAddedEventDto) dto));
+                event.setType(HubEventType.SCENARIO_ADDED);
+                break;
+            case SCENARIO_REMOVED:
+                event.setPayload(map((ScenarioRemovedEventDto) dto));
+                event.setType(HubEventType.SCENARIO_REMOVED);
+                break;
+            default:
+                throw new IllegalArgumentException("Unknown HubEvent type: " + dto.getType());
+        }
+        return event;
+    }
+
+    protected abstract DeviceAddedEvent map(DeviceAddedEventDto dto);
+
+    protected abstract DeviceRemovedEvent map(DeviceRemovedEventDto dto);
+
+    protected abstract ScenarioAddedEvent map(ScenarioAddedEventDto dto);
+
+    protected abstract ScenarioRemovedEvent map(ScenarioRemovedEventDto dto);
+
+    protected abstract ScenarioCondition map(ScenarioConditionDto dto);
+    protected abstract DeviceAction map(DeviceActionDto dto);
 }
