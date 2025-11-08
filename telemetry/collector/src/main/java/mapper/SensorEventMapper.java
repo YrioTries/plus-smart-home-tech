@@ -1,11 +1,12 @@
 package mapper;
 
 import dto.sensor.*;
+import org.mapstruct.InjectionStrategy;
 import org.mapstruct.Mapper;
 import ru.yandex.practicum.kafka.telemetry.event.*;
 import java.time.Instant;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", injectionStrategy = InjectionStrategy.CONSTRUCTOR)
 public abstract class SensorEventMapper {
 
     public SensorEvent toAvro(SensorEventDto dto) {
