@@ -13,7 +13,7 @@ import ru.yandex.practicum.kafka.telemetry.event.SensorType;
 @RequiredArgsConstructor
 public class AvroEventConsumerService {
 
-    @KafkaListener(topics = "telemetry.sensors")
+    @KafkaListener(topics = "telemetry.sensors.v1")
     public void consumeSensorEvent(SensorEvent event) {
         switch (event.getType()) {
             case CLIMATE_SENSOR_EVENT:

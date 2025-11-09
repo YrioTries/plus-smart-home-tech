@@ -14,7 +14,7 @@ public class AvroEventProducerService {
     private final KafkaTemplate<String, Object> avroKafkaTemplate;
 
     public void sendSensorEvent(SensorEvent event) {
-        String topic = "telemetry.sensors";
+        String topic = "telemetry.sensors.v1";
         avroKafkaTemplate.send(topic, event.getId(), event)
                 .thenAccept(result -> log.info("Event sent: {}", event.getId()))
                 .exceptionally(failure -> {
@@ -24,7 +24,7 @@ public class AvroEventProducerService {
     }
 
     public void sendHubEvent(HubEvent event) {
-        String topic = "telemetry.hub";
+        String topic = "telemetry.hub.v1";
         avroKafkaTemplate.send(topic, event.getHubId(), event)
                 .thenAccept(result -> log.info("Event sent: {}", event.getHubId()))
                 .exceptionally(failure -> {
