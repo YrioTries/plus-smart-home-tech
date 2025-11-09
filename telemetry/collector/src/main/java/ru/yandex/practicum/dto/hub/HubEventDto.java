@@ -1,4 +1,4 @@
-package dto.hub;
+package ru.yandex.practicum.dto.hub;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSubTypes;

@@ -1,11 +1,11 @@
-package service;
+package ru.yandex.practicum.service;
 
-import dto.hub.HubEventDto;
-import dto.sensor.SensorEventDto;
+import ru.yandex.practicum.dto.hub.HubEventDto;
+import ru.yandex.practicum.dto.sensor.SensorEventDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import mapper.HubEventMapper;
-import mapper.SensorEventMapper;
+import ru.yandex.practicum.mapper.HubEventMapper;
+import ru.yandex.practicum.mapper.SensorEventMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.yandex.practicum.kafka.telemetry.event.HubEvent;

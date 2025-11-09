@@ -1,4 +1,4 @@
-package config;
+package ru.yandex.practicum.config;
 
 import io.confluent.kafka.serializers.KafkaAvroSerializer;
 import io.confluent.kafka.serializers.KafkaAvroSerializerConfig;

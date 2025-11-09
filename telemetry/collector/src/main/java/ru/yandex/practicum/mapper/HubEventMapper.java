@@ -1,8 +1,8 @@
-package mapper;
+package ru.yandex.practicum.mapper;
 
-import dto.hub.*;
 import org.mapstruct.Mapper;
 import org.mapstruct.InjectionStrategy;
+import ru.yandex.practicum.dto.hub.*;
 import ru.yandex.practicum.kafka.telemetry.event.*;
 
 @Mapper(componentModel = "spring", injectionStrategy = InjectionStrategy.CONSTRUCTOR)

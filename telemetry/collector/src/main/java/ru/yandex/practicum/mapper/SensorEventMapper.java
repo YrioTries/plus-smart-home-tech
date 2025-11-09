@@ -1,8 +1,8 @@
-package mapper;
+package ru.yandex.practicum.mapper;
 
-import dto.sensor.*;
 import org.mapstruct.InjectionStrategy;
 import org.mapstruct.Mapper;
+import ru.yandex.practicum.dto.sensor.*;
 import ru.yandex.practicum.kafka.telemetry.event.*;
 import java.time.Instant;
 

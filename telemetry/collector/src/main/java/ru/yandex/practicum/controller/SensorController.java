@@ -1,12 +1,12 @@
-package controller;
+package ru.yandex.practicum.controller;
 
-import dto.hub.HubEventDto;
-import dto.sensor.SensorEventDto;
+import ru.yandex.practicum.dto.hub.HubEventDto;
+import ru.yandex.practicum.dto.sensor.SensorEventDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import service.SensorEventService;
+import ru.yandex.practicum.service.SensorEventService;
 
 @RestController
 @RequiredArgsConstructor

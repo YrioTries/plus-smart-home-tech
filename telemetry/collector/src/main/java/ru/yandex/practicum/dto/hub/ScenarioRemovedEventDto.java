@@ -1,4 +1,4 @@
-package dto.hub;
+package ru.yandex.practicum.dto.hub;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
