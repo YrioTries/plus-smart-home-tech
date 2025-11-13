@@ -6,7 +6,7 @@ import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.clients.producer.RecordMetadata;
 import org.springframework.stereotype.Component;
-import ru.yandex.practicum.kafka.config.NewConfig;
+import ru.yandex.practicum.kafka.config.KafkaConfig;
 import ru.yandex.practicum.kafka.config.TopicType;
 
 import java.time.Duration;
@@ -22,16 +22,16 @@ import java.util.concurrent.Future;
 @Component
 public class KafkaEventProducer implements AutoCloseable {
 
-    protected final KafkaProducer<String, SpecificRecordBase> producer;
+    private final KafkaProducer<String, SpecificRecordBase> producer;
 
     /**
      * Конструктор класса.
      *
      * @param kafkaConfig Класс содержащий настройки для работы с kafka
      */
-    public KafkaEventProducer(NewConfig kafkaConfig) {
+    public KafkaEventProducer(KafkaConfig kafkaConfig) {
         // Создаём продюсера используя настройки из конфигурации приложения
-        this.producer = new KafkaProducer<>(kafkaConfig.getConfig());
+        this.producer = new KafkaProducer<>(kafkaConfig.getProducerConfig());
     }
 
     /**
