@@ -15,16 +15,14 @@ public class SensorController {
     private final SensorEventService sensorEventService;
 
     @PostMapping("/sensors")
-    @ResponseStatus(HttpStatus.OK)
-    public String collectSensorEvent(@Valid @RequestBody SensorEventDto event) {
+    @ResponseStatus(HttpStatus.CREATED)
+    public void collectSensorEvent(@Valid @RequestBody SensorEventDto event) {
         sensorEventService.processSensorEvent(event);
-        return "Event processed successfully";
     }
 
     @PostMapping("/hubs")
-    @ResponseStatus(HttpStatus.OK)
-    public String collectHubEvent(@Valid @RequestBody HubEventDto event) {
+    @ResponseStatus(HttpStatus.CREATED)
+    public void collectHubEvent(@Valid @RequestBody HubEventDto event) {
         sensorEventService.processHubEvent(event);
-        return "Event processed successfully";
     }
 }
