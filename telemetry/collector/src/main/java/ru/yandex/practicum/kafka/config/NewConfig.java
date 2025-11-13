@@ -2,6 +2,7 @@ package ru.yandex.practicum.kafka.config;
 
 import jakarta.annotation.PostConstruct;
 import lombok.Getter;
+import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.kafka.serializer.GeneralAvroSerializer;
@@ -20,4 +21,5 @@ public class NewConfig {
         this.config.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.VoidSerializer");
         this.config.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, GeneralAvroSerializer.class.getName());
     }
+
 }
