@@ -1,53 +1,33 @@
 package ru.yandex.practicum.kafka.config;
 
-import io.confluent.kafka.serializers.KafkaAvroSerializer;
-import io.confluent.kafka.serializers.KafkaAvroSerializerConfig;
-import org.apache.avro.specific.SpecificRecordBase;
-import org.apache.kafka.clients.producer.KafkaProducer;
-import org.apache.kafka.clients.producer.Producer;
+import jakarta.annotation.PostConstruct;
+import lombok.Getter;
+import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.producer.ProducerConfig;
+import org.springframework.stereotype.Component;
+import ru.yandex.practicum.kafka.serializer.GeneralAvroDeserializer;
+import ru.yandex.practicum.kafka.serializer.GeneralAvroSerializer;
 
 import java.util.Properties;
 
+@Getter
+@Component
 public class KafkaConfig {
+    private Properties producerConfig;
+    private Properties consumerConfig;
 
-    private final String bootstrapServers;
-    private final String schemaRegistryUrl;
+    @PostConstruct
+    public void init() {
+        //Producer Config
+        this.producerConfig = new Properties();
+        this.producerConfig.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
+        this.producerConfig.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.VoidSerializer");
+        this.producerConfig.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, GeneralAvroSerializer.class.getName());
 
-    public KafkaConfig(String bootstrapServers, String schemaRegistryUrl) {
-        this.bootstrapServers = bootstrapServers;
-        this.schemaRegistryUrl = schemaRegistryUrl;
-    }
-
-    public KafkaConfig() {
-        this("localhost:9092", "http://localhost:8080");
-    }
-
-    public KafkaProducer<String, SpecificRecordBase> getKafkaProducer() {
-        Properties props = new Properties();
-
-        // Basic Kafka configuration
-        props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
-        props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG,
-                "org.apache.kafka.common.serialization.StringSerializer");
-        props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG,
-                "io.confluent.kafka.serializers.KafkaAvroSerializer");
-
-        // Schema Registry configuration
-        props.put(KafkaAvroSerializerConfig.SCHEMA_REGISTRY_URL_CONFIG, schemaRegistryUrl);
-        props.put(KafkaAvroSerializerConfig.AUTO_REGISTER_SCHEMAS, "true");
-
-        // Reliability configuration
-        props.put(ProducerConfig.ACKS_CONFIG, "all");
-        props.put(ProducerConfig.RETRIES_CONFIG, "3");
-        props.put(ProducerConfig.MAX_BLOCK_MS_CONFIG, "60000");
-        props.put(ProducerConfig.REQUEST_TIMEOUT_MS_CONFIG, "30000");
-
-        // Optional: batching and performance settings
-        props.put(ProducerConfig.BATCH_SIZE_CONFIG, "16384");
-        props.put(ProducerConfig.LINGER_MS_CONFIG, "10");
-        props.put(ProducerConfig.BUFFER_MEMORY_CONFIG, "33554432");
-
-        return new KafkaProducer<>(props);
+        //Consumer Config
+        this.consumerConfig = new Properties();
+        this.consumerConfig.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
+        this.consumerConfig.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringDeserializer");
+        this.consumerConfig.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, GeneralAvroDeserializer.class.getName());
     }
 }
