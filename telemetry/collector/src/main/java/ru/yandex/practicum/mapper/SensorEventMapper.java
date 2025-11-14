@@ -2,6 +2,7 @@ package ru.yandex.practicum.mapper;
 
 import org.mapstruct.InjectionStrategy;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import ru.yandex.practicum.dto.sensor.*;
 import ru.yandex.practicum.kafka.telemetry.event.*;
 import java.time.Instant;
@@ -9,73 +10,63 @@ import java.time.Instant;
 @Mapper(componentModel = "spring", injectionStrategy = InjectionStrategy.CONSTRUCTOR)
 public abstract class SensorEventMapper {
 
-    public SensorEvent toAvro(SensorEventDto dto) {
-        if (dto == null) return null;
-        SensorEvent event = new SensorEvent();
-        event.setId(dto.getId());
-        event.setHubId(dto.getHubId());
-        event.setTimestamp(map(dto.getTimestamp()));
-        event.setType(dto.getType());
+    @Mapping(target = "timestamp", expression = "java(eventDto.getTimestamp().toEpochMilli())")
+    @Mapping(target = "payload", source = "eventDto")
+    public abstract SensorEvent toAvro(SensorEventDto eventDto);
 
-        switch (dto.getType()) {
-            case CLIMATE_SENSOR_EVENT:
-                event.setPayload(map((ClimateSensorEventDto) dto));
+    public SensorEvent convertSensorToAvro(SensorEventDto eventDto) {
+        SensorEvent sensorEvent = new SensorEvent();
+        sensorEvent.setId(eventDto.getId());
+        sensorEvent.setHubId(eventDto.getHubId());
+        sensorEvent.setTimestamp(eventDto.getTimestamp().toEpochMilli());
+        sensorEvent.setType(eventDto.getType());
+
+        // Обработка payload в зависимости от типа события
+        switch (eventDto.getType()) {
+            case SWITCH_SENSOR_EVENT: {
+                SwitchSensorEventDto switchDto = (SwitchSensorEventDto) eventDto;
+                SwitchSensorEvent switchPayload = new SwitchSensorEvent();
+                switchPayload.setState(switchDto.getState());
+                sensorEvent.setPayload(switchPayload);
                 break;
-            case LIGHT_SENSOR_EVENT:
-                event.setPayload(map((LightSensorEventDto) dto));
+            }
+            case CLIMATE_SENSOR_EVENT: {
+                ClimateSensorEventDto climateDto = (ClimateSensorEventDto) eventDto;
+                ClimateSensorEvent climatePayload = new ClimateSensorEvent();
+                climatePayload.setTemperatureC(climateDto.getTemperatureC());
+                climatePayload.setHumidity(climateDto.getHumidity());
+                climatePayload.setCo2Level(climateDto.getCo2Level());
+                sensorEvent.setPayload(climatePayload);
                 break;
-            case MOTION_SENSOR_EVENT:
-                event.setPayload(map((MotionSensorEventDto) dto));
+            }
+            case LIGHT_SENSOR_EVENT: {
+                LightSensorEventDto lightDto = (LightSensorEventDto) eventDto;
+                LightSensorEvent lightPayload = new LightSensorEvent();
+                lightPayload.setLinkQuality(lightDto.getLinkQuality());
+                lightPayload.setLuminosity(lightDto.getLuminosity());
+                sensorEvent.setPayload(lightPayload);
                 break;
-            case SWITCH_SENSOR_EVENT:
-                event.setPayload(map((SwitchSensorEventDto) dto));
+            }
+            case MOTION_SENSOR_EVENT: {
+                MotionSensorEventDto motionDto = (MotionSensorEventDto) eventDto;
+                MotionSensorEvent motionPayload = new MotionSensorEvent();
+                motionPayload.setLinkQuality(motionDto.getLinkQuality());
+                motionPayload.setMotion(motionDto.getMotion());
+                motionPayload.setVoltage(motionDto.getVoltage());
+                sensorEvent.setPayload(motionPayload);
                 break;
-            case TEMPERATURE_SENSOR_EVENT:
-                event.setPayload(map((TemperatureSensorEventDto) dto));
+            }
+            case TEMPERATURE_SENSOR_EVENT: {
+                TemperatureSensorEventDto tempDto = (TemperatureSensorEventDto) eventDto;
+                TemperatureSensorEvent tempPayload = new TemperatureSensorEvent();
+                tempPayload.setTemperatureC(tempDto.getTemperatureC());
+                tempPayload.setTemperatureF(tempDto.getTemperatureF());
+                sensorEvent.setPayload(tempPayload);
                 break;
+            }
             default:
-                throw new IllegalArgumentException("Unknown sensor type: " + dto.getType());
+                throw new IllegalArgumentException("Unknown sensor event type: " + eventDto.getType());
         }
-        return event;
-    }
-
-    protected long map(Instant value) {
-        return value != null ? value.toEpochMilli() : 0L;
-    }
-
-    protected ClimateSensorEvent map(ClimateSensorEventDto dto) {
-        ClimateSensorEvent event = new ClimateSensorEvent();
-        event.setTemperatureC(dto.getTemperatureC());
-        event.setHumidity(dto.getHumidity());
-        event.setCo2Level(dto.getCo2Level());
-        return event;
-    }
-
-    protected LightSensorEvent map(LightSensorEventDto dto) {
-        LightSensorEvent event = new LightSensorEvent();
-        event.setLinkQuality(dto.getLinkQuality());
-        event.setLuminosity(dto.getLuminosity());
-        return event;
-    }
-
-    protected MotionSensorEvent map(MotionSensorEventDto dto) {
-        MotionSensorEvent event = new MotionSensorEvent();
-        event.setLinkQuality(dto.getLinkQuality());
-        event.setMotion(dto.getMotion());
-        event.setVoltage(dto.getVoltage());
-        return event;
-    }
-
-    protected SwitchSensorEvent map(SwitchSensorEventDto dto) {
-        SwitchSensorEvent event = new SwitchSensorEvent();
-        event.setState(dto.getState());
-        return event;
-    }
-
-    protected TemperatureSensorEvent map(TemperatureSensorEventDto dto) {
-        TemperatureSensorEvent event = new TemperatureSensorEvent();
-        event.setTemperatureC(dto.getTemperatureC());
-        event.setTemperatureF(dto.getTemperatureF());
-        return event;
+        return sensorEvent;
     }
 }

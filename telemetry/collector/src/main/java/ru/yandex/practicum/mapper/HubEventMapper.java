@@ -5,47 +5,94 @@ import org.mapstruct.InjectionStrategy;
 import ru.yandex.practicum.dto.hub.*;
 import ru.yandex.practicum.kafka.telemetry.event.*;
 
+import java.util.List;
+
 @Mapper(componentModel = "spring", injectionStrategy = InjectionStrategy.CONSTRUCTOR)
 public abstract class HubEventMapper {
 
-    public HubEvent toAvro(HubEventDto dto) {
-        if (dto == null) return null;
+    public HubEvent convertHubToAvro(HubEventDto eventDto) {
+        HubEvent hubEvent = new HubEvent();
+        hubEvent.setHubId(eventDto.getHubId());
+        hubEvent.setTimestamp(eventDto.getTimestamp().toEpochMilli());
+        hubEvent.setType(eventDto.getType());
 
-        HubEvent event = new HubEvent();
-        event.setHubId(dto.getHubId());
-        event.setTimestamp(dto.getTimestamp() != null ? dto.getTimestamp().toEpochMilli() : 0);
+        // Обработка payload в зависимости от типа события
+        switch (eventDto.getType()) {
+            case DEVICE_ADDED: {
+                DeviceAddedEventDto addedEventDto = (DeviceAddedEventDto) eventDto;
+                DeviceAddedEvent addedPayload = new DeviceAddedEvent();
+                addedPayload.setId(addedEventDto.getId());
+                addedPayload.setDeviceType(addedEventDto.getDeviceType());
+                hubEvent.setPayload(addedPayload);
+                break;
+            }
+            case DEVICE_REMOVED: {
+                DeviceRemovedEventDto removedEventDto = (DeviceRemovedEventDto) eventDto;
+                DeviceRemovedEvent removedPayload = new DeviceRemovedEvent();
+                removedPayload.setId(removedEventDto.getId());
+                hubEvent.setPayload(removedPayload);
+                break;
+            }
+            case SCENARIO_ADDED: {
+                ScenarioAddedEventDto scenarioAddedDto = (ScenarioAddedEventDto) eventDto;
+                ScenarioAddedEvent scenarioAddedPayload = new ScenarioAddedEvent();
+                scenarioAddedPayload.setName(scenarioAddedDto.getName());
 
-        switch (dto.getType()) {
-            case DEVICE_ADDED:
-                event.setPayload(map((DeviceAddedEventDto) dto));
-                event.setType(HubEventType.DEVICE_ADDED);
+                // Конвертация условий (conditions)
+                List<ScenarioCondition> conditions = scenarioAddedDto.getConditions().stream()
+                        .map(this::convertScenarioCondition)
+                        .toList();
+                scenarioAddedPayload.setConditions(conditions);
+
+                // Конвертация действий (actions)
+                List<DeviceAction> actions = scenarioAddedDto.getActions().stream()
+                        .map(this::convertDeviceAction)
+                        .toList();
+                scenarioAddedPayload.setActions(actions);
+
+                hubEvent.setPayload(scenarioAddedPayload);
                 break;
-            case DEVICE_REMOVED:
-                event.setPayload(map((DeviceRemovedEventDto) dto));
-                event.setType(HubEventType.DEVICE_REMOVED);
+            }
+            case SCENARIO_REMOVED: {
+                ScenarioRemovedEventDto scenarioRemovedDto = (ScenarioRemovedEventDto) eventDto;
+                ScenarioRemovedEvent scenarioRemovedPayload = new ScenarioRemovedEvent();
+                scenarioRemovedPayload.setName(scenarioRemovedDto.getName());
+                hubEvent.setPayload(scenarioRemovedPayload);
                 break;
-            case SCENARIO_ADDED:
-                event.setPayload(map((ScenarioAddedEventDto) dto));
-                event.setType(HubEventType.SCENARIO_ADDED);
-                break;
-            case SCENARIO_REMOVED:
-                event.setPayload(map((ScenarioRemovedEventDto) dto));
-                event.setType(HubEventType.SCENARIO_REMOVED);
-                break;
+            }
             default:
-                throw new IllegalArgumentException("Unknown HubEvent type: " + dto.getType());
+                throw new IllegalArgumentException("Unknown hub event type: " + eventDto.getType());
         }
-        return event;
+
+        return hubEvent;
     }
 
-    protected abstract DeviceAddedEvent map(DeviceAddedEventDto dto);
+    // Вспомогательный метод для конвертации ScenarioConditionDto в ScenarioCondition
+    private ScenarioCondition convertScenarioCondition(ScenarioConditionDto<?> conditionDto) {
+        ScenarioCondition condition = new ScenarioCondition();
+        condition.setSensorId(conditionDto.getSensorId());
+        condition.setType(conditionDto.getType());
+        condition.setOperation(conditionDto.getOperation());
 
-    protected abstract DeviceRemovedEvent map(DeviceRemovedEventDto dto);
+        // Обработка значения value (может быть null, int или boolean)
+        Object value = conditionDto.getValue();
+        if (value instanceof Integer intValue) {
+            condition.setValue(intValue);
+        } else if (value instanceof Boolean booleanValue) {
+            condition.setValue(booleanValue);
+        } else {
+            condition.setValue(null);
+        }
 
-    protected abstract ScenarioAddedEvent map(ScenarioAddedEventDto dto);
+        return condition;
+    }
 
-    protected abstract ScenarioRemovedEvent map(ScenarioRemovedEventDto dto);
-
-    protected abstract ScenarioCondition map(ScenarioConditionDto dto);
-    protected abstract DeviceAction map(DeviceActionDto dto);
+    // Вспомогательный метод для конвертации DeviceActionDto в DeviceAction
+    private DeviceAction convertDeviceAction(DeviceActionDto actionDto) {
+        DeviceAction action = new DeviceAction();
+        action.setSensorId(actionDto.getSensorId());
+        action.setType(actionDto.getType());
+        action.setValue(actionDto.getValue());
+        return action;
+    }
 }
