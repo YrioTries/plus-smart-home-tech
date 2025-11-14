@@ -1,8 +1,6 @@
 package ru.yandex.practicum.mapper;
 
-import org.mapstruct.InjectionStrategy;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
+import org.mapstruct.*;
 import ru.yandex.practicum.dto.sensor.*;
 import ru.yandex.practicum.kafka.telemetry.event.*;
 import java.time.Instant;
@@ -11,17 +9,11 @@ import java.time.Instant;
 public abstract class SensorEventMapper {
 
     @Mapping(target = "timestamp", expression = "java(eventDto.getTimestamp().toEpochMilli())")
-    @Mapping(target = "payload", source = "eventDto")
+    @Mapping(target = "payload", ignore = true) // Игнорируем автоматический маппинг для payload
     public abstract SensorEvent toAvro(SensorEventDto eventDto);
 
-    public SensorEvent convertSensorToAvro(SensorEventDto eventDto) {
-        SensorEvent sensorEvent = new SensorEvent();
-        sensorEvent.setId(eventDto.getId());
-        sensorEvent.setHubId(eventDto.getHubId());
-        sensorEvent.setTimestamp(eventDto.getTimestamp().toEpochMilli());
-        sensorEvent.setType(eventDto.getType());
-
-        // Обработка payload в зависимости от типа события
+    @AfterMapping
+    protected void setPayload(@MappingTarget SensorEvent sensorEvent, SensorEventDto eventDto) {
         switch (eventDto.getType()) {
             case SWITCH_SENSOR_EVENT: {
                 SwitchSensorEventDto switchDto = (SwitchSensorEventDto) eventDto;
@@ -67,6 +59,6 @@ public abstract class SensorEventMapper {
             default:
                 throw new IllegalArgumentException("Unknown sensor event type: " + eventDto.getType());
         }
-        return sensorEvent;
     }
 }
+

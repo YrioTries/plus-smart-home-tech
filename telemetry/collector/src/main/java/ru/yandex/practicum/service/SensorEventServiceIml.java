@@ -22,7 +22,7 @@ public class SensorEventServiceIml implements SensorEventService {
     private final HubEventMapper hubEventMapper;
 
     public void processSensorEvent(SensorEventDto sensorEventDto) {
-        SensorEvent sensorEvent = sensorEventMapper.convertSensorToAvro(sensorEventDto);
+        SensorEvent sensorEvent = sensorEventMapper.toAvro(sensorEventDto);
         kafkaEventProducer.send(
                 sensorEvent,
                 sensorEvent.getHubId(),
