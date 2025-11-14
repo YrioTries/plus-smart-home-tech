@@ -21,6 +21,6 @@ public enum TopicType {
     }
 
     private static class KafkaTopics {
-        public static final List<String> topicList = List.of("telemetry.sensors.v1", "telemetry.hub.v1");
+        public static final List<String> topicList = List.of("telemetry.sensors.v1", "telemetry.hubs.v1");
     }
 }
