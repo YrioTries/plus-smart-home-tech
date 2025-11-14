@@ -31,5 +31,9 @@ public class KafkaConfig {
         this.consumerConfig.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, GeneralAvroDeserializer.class.getName());
         this.consumerConfig.put(ConsumerConfig.GROUP_ID_CONFIG, "collector-group");
         this.consumerConfig.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
+        this.producerConfig.put(ProducerConfig.ACKS_CONFIG, "1"); // Подтверждение от лидера
+        this.producerConfig.put(ProducerConfig.LINGER_MS_CONFIG, 5); // Задержка для батчинга
+        this.producerConfig.put(ProducerConfig.BATCH_SIZE_CONFIG, 16384); // Размер батча
+        this.producerConfig.put(ProducerConfig.BUFFER_MEMORY_CONFIG, 33554432); // Память для буфера
     }
 }
