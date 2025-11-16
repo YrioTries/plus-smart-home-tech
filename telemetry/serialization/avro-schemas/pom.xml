@@ -39,23 +39,17 @@
             <plugin>
                 <groupId>org.apache.avro</groupId>
                 <artifactId>avro-maven-plugin</artifactId>
-                <version>1.11.3</version>
                 <executions>
                     <execution>
                         <id>schemas</id>
                         <phase>generate-sources</phase>
                         <goals>
-                            <!-- ИЗМЕНИТЕ С idl-protocol НА schema -->
-                            <goal>schema</goal>
+                            <goal>idl-protocol</goal>
                         </goals>
                         <configuration>
                             <sourceDirectory>${project.basedir}/src/main/avro/</sourceDirectory>
                             <outputDirectory>${project.build.directory}/generated-sources</outputDirectory>
                             <stringType>String</stringType>
-                            <!-- ДОБАВЬТЕ эти настройки -->
-                            <createSetters>false</createSetters>
-                            <fieldVisibility>PRIVATE</fieldVisibility>
-                            <enableDecimalLogicalType>true</enableDecimalLogicalType>
                         </configuration>
                     </execution>
                 </executions>
