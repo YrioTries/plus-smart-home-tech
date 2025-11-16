@@ -14,7 +14,6 @@ public abstract class HubEventMapper {
         HubEvent hubEvent = new HubEvent();
         hubEvent.setHubId(eventDto.getHubId());
         hubEvent.setTimestamp(eventDto.getTimestamp().toEpochMilli());
-        hubEvent.setType(eventDto.getType());
 
         // Обработка payload в зависимости от типа события
         switch (eventDto.getType()) {

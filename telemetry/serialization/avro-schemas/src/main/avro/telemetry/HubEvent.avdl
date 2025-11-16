@@ -55,7 +55,6 @@ protocol HubEventProtocol {
 	record HubEvent {
 		string hubId;
 		long timestamp;
-		HubEventType type;
 		union {
 			null,
 			DeviceAddedEvent,
