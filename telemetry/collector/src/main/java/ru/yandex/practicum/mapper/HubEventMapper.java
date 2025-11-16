@@ -14,53 +14,54 @@ public class HubEventMapper {
                 .setHubId(eventDto.getHubId())
                 .setTimestamp(eventDto.getTimestamp().toEpochMilli());
 
-        Object payload = createHubPayload(eventDto);
-        hubEventBuilder.setPayload(payload);
-
-        return hubEventBuilder.build();
-    }
-
-    private Object createHubPayload(HubEventDto eventDto) {
+        // Явно указываем тип для union вместо общего Object
         switch (eventDto.getType()) {
-            case DEVICE_ADDED: {
+            case DEVICE_ADDED:
                 DeviceAddedEventDto addedEventDto = (DeviceAddedEventDto) eventDto;
-                return DeviceAddedEvent.newBuilder()
+                DeviceAddedEvent deviceAdded = DeviceAddedEvent.newBuilder()
                         .setId(addedEventDto.getId())
                         .setDeviceType(addedEventDto.getDeviceType())
                         .build();
-            }
-            case DEVICE_REMOVED: {
+                hubEventBuilder.setPayload(deviceAdded);
+                break;
+
+            case DEVICE_REMOVED:
                 DeviceRemovedEventDto removedEventDto = (DeviceRemovedEventDto) eventDto;
-                return DeviceRemovedEvent.newBuilder()
+                DeviceRemovedEvent deviceRemoved = DeviceRemovedEvent.newBuilder()
                         .setId(removedEventDto.getId())
                         .build();
-            }
-            case SCENARIO_ADDED: {
-                ScenarioAddedEventDto scenarioAddedDto = (ScenarioAddedEventDto) eventDto;
+                hubEventBuilder.setPayload(deviceRemoved);
+                break;
 
+            case SCENARIO_ADDED:
+                ScenarioAddedEventDto scenarioAddedDto = (ScenarioAddedEventDto) eventDto;
                 List<ScenarioCondition> conditions = scenarioAddedDto.getConditions().stream()
                         .map(this::convertScenarioCondition)
                         .collect(Collectors.toList());
-
                 List<DeviceAction> actions = scenarioAddedDto.getActions().stream()
                         .map(this::convertDeviceAction)
                         .collect(Collectors.toList());
-
-                return ScenarioAddedEvent.newBuilder()
+                ScenarioAddedEvent scenarioAdded = ScenarioAddedEvent.newBuilder()
                         .setName(scenarioAddedDto.getName())
                         .setConditions(conditions)
                         .setActions(actions)
                         .build();
-            }
-            case SCENARIO_REMOVED: {
+                hubEventBuilder.setPayload(scenarioAdded);
+                break;
+
+            case SCENARIO_REMOVED:
                 ScenarioRemovedEventDto scenarioRemovedDto = (ScenarioRemovedEventDto) eventDto;
-                return ScenarioRemovedEvent.newBuilder()
+                ScenarioRemovedEvent scenarioRemoved = ScenarioRemovedEvent.newBuilder()
                         .setName(scenarioRemovedDto.getName())
                         .build();
-            }
+                hubEventBuilder.setPayload(scenarioRemoved);
+                break;
+
             default:
                 throw new IllegalArgumentException("Unknown hub event type: " + eventDto.getType());
         }
+
+        return hubEventBuilder.build();
     }
 
     private ScenarioCondition convertScenarioCondition(ScenarioConditionDto<?> conditionDto) {
