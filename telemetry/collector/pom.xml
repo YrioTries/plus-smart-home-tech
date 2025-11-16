@@ -40,6 +40,11 @@
             <version>3.6.1</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.springframework.kafka</groupId>
+            <artifactId>spring-kafka</artifactId>
+        </dependency>
+
         <!-- Confluent Avro Serializer -->
         <dependency>
             <groupId>io.confluent</groupId>
