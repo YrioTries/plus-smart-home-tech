@@ -13,12 +13,11 @@ collector:
   kafka:
     producer:
       properties:
-        "bootstrap.servers": localhost:9092
-        "client.id": "telemetry.collector"
-        "key.serializer": org.apache.kafka.common.serialization.StringSerializer
-        value-serializer: org.apache.kafka.common.serialization.ByteArraySerializer
-#        "value.serializer": ru.yandex.practicum.kafka.serializer.GeneralAvroSerializer
-        "linger.ms": 0
+        bootstrap.servers: localhost:9092
+        client.id: telemetry.collector
+        key.serializer: org.apache.kafka.common.serialization.StringSerializer
+        value.serializer: ru.yandex.practicum.kafka.serializer.GeneralAvroSerializer
+        linger.ms: 0
       topics:
         sensors-events: telemetry.sensors.v1
         hubs-events: telemetry.hubs.v1
