@@ -4,9 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import ru.yandex.practicum.dto.hub.*;
 import ru.yandex.practicum.dto.sensor.*;
-//import ru.yandex.practicum.kafka.KafkaEventProducer;
 import ru.yandex.practicum.kafka.KafkaEventProducer;
-import ru.yandex.practicum.kafka.KafkaProducerService;
 import ru.yandex.practicum.kafka.config.TopicType;
 import ru.yandex.practicum.kafka.telemetry.event.*;
 import ru.yandex.practicum.mapper.HubEventMapper;
@@ -44,7 +42,7 @@ public class SensorEventServiceIml implements SensorEventService {
     public void processHubEvent(HubEventDto hubEventDto) {
         log.info("Processing hub event: {}", hubEventDto);
         try {
-            HubEvent hubEvent = hubEventMapper.convertHubToAvro(hubEventDto);
+            HubEvent hubEvent = hubEventMapper.toAvro(hubEventDto);
             //kafkaProducerService.sendHubEvent(TopicType.TELEMETRY_HUBS_V1.getTopic(), hubEvent);
 
             kafkaEventProducer.send(
