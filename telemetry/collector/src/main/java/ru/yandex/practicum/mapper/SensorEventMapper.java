@@ -15,14 +15,6 @@ public class SensorEventMapper {
 
         // Явно указываем тип для union вместо общего Object
         switch (eventDto.getType()) {
-            case SWITCH_SENSOR_EVENT:
-                SwitchSensorEventDto switchDto = (SwitchSensorEventDto) eventDto;
-                SwitchSensorEvent switchEvent = SwitchSensorEvent.newBuilder()
-                        .setState(switchDto.getState())
-                        .build();
-                sensorEventBuilder.setPayload(switchEvent);
-                break;
-
             case CLIMATE_SENSOR_EVENT:
                 ClimateSensorEventDto climateDto = (ClimateSensorEventDto) eventDto;
                 ClimateSensorEvent climateEvent = ClimateSensorEvent.newBuilder()
@@ -50,6 +42,14 @@ public class SensorEventMapper {
                         .setVoltage(motionDto.getVoltage())
                         .build();
                 sensorEventBuilder.setPayload(motionEvent);
+                break;
+
+            case SWITCH_SENSOR_EVENT:
+                SwitchSensorEventDto switchDto = (SwitchSensorEventDto) eventDto;
+                SwitchSensorEvent switchEvent = SwitchSensorEvent.newBuilder()
+                        .setState(switchDto.getState())
+                        .build();
+                sensorEventBuilder.setPayload(switchEvent);
                 break;
 
             case TEMPERATURE_SENSOR_EVENT:
