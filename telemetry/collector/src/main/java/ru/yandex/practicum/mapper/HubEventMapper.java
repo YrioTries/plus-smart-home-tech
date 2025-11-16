@@ -1,11 +1,13 @@
 package ru.yandex.practicum.mapper;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.dto.hub.*;
 import ru.yandex.practicum.kafka.telemetry.event.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Component
 public class HubEventMapper {
 
@@ -23,6 +25,7 @@ public class HubEventMapper {
                         .setDeviceType(addedEventDto.getDeviceType())
                         .build();
                 hubEventBuilder.setPayload(deviceAdded);
+                log.info("MAPPED: DEVICE_ADDED -> DeviceAddedEvent, id: {}", addedEventDto.getId());
                 break;
 
             case DEVICE_REMOVED:
@@ -31,6 +34,7 @@ public class HubEventMapper {
                         .setId(removedEventDto.getId())
                         .build();
                 hubEventBuilder.setPayload(deviceRemoved);
+                log.info("MAPPED: DEVICE_REMOVED -> DeviceRemovedEvent, id: {}", removedEventDto.getId());
                 break;
 
             case SCENARIO_ADDED:
@@ -47,6 +51,7 @@ public class HubEventMapper {
                         .setActions(actions)
                         .build();
                 hubEventBuilder.setPayload(scenarioAdded);
+                log.info("MAPPED: SCENARIO_ADDED -> ScenarioAddedEvent, name: {}", scenarioAddedDto.getName());
                 break;
 
             case SCENARIO_REMOVED:
@@ -55,6 +60,7 @@ public class HubEventMapper {
                         .setName(scenarioRemovedDto.getName())
                         .build();
                 hubEventBuilder.setPayload(scenarioRemoved);
+                log.info("MAPPED: SCENARIO_REMOVED -> ScenarioRemovedEvent, name: {}", scenarioRemovedDto.getName());
                 break;
 
             default:
