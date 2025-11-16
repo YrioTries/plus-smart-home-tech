@@ -33,7 +33,6 @@ public abstract class HubEventDto {
 
     private Instant timestamp = Instant.now();
 
-    @NotNull
     @JsonProperty("type")
     public abstract HubEventType getType();
 }
