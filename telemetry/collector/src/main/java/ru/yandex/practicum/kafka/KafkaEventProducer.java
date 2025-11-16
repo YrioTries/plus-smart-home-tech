@@ -65,15 +65,15 @@ public class KafkaEventProducer implements AutoCloseable {
         log.trace("Сохраняю событие {} связанное с хабом {} в топик {}",
                 eventClass, hubId, topic);
 
-        // Отправка события в топик Kafka
-        Future<RecordMetadata> futureResult = producer.send(record, (metadata, exception) -> {
-            if (exception != null) {
-                log.warn("Не удалось записать событие {} в топик {}", eventClass, topic, exception);
-            } else {
-                log.info("Событие {} было успешно сохранёно в топик {} в партицию {} со смещением {}",
-                        eventClass, metadata.topic(), metadata.partition(), metadata.offset());
-            }
-        });
+        Future<RecordMetadata> futureResult = producer.send(record);
+        producer.flush();
+        try {
+            RecordMetadata metadata = futureResult.get();
+            log.info("Событие {} было успешно сохранёно в топик {} в партицию {} со смещением {}",
+                    eventClass, metadata.topic(), metadata.partition(), metadata.offset());
+        } catch (InterruptedException | ExecutionException e) {
+            log.warn("Не удалось записать событие {} в топик {}", eventClass, topic, e);
+        }
     }
 
     /**
