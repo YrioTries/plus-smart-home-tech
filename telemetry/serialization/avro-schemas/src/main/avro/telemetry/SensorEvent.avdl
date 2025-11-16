@@ -39,7 +39,6 @@ protocol SensorEventProtocol {
 		string hubId;
 		long timestamp;
 		union {
-			null,
 			ClimateSensorEvent,
 			LightSensorEvent,
 			MotionSensorEvent,

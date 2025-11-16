@@ -73,7 +73,6 @@ protocol HubEventProtocol {
 		string hubId;
 		long timestamp;
 		union {
-			null,
 			DeviceAddedEvent,
 			DeviceRemovedEvent,
 			ScenarioAddedEvent,
