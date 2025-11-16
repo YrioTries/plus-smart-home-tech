@@ -40,6 +40,7 @@ protocol SensorEventProtocol {
 		long timestamp;
 		SensorType type;
 		union {
+			null,
 			ClimateSensorEvent,
 			LightSensorEvent,
 			MotionSensorEvent,

@@ -57,6 +57,7 @@ protocol HubEventProtocol {
 		long timestamp;
 		HubEventType type;
 		union {
+			null,
 			DeviceAddedEvent,
 			DeviceRemovedEvent,
 			ScenarioAddedEvent,
