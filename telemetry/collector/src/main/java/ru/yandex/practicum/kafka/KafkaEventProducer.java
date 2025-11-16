@@ -30,6 +30,7 @@ public class KafkaEventProducer implements AutoCloseable {
      * @param kafkaConfig Класс содержащий настройки для работы с kafka
      */
     public KafkaEventProducer(KafkaConfig kafkaConfig) {
+        log.info("Kafka configuration: {}", kafkaConfig.getProducerConfig());
         // Создаём продюсера используя настройки из конфигурации приложения
         this.producer = new KafkaProducer<>(kafkaConfig.getProducerConfig());
     }
@@ -65,15 +66,14 @@ public class KafkaEventProducer implements AutoCloseable {
                 eventClass, hubId, topic);
 
         // Отправка события в топик Kafka
-        Future<RecordMetadata> futureResult = producer.send(record);
-        producer.flush();
-        try {
-            RecordMetadata metadata = futureResult.get();
-            log.info("Событие {} было успешно сохранёно в топик {} в партицию {} со смещением {}",
-                    eventClass, metadata.topic(), metadata.partition(), metadata.offset());
-        } catch (InterruptedException | ExecutionException e) {
-            log.warn("Не удалось записать событие {} в топик {}", eventClass, topic, e);
-        }
+        Future<RecordMetadata> futureResult = producer.send(record, (metadata, exception) -> {
+            if (exception != null) {
+                log.warn("Не удалось записать событие {} в топик {}", eventClass, topic, exception);
+            } else {
+                log.info("Событие {} было успешно сохранёно в топик {} в партицию {} со смещением {}",
+                        eventClass, metadata.topic(), metadata.partition(), metadata.offset());
+            }
+        });
     }
 
     /**

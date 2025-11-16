@@ -29,8 +29,8 @@ public class SensorEventServiceIml implements SensorEventService {
             //kafkaProducerService.sendSensorEvent(TopicType.TELEMETRY_SENSORS_V1.getTopic(), sensorEvent);
             kafkaEventProducer.send(
                     sensorEvent,
-                    sensorEvent.getHubId(),
-                    Instant.ofEpochMilli(sensorEvent.getTimestamp()),
+                    sensorEventDto.getHubId(),
+                    sensorEventDto.getTimestamp(),
                     TopicType.TELEMETRY_SENSORS_V1
             );
         } catch (Exception e) {
@@ -47,8 +47,8 @@ public class SensorEventServiceIml implements SensorEventService {
 
             kafkaEventProducer.send(
                     hubEvent,
-                    hubEvent.getHubId(),
-                    Instant.ofEpochMilli(hubEvent.getTimestamp()),
+                    hubEventDto.getHubId(),
+                    hubEventDto.getTimestamp(),
                     TopicType.TELEMETRY_HUBS_V1
             );
         } catch (Exception e) {
