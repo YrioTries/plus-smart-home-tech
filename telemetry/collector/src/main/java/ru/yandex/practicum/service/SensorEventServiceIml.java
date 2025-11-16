@@ -18,7 +18,6 @@ import java.time.Instant;
 @RequiredArgsConstructor
 public class SensorEventServiceIml implements SensorEventService {
     private final KafkaEventProducer kafkaEventProducer;
-    //private final KafkaProducerService kafkaProducerService;
     private final SensorEventMapper sensorEventMapper;
     private final HubEventMapper hubEventMapper;
 
@@ -26,7 +25,7 @@ public class SensorEventServiceIml implements SensorEventService {
         log.info("Processing sensor event: {}", sensorEventDto);
         try {
             SensorEvent sensorEvent = sensorEventMapper.toAvro(sensorEventDto);
-            //kafkaProducerService.sendSensorEvent(TopicType.TELEMETRY_SENSORS_V1.getTopic(), sensorEvent);
+
             kafkaEventProducer.send(
                     sensorEvent,
                     sensorEventDto.getHubId(),
@@ -43,7 +42,6 @@ public class SensorEventServiceIml implements SensorEventService {
         log.info("Processing hub event: {}", hubEventDto);
         try {
             HubEvent hubEvent = hubEventMapper.toAvro(hubEventDto);
-            //kafkaProducerService.sendHubEvent(TopicType.TELEMETRY_HUBS_V1.getTopic(), hubEvent);
 
             kafkaEventProducer.send(
                     hubEvent,
