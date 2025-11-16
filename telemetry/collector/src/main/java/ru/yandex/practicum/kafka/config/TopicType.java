@@ -1,7 +1,10 @@
 package ru.yandex.practicum.kafka.config;
 
+import lombok.Getter;
+
 import java.util.List;
 
+@Getter
 public enum TopicType {
     TELEMETRY_SENSORS_V1(KafkaTopics.topicList.get(0)),
     TELEMETRY_HUBS_V1(KafkaTopics.topicList.get(1));
@@ -10,10 +13,6 @@ public enum TopicType {
 
     TopicType(String topic) {
         this.topic = topic;
-    }
-
-    public String getTopic() {
-        return topic;
     }
 
     public static boolean isCorrectTopic(String gn) {
