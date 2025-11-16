@@ -17,10 +17,8 @@ public class ScenarioAddedEventDto extends HubEventDto {
     @Size(min = 3, max = 2147483647)
     private String name;
 
-    @NotBlank
     private List<ScenarioConditionDto> conditions;
 
-    @NotBlank
     private List<DeviceActionDto> actions;
 
     @Override

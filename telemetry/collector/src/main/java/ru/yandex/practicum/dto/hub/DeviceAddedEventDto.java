@@ -14,7 +14,6 @@ public class DeviceAddedEventDto extends HubEventDto {
     @NotBlank
     private String id;
 
-    @NotBlank
     private DeviceType deviceType;
 
     @Override
