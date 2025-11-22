@@ -109,7 +109,7 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
-                    <mainClass>ru.yandex.practicum.CollectorApplication</mainClass>
+                    <mainClass>ru.yandex.practicum.rest.CollectorApplication</mainClass>
                 </configuration>
             </plugin>
         </plugins>
