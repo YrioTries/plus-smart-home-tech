@@ -1,0 +1,32 @@
+package ru.yandex.practicum.entity;
+
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
+@Getter
+@Setter
+@Entity
+@Table(name = "scenario_actions")
+@ToString
+public class ScenarioAction {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "scenario_id")
+    @ToString.Exclude
+    private Scenario scenario;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "sensor_id")
+    @ToString.Exclude
+    private Sensor sensor;
+
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "action_id")
+    @ToString.Exclude
+    private Action action;
+}
