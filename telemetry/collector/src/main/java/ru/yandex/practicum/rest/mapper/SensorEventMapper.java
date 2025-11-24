@@ -1,4 +1,4 @@
-package ru.yandex.practicum.mapper;
+package ru.yandex.practicum.rest.mapper;
 
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.dto.sensor.*;
