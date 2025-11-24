@@ -9,6 +9,7 @@ import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.errors.WakeupException;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.kafka.config.KafkaConfig;
+import ru.yandex.practicum.kafka.config.TopicType;
 import ru.yandex.practicum.kafka.telemetry.event.SensorEvent;
 import ru.yandex.practicum.kafka.telemetry.event.SensorsSnapshotAvro;
 
@@ -46,7 +47,7 @@ public class AggregationStarter {
                         if (updatedSnapshot.isPresent()) {
                             SensorsSnapshotAvro snapshot = updatedSnapshot.get();
                             ProducerRecord<String, SensorsSnapshotAvro> producerRecord =
-                                    new ProducerRecord<>("telemetry.snapshots.v1", snapshot.getHubId(), snapshot);
+                                    new ProducerRecord<>(TopicType.TELEMETRY_SNAPSHOTS_V1.getTopic(), snapshot.getHubId(), snapshot);
 
                             producer.send(producerRecord, (metadata, exception) -> {
                                 if (exception != null) {

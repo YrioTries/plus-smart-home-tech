@@ -21,7 +21,7 @@ public class KafkaConfig {
         // Producer Config
         this.producerConfig = new Properties();
         this.producerConfig.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
-        this.producerConfig.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringSerializer"); // ← ИСПРАВЛЕНО
+        this.producerConfig.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringSerializer");
         this.producerConfig.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, GeneralAvroSerializer.class.getName());
         this.producerConfig.put(ProducerConfig.ACKS_CONFIG, "1");
         this.producerConfig.put(ProducerConfig.LINGER_MS_CONFIG, 5);
@@ -30,7 +30,7 @@ public class KafkaConfig {
 
         // Consumer Config
         this.consumerConfig = new Properties();
-        this.consumerConfig.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092"); // ← ИСПРАВЛЕНО
+        this.consumerConfig.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
         this.consumerConfig.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringDeserializer");
         this.consumerConfig.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, GeneralAvroDeserializer.class.getName());
         this.consumerConfig.put(ConsumerConfig.GROUP_ID_CONFIG, "collector-group");
