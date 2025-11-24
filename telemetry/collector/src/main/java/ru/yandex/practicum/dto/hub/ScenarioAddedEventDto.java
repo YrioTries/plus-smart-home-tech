@@ -1,4 +1,4 @@
-package ru.yandex.practicum.rest.dto.hub;
+package ru.yandex.practicum.dto.hub;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;

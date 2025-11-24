@@ -1,4 +1,4 @@
-package ru.yandex.practicum.rest.kafka;
+package ru.yandex.practicum.kafka;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.avro.Schema;
@@ -7,8 +7,8 @@ import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.clients.producer.RecordMetadata;
 import org.springframework.stereotype.Component;
-import ru.yandex.practicum.rest.kafka.config.KafkaConfig;
-import ru.yandex.practicum.rest.kafka.config.TopicType;
+import ru.yandex.practicum.kafka.config.KafkaConfig;
+import ru.yandex.practicum.kafka.config.TopicType;
 import ru.yandex.practicum.kafka.telemetry.event.DeviceAddedEvent;
 import ru.yandex.practicum.kafka.telemetry.event.HubEvent;
 import ru.yandex.practicum.kafka.telemetry.event.ScenarioAddedEvent;

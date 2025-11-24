@@ -1,20 +1,20 @@
-package ru.yandex.practicum.rest.service;
+package ru.yandex.practicum.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import ru.yandex.practicum.rest.kafka.KafkaEventProducer;
-import ru.yandex.practicum.rest.kafka.config.TopicType;
+import ru.yandex.practicum.kafka.KafkaEventProducer;
+import ru.yandex.practicum.kafka.config.TopicType;
 import ru.yandex.practicum.kafka.telemetry.event.*;
 import ru.yandex.practicum.rest.mapper.HubEventMapper;
 import ru.yandex.practicum.rest.mapper.SensorEventMapper;
 import org.springframework.stereotype.Service;
-import ru.yandex.practicum.rest.dto.hub.HubEventDto;
-import ru.yandex.practicum.rest.dto.sensor.SensorEventDto;
+import ru.yandex.practicum.dto.hub.HubEventDto;
+import ru.yandex.practicum.dto.sensor.SensorEventDto;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class SensorEventServiceIml implements SensorEventService {
+public class CollectorEventServiceIml implements CollectorEventService {
     private final KafkaEventProducer kafkaEventProducer;
     private final SensorEventMapper sensorEventMapper;
     private final HubEventMapper hubEventMapper;

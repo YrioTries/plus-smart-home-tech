@@ -1,4 +1,4 @@
-package ru.yandex.practicum.rest.kafka;
+package ru.yandex.practicum.kafka;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.avro.specific.SpecificRecordBase;
@@ -6,7 +6,7 @@ import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.springframework.stereotype.Component;
-import ru.yandex.practicum.rest.kafka.config.KafkaConfig;
+import ru.yandex.practicum.kafka.config.KafkaConfig;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;

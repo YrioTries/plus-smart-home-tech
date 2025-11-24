@@ -1,4 +1,4 @@
-package ru.yandex.practicum.rest.dto.sensor;
+package ru.yandex.practicum.dto.sensor;
 
 import lombok.Getter;
 import lombok.Setter;

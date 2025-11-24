@@ -1,4 +1,4 @@
-package ru.yandex.practicum.rest.kafka.serializer;
+package ru.yandex.practicum.kafka.serializer;
 
 import org.apache.avro.io.BinaryDecoder;
 import org.apache.avro.io.DatumReader;

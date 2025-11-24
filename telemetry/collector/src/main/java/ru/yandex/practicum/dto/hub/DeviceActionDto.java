@@ -1,4 +1,4 @@
-package ru.yandex.practicum.rest.dto.hub;
+package ru.yandex.practicum.dto.hub;
 
 import lombok.Getter;
 import lombok.Setter;

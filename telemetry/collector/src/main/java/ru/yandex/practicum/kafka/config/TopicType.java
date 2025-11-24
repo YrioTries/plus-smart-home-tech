@@ -1,4 +1,4 @@
-package ru.yandex.practicum.rest.kafka.config;
+package ru.yandex.practicum.kafka.config;
 
 import lombok.Getter;
 

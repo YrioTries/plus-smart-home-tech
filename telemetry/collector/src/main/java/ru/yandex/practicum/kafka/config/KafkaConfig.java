@@ -1,12 +1,12 @@
-package ru.yandex.practicum.rest.kafka.config;
+package ru.yandex.practicum.kafka.config;
 
 import jakarta.annotation.PostConstruct;
 import lombok.Getter;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.springframework.stereotype.Component;
-import ru.yandex.practicum.rest.kafka.serializer.GeneralAvroDeserializer;
-import ru.yandex.practicum.rest.kafka.serializer.GeneralAvroSerializer;
+import ru.yandex.practicum.kafka.serializer.GeneralAvroDeserializer;
+import ru.yandex.practicum.kafka.serializer.GeneralAvroSerializer;
 
 import java.util.Properties;
 
