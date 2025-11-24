@@ -11,10 +11,21 @@
 
     <artifactId>proto-schemas</artifactId>
 
+    <properties>
+        <grpc.version>1.63.0</grpc.version>
+        <protobuf.version>3.23.4</protobuf.version>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>io.grpc</groupId>
             <artifactId>grpc-stub</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.google.protobuf</groupId>
+            <artifactId>protobuf-java</artifactId>
+            <version>3.25.1</version>
         </dependency>
 
         <dependency>
@@ -39,30 +50,53 @@
                 <artifactId>maven-compiler-plugin</artifactId>
             </plugin>
 
+<!--            <plugin>-->
+<!--                <groupId>io.github.ascopes</groupId>-->
+<!--                <artifactId>protobuf-maven-plugin</artifactId>-->
+<!--                <configuration>-->
+<!--                    <protocVersion>${protobuf.version}</protocVersion>-->
+<!--                    <binaryMavenPlugins>-->
+<!--                        <sourceRoots>-->
+<!--                            <sourceRoot>src/main/protobuf</sourceRoot>-->
+<!--                        </sourceRoots>-->
+
+<!--                        <binaryMavenPlugin>-->
+<!--                            <groupId>io.grpc</groupId>-->
+<!--                            <artifactId>protoc-gen-grpc-java</artifactId>-->
+<!--                            <version>${grpc.version}</version>-->
+<!--                        </binaryMavenPlugin>-->
+<!--                    </binaryMavenPlugins>-->
+<!--                </configuration>-->
+<!--                <executions>-->
+<!--                    <execution>-->
+<!--                        <goals>-->
+<!--                            <goal>generate</goal>-->
+<!--                        </goals>-->
+<!--                    </execution>-->
+<!--                </executions>-->
+<!--            </plugin>-->
+
+
             <plugin>
-                <groupId>io.github.ascopes</groupId>
+                <groupId>org.xolstice.maven.plugins</groupId>
                 <artifactId>protobuf-maven-plugin</artifactId>
-
+                <version>0.6.1</version>
                 <configuration>
-                    <protocVersion>${protobuf.version}</protocVersion>
-
-                    <binaryMavenPlugins>
-                        <binaryMavenPlugin>
-                            <groupId>io.grpc</groupId>
-                            <artifactId>protoc-gen-grpc-java</artifactId>
-                            <version>${grpc.version}</version>
-                        </binaryMavenPlugin>
-                    </binaryMavenPlugins>
+                    <protocArtifact>com.google.protobuf:protoc:3.23.4:exe:windows-x86_64</protocArtifact>
+                    <pluginId>grpc-java</pluginId>
+                    <pluginArtifact>io.grpc:protoc-gen-grpc-java:1.63.0:exe:windows-x86_64</pluginArtifact>
+                    <protoSourceRoot>src/main/protobuf</protoSourceRoot>
                 </configuration>
-
                 <executions>
                     <execution>
                         <goals>
-                            <goal>generate</goal>
+                            <goal>compile</goal>
+                            <goal>compile-custom</goal>
                         </goals>
                     </execution>
                 </executions>
             </plugin>
+
 
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
@@ -80,31 +114,6 @@
                                 <source>${project.build.directory}/generated-sources/protobuf</source>
                             </sources>
                         </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-
-            <plugin>
-                <groupId>io.github.ascopes</groupId>
-                <artifactId>protobuf-maven-plugin</artifactId>
-
-                <configuration>
-                    <protocVersion>3.23.4</protocVersion>
-
-                    <binaryMavenPlugins>
-                        <binaryMavenPlugin>
-                            <groupId>io.grpc</groupId>
-                            <artifactId>protoc-gen-grpc-java</artifactId>
-                            <version>${grpc.version}</version>
-                        </binaryMavenPlugin>
-                    </binaryMavenPlugins>
-                </configuration>
-
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>generate</goal>
-                        </goals>
                     </execution>
                 </executions>
             </plugin>
