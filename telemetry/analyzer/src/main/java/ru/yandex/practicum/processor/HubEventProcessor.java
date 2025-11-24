@@ -8,6 +8,7 @@ import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.common.errors.WakeupException;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.kafka.config.KafkaConfig;
+import ru.yandex.practicum.kafka.config.TopicType;
 import ru.yandex.practicum.kafka.telemetry.event.HubEvent;
 import ru.yandex.practicum.service.HubEventProcessingService;
 
@@ -30,7 +31,7 @@ public class HubEventProcessor implements Runnable {
         log.info("Starting HubEventProcessor in separate thread...");
 
         consumer = new KafkaConsumer<>(config.getConsumerConfig());
-        consumer.subscribe(Collections.singletonList("telemetry.hubs.v1"));
+        consumer.subscribe(Collections.singletonList(TopicType.TELEMETRY_HUBS_V1.getTopic()));
 
         log.info("Subscribed to topic: telemetry.hubs.v1");
 
