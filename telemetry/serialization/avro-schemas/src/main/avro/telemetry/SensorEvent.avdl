@@ -46,4 +46,6 @@ protocol SensorEventProtocol {
 			TemperatureSensorEvent
 		} payload;
 	}
+
+
 }
