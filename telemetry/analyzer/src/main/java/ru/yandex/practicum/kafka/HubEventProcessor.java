@@ -5,8 +5,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.Consumer;
 import org.apache.kafka.common.errors.WakeupException;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.stereotype.Component;
+import org.springframework.kafka.core.ConsumerFactory;
 import ru.yandex.practicum.kafka.telemetry.event.HubEvent;
 import ru.yandex.practicum.service.HubEventService;
 

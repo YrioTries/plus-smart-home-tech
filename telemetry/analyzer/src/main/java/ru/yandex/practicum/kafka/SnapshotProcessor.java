@@ -9,6 +9,7 @@ import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.AnalyzerClient;
 import ru.yandex.practicum.CheckScenarios;
+import ru.yandex.practicum.grpc.telemetry.messages.DeviceActionRequest;
 import ru.yandex.practicum.kafka.telemetry.event.SensorsSnapshotAvro;
 
 import java.time.Duration;
@@ -39,7 +40,7 @@ public class SnapshotProcessor {
                     List<SensorsSnapshotAvro> snapshotList = new ArrayList<>();
                     snapshotRecords.forEach(record -> snapshotList.add(record.value()));
                     snapshotList.forEach(snapshot -> {
-                        List<ru.yandex.practicum.grpc.telemetry.messages.DeviceActionRequest> actions = checkScenarios.checkScenarios(snapshot);
+                        List<DeviceActionRequest> actions = checkScenarios.checkScenarios(snapshot);
                         actions.forEach(service::sendDeviceActions);
                     });
                     snapshotList.clear();
