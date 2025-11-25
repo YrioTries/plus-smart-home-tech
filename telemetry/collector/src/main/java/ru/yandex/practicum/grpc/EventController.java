@@ -12,6 +12,7 @@ import ru.yandex.practicum.dto.sensor.SensorEventDto;
 import ru.yandex.practicum.grpc.converter.hub.HubProtoToAvroConverter;
 import ru.yandex.practicum.grpc.converter.ProtoToModelConverter;
 import ru.yandex.practicum.grpc.converter.sensor.SensorProtoToAvroConverter;
+import ru.yandex.practicum.grpc.telemetry.messages.HubEventProto;
 import ru.yandex.practicum.grpc.telemetry.messages.SensorEventProto;
 import ru.yandex.practicum.grpc.telemetry.services.CollectorControllerGrpc;
 import ru.yandex.practicum.kafka.telemetry.event.HubEvent;
@@ -47,7 +48,7 @@ public class EventController extends CollectorControllerGrpc.CollectorController
     }
 
     @Override
-    public void collectHubEvent(ru.yandex.practicum.grpc.telemetry.messages.HubEventProto request, StreamObserver<Empty> responseObserver) {
+    public void collectHubEvent(HubEventProto request, StreamObserver<Empty> responseObserver) {
         try {
             log.info(request.toString());
             HubEventDto hubEventDto = protoToModelConverter.convertToModel(request);
