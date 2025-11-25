@@ -1,13 +1,10 @@
-package ru.yandex.practicum.grpc;
+package ru.yandex.practicum.grpc.converter.hub;
 
 import com.google.protobuf.Timestamp;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.kafka.telemetry.event.DeviceAddedEvent;
 import ru.yandex.practicum.kafka.telemetry.event.DeviceType;
 import ru.yandex.practicum.kafka.telemetry.event.HubEvent;
-
-
-import java.time.Instant;
 
 @Component
 public class DeviceAddedToAvroConverter {

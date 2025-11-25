@@ -1,4 +1,4 @@
-package ru.yandex.practicum.grpc;
+package ru.yandex.practicum.grpc.converter.sensor;
 
 import ru.yandex.practicum.kafka.telemetry.event.SensorEvent;
 

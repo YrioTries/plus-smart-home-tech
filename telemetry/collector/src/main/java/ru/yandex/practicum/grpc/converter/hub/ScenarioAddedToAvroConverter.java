@@ -1,4 +1,4 @@
-package ru.yandex.practicum.grpc;
+package ru.yandex.practicum.grpc.converter.hub;
 
 import com.google.protobuf.Timestamp;
 import org.springframework.stereotype.Component;

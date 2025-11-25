@@ -9,6 +9,11 @@ import lombok.extern.slf4j.Slf4j;
 import net.devh.boot.grpc.server.service.GrpcService;
 import ru.yandex.practicum.dto.hub.HubEventDto;
 import ru.yandex.practicum.dto.sensor.SensorEventDto;
+import ru.yandex.practicum.grpc.converter.hub.HubProtoToAvroConverter;
+import ru.yandex.practicum.grpc.converter.ProtoToModelConverter;
+import ru.yandex.practicum.grpc.converter.sensor.SensorProtoToAvroConverter;
+import ru.yandex.practicum.grpc.telemetry.messages.SensorEventProto;
+import ru.yandex.practicum.grpc.telemetry.services.CollectorControllerGrpc;
 import ru.yandex.practicum.kafka.telemetry.event.HubEvent;
 import ru.yandex.practicum.kafka.telemetry.event.SensorEvent;
 import ru.yandex.practicum.service.CollectorEventService;
@@ -17,7 +22,7 @@ import ru.yandex.practicum.service.CollectorEventService;
 @Slf4j
 @GrpcService
 @RequiredArgsConstructor
-public class EventController extends ru.yandex.practicum.grpc.telemetry.services.CollectorControllerGrpc.CollectorControllerImplBase {
+public class EventController extends CollectorControllerGrpc.CollectorControllerImplBase {
 
     private final SensorProtoToAvroConverter protoToAvroConverter;
     private final HubProtoToAvroConverter hubProtoToAvroConverter;
@@ -26,7 +31,7 @@ public class EventController extends ru.yandex.practicum.grpc.telemetry.services
 
 
     @Override
-    public void collectSensorEvent(ru.yandex.practicum.grpc.telemetry.messages.SensorEventProto request, StreamObserver<Empty> responseObserver) {
+    public void collectSensorEvent(SensorEventProto request, StreamObserver<Empty> responseObserver) {
         try {
             SensorEventDto sensorEventDto = protoToModelConverter.convertToModel(request);
             collectorService.processSensorEvent(sensorEventDto);

@@ -8,6 +8,9 @@ import org.springframework.stereotype.Component;
 import ru.yandex.practicum.entity.Scenario;
 import ru.yandex.practicum.entity.ScenarioAction;
 import ru.yandex.practicum.entity.ScenarioCondition;
+import ru.yandex.practicum.grpc.telemetry.messages.ActionTypeProto;
+import ru.yandex.practicum.grpc.telemetry.messages.DeviceActionProto;
+import ru.yandex.practicum.grpc.telemetry.messages.DeviceActionRequest;
 import ru.yandex.practicum.kafka.telemetry.event.*;
 import ru.yandex.practicum.repository.ScenarioActionRepository;
 import ru.yandex.practicum.repository.ScenarioConditionRepository;
@@ -30,10 +33,10 @@ public class CheckScenarios {
     private final ScenarioActionRepository scenarioActionRepository;
     private final SensorRepository sensorRepository;
 
-    public List<ru.yandex.practicum.grpc.telemetry.messages.DeviceActionRequest> checkScenarios(SensorsSnapshotAvro snapshot) {
+    public List<DeviceActionRequest> checkScenarios(SensorsSnapshotAvro snapshot) {
         log.info("Начинаю проверку сценариев...");
 
-        List<ru.yandex.practicum.grpc.telemetry.messages.DeviceActionRequest> result = new ArrayList<>();
+        List<DeviceActionRequest> result = new ArrayList<>();
 
         List<Scenario> scenarioList = scenarioRepository.findByHubId(snapshot.getHubId());
         if (scenarioList.isEmpty()) {
@@ -67,13 +70,13 @@ public class CheckScenarios {
                         actionsByScenario.getOrDefault(scenario.getId(), List.of());
 
                 for (ScenarioAction action : actions) {
-                    ru.yandex.practicum.grpc.telemetry.messages.DeviceActionProto deviceActionProto = ru.yandex.practicum.grpc.telemetry.messages.DeviceActionProto.newBuilder()
+                    DeviceActionProto deviceActionProto = DeviceActionProto.newBuilder()
                             .setSensorId(action.getSensor().getId())
-                            .setType(ru.yandex.practicum.grpc.telemetry.messages.ActionTypeProto.valueOf(action.getAction().getType()))
+                            .setType(ActionTypeProto.valueOf(action.getAction().getType()))
                             .setValue(action.getAction().getValue())
                             .build();
 
-                    ru.yandex.practicum.grpc.telemetry.messages.DeviceActionRequest request = ru.yandex.practicum.grpc.telemetry.messages.DeviceActionRequest.newBuilder()
+                    DeviceActionRequest request = DeviceActionRequest.newBuilder()
                             .setHubId(snapshot.getHubId())
                             .setScenarioName(action.getScenario().getName())
                             .setAction(deviceActionProto)

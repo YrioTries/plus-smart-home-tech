@@ -1,4 +1,4 @@
-package ru.yandex.practicum.grpc;
+package ru.yandex.practicum.grpc.converter.hub;
 
 import ru.yandex.practicum.kafka.telemetry.event.HubEvent;
 

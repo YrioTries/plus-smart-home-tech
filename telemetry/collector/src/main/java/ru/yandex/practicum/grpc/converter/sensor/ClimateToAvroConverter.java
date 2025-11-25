@@ -1,35 +1,32 @@
-package ru.yandex.practicum.grpc;
+package ru.yandex.practicum.grpc.converter.sensor;
 
 import com.google.protobuf.Timestamp;
 import org.springframework.stereotype.Component;
-import ru.yandex.practicum.kafka.telemetry.event.MotionSensorEvent;
+import ru.yandex.practicum.kafka.telemetry.event.ClimateSensorEvent;
 import ru.yandex.practicum.kafka.telemetry.event.SensorEvent;
 
-import java.time.Instant;
-
 @Component
-public class MotionToAvroConverter {
+public class ClimateToAvroConverter {
 
     public SensorEvent convertToAvro(ru.yandex.practicum.grpc.telemetry.messages.SensorEventProto proto) {
         Timestamp protoTimestamp = proto.getTimestamp();
         //Instant instant = Instant.ofEpochSecond(protoTimestamp.getSeconds(), protoTimestamp.getNanos());
 
-        MotionSensorEvent motionSensorAvro = convert(proto.getMotionSensor());
+        ClimateSensorEvent climatePayload = convert(proto.getClimateSensor());
 
         return SensorEvent.newBuilder()
                 .setId(proto.getId())
                 .setHubId(proto.getHubId())
                 .setTimestamp(protoTimestamp.getSeconds())
-                .setPayload(motionSensorAvro)
+                .setPayload(climatePayload)
                 .build();
     }
 
-    private MotionSensorEvent convert(ru.yandex.practicum.grpc.telemetry.messages.MotionSensorProto protoPayload) {
-        return MotionSensorEvent.newBuilder()
-                .setMotion(protoPayload.getMotion())
-                .setLinkQuality(protoPayload.getLinkQuality())
-                .setVoltage(protoPayload.getVoltage())
+    private ClimateSensorEvent convert(ru.yandex.practicum.grpc.telemetry.messages.ClimateSensorProto protoPayload) {
+        return ClimateSensorEvent.newBuilder()
+                .setTemperatureC(protoPayload.getTemperatureC())
+                .setCo2Level(protoPayload.getCo2Level())
+                .setHumidity(protoPayload.getHumidity())
                 .build();
     }
-
 }

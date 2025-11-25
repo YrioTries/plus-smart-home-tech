@@ -1,9 +1,11 @@
-package ru.yandex.practicum.grpc;
+package ru.yandex.practicum.grpc.converter;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.dto.hub.*;
 import ru.yandex.practicum.dto.sensor.*;
+import ru.yandex.practicum.grpc.telemetry.messages.HubEventProto;
+import ru.yandex.practicum.grpc.telemetry.messages.SensorEventProto;
 import ru.yandex.practicum.kafka.telemetry.event.ActionType;
 import ru.yandex.practicum.kafka.telemetry.event.ConditionOperation;
 import ru.yandex.practicum.kafka.telemetry.event.ConditionType;
@@ -16,8 +18,8 @@ import java.util.stream.Collectors;
 @Component
 public class ProtoToModelConverter {
 
-    public SensorEventDto convertToModel(ru.yandex.practicum.grpc.telemetry.messages.SensorEventProto proto) {
-        ru.yandex.practicum.grpc.telemetry.messages.SensorEventProto.PayloadCase payloadCase = proto.getPayloadCase();
+    public SensorEventDto convertToModel(SensorEventProto proto) {
+        SensorEventProto.PayloadCase payloadCase = proto.getPayloadCase();
 
         switch (payloadCase) {
             case MOTION_SENSOR:
@@ -36,8 +38,8 @@ public class ProtoToModelConverter {
         }
     }
 
-    public HubEventDto convertToModel(ru.yandex.practicum.grpc.telemetry.messages.HubEventProto proto) {
-        ru.yandex.practicum.grpc.telemetry.messages.HubEventProto.PayloadCase payloadCase = proto.getPayloadCase();
+    public HubEventDto convertToModel(HubEventProto proto) {
+        HubEventProto.PayloadCase payloadCase = proto.getPayloadCase();
 
         switch (payloadCase) {
             case DEVICE_ADDED:

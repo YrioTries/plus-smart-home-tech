@@ -1,4 +1,4 @@
-package ru.yandex.practicum.grpc;
+package ru.yandex.practicum.grpc.converter.hub;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
