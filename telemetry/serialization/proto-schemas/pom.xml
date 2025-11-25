@@ -56,10 +56,6 @@
                 <configuration>
                     <protocVersion>${protobuf.version}</protocVersion>
                     <binaryMavenPlugins>
-<!--                        <sourceRoots>-->
-<!--                            <sourceRoot>src/main/protobuf</sourceRoot>-->
-<!--                        </sourceRoots>-->
-
                         <binaryMavenPlugin>
                             <groupId>io.grpc</groupId>
                             <artifactId>protoc-gen-grpc-java</artifactId>
