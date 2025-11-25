@@ -4,27 +4,29 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import ru.yandex.practicum.kafka.telemetry.event.ConditionOperation;
-import ru.yandex.practicum.kafka.telemetry.event.ConditionType;
 
-@Getter
-@Setter
+import lombok.*;
+
 @Entity
 @Table(name = "conditions")
+@Getter
+@Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @ToString
 public class Condition {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "type", nullable = false)
-    @Enumerated(EnumType.STRING)
-    private ConditionType type;
+    @Column(nullable = false)
+    private String type;
 
-    @Column(name = "operation", nullable = false)
-    @Enumerated(EnumType.STRING)
-    private ConditionOperation operation;
+    @Column(nullable = false)
+    private String operation;
 
-    @Column(name = "value")
+    @Column(nullable = false)
     private Integer value;
 }

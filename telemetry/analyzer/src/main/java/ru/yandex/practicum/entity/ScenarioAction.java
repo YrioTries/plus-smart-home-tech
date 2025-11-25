@@ -1,32 +1,33 @@
 package ru.yandex.practicum.entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
-@Getter
-@Setter
 @Entity
 @Table(name = "scenario_actions")
+@Getter
+@Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @ToString
 public class ScenarioAction {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @EmbeddedId
+    private ScenarioActionId id;
+
+    @ManyToOne
     @JoinColumn(name = "scenario_id")
-    @ToString.Exclude
+    @MapsId("scenarioId")
     private Scenario scenario;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "sensor_id")
-    @ToString.Exclude
+    @MapsId("sensorId")
     private Sensor sensor;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "action_id")
-    @ToString.Exclude
+    @MapsId("actionId")
     private Action action;
 }

@@ -7,14 +7,8 @@ import "telemetry/messages/hub_event.proto";
 
 option java_package = "ru.yandex.practicum.grpc.telemetry.hubrouter";
 option java_outer_classname = "HubRouterControllerProto";
-option java_multiple_files = true;
 
 service HubRouterController {
-    rpc handleDeviceAction(DeviceActionRequest) returns (google.protobuf.Empty);
-}
-
-message DeviceActionRequest {
-    string hub_id = 1;
-    string scenario_name = 2;
-    messages.DeviceActionProto action = 3;
+    rpc handleDeviceAction (messages.DeviceActionRequest)
+            returns (google.protobuf.Empty);
 }

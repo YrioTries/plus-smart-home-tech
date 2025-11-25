@@ -6,12 +6,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import ru.yandex.practicum.entity.*;
+import ru.yandex.practicum.entity.ScenarioCondition;
 import ru.yandex.practicum.kafka.telemetry.event.*;
-import ru.yandex.practicum.kafka.telemetry.event.ScenarioCondition;
-import ru.yandex.practicum.repository.ActionRepository;
-import ru.yandex.practicum.repository.ConditionRepository;
-import ru.yandex.practicum.repository.ScenarioRepository;
-import ru.yandex.practicum.repository.SensorRepository;
+
+import ru.yandex.practicum.repository.*;
 
 @Service
 @RequiredArgsConstructor
