@@ -4,7 +4,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.dto.hub.*;
 import ru.yandex.practicum.dto.sensor.*;
+import ru.yandex.practicum.grpc.telemetry.messages.DeviceActionProto;
 import ru.yandex.practicum.grpc.telemetry.messages.HubEventProto;
+import ru.yandex.practicum.grpc.telemetry.messages.ScenarioConditionProto;
 import ru.yandex.practicum.grpc.telemetry.messages.SensorEventProto;
 import ru.yandex.practicum.kafka.telemetry.event.ActionType;
 import ru.yandex.practicum.kafka.telemetry.event.ConditionOperation;
@@ -56,7 +58,7 @@ public class ProtoToModelConverter {
         }
     }
 
-    private MotionSensorEventDto convertMotionSensor(ru.yandex.practicum.grpc.telemetry.messages.SensorEventProto proto) {
+    private MotionSensorEventDto convertMotionSensor(SensorEventProto proto) {
         ru.yandex.practicum.grpc.telemetry.messages.MotionSensorProto motionSensor = proto.getMotionSensor();
         MotionSensorEventDto event = new MotionSensorEventDto();
         setCommonSensorFields(event, proto);
@@ -66,7 +68,7 @@ public class ProtoToModelConverter {
         return event;
     }
 
-    private TemperatureSensorEventDto convertTemperatureSensor(ru.yandex.practicum.grpc.telemetry.messages.SensorEventProto proto) {
+    private TemperatureSensorEventDto convertTemperatureSensor(SensorEventProto proto) {
         ru.yandex.practicum.grpc.telemetry.messages.TemperatureSensorProto tempSensor = proto.getTemperatureSensor();
         TemperatureSensorEventDto event = new TemperatureSensorEventDto();
         setCommonSensorFields(event, proto);
@@ -75,7 +77,7 @@ public class ProtoToModelConverter {
         return event;
     }
 
-    private LightSensorEventDto convertLightSensor(ru.yandex.practicum.grpc.telemetry.messages.SensorEventProto proto) {
+    private LightSensorEventDto convertLightSensor(SensorEventProto proto) {
         ru.yandex.practicum.grpc.telemetry.messages.LightSensorProto lightSensor = proto.getLightSensor();
         LightSensorEventDto event = new LightSensorEventDto();
         setCommonSensorFields(event, proto);
@@ -84,7 +86,7 @@ public class ProtoToModelConverter {
         return event;
     }
 
-    private ClimateSensorEventDto convertClimateSensor(ru.yandex.practicum.grpc.telemetry.messages.SensorEventProto proto) {
+    private ClimateSensorEventDto convertClimateSensor(SensorEventProto proto) {
         ru.yandex.practicum.grpc.telemetry.messages.ClimateSensorProto climateSensor = proto.getClimateSensor();
         ClimateSensorEventDto event = new ClimateSensorEventDto();
         setCommonSensorFields(event, proto);
@@ -94,7 +96,7 @@ public class ProtoToModelConverter {
         return event;
     }
 
-    private SwitchSensorEventDto convertSwitchSensor(ru.yandex.practicum.grpc.telemetry.messages.SensorEventProto proto) {
+    private SwitchSensorEventDto convertSwitchSensor(SensorEventProto proto) {
         ru.yandex.practicum.grpc.telemetry.messages.SwitchSensorProto switchSensor = proto.getSwitchSensor();
         SwitchSensorEventDto event = new SwitchSensorEventDto();
         setCommonSensorFields(event, proto);
@@ -102,7 +104,7 @@ public class ProtoToModelConverter {
         return event;
     }
 
-    private DeviceAddedEventDto convertDeviceAdded(ru.yandex.practicum.grpc.telemetry.messages.HubEventProto proto) {
+    private DeviceAddedEventDto convertDeviceAdded(HubEventProto proto) {
         ru.yandex.practicum.grpc.telemetry.messages.DeviceAddedEventProto deviceAdded = proto.getDeviceAdded();
         DeviceAddedEventDto event = new DeviceAddedEventDto();
         setCommonHubFields(event, proto);
@@ -111,7 +113,7 @@ public class ProtoToModelConverter {
         return event;
     }
 
-    private DeviceRemovedEventDto convertDeviceRemoved(ru.yandex.practicum.grpc.telemetry.messages.HubEventProto proto) {
+    private DeviceRemovedEventDto convertDeviceRemoved(HubEventProto proto) {
         ru.yandex.practicum.grpc.telemetry.messages.DeviceRemovedEventProto deviceRemoved = proto.getDeviceRemoved();
         DeviceRemovedEventDto event = new DeviceRemovedEventDto();
         setCommonHubFields(event, proto);
@@ -119,7 +121,7 @@ public class ProtoToModelConverter {
         return event;
     }
 
-    private ScenarioAddedEventDto convertScenarioAdded(ru.yandex.practicum.grpc.telemetry.messages.HubEventProto proto) {
+    private ScenarioAddedEventDto convertScenarioAdded(HubEventProto proto) {
         ru.yandex.practicum.grpc.telemetry.messages.ScenarioAddedEventProto scenarioAdded = proto.getScenarioAdded();
         ScenarioAddedEventDto event = new ScenarioAddedEventDto();
         setCommonHubFields(event, proto);
@@ -133,7 +135,7 @@ public class ProtoToModelConverter {
         return event;
     }
 
-    private ScenarioRemovedEventDto convertScenarioRemoved(ru.yandex.practicum.grpc.telemetry.messages.HubEventProto proto) {
+    private ScenarioRemovedEventDto convertScenarioRemoved(HubEventProto proto) {
         ru.yandex.practicum.grpc.telemetry.messages.ScenarioRemovedEventProto scenarioRemoved = proto.getScenarioRemoved();
         ScenarioRemovedEventDto event = new ScenarioRemovedEventDto();
         setCommonHubFields(event, proto);
@@ -141,7 +143,7 @@ public class ProtoToModelConverter {
         return event;
     }
 
-    private ScenarioConditionDto convertCondition(ru.yandex.practicum.grpc.telemetry.messages.ScenarioConditionProto proto) {
+    private ScenarioConditionDto convertCondition(ScenarioConditionProto proto) {
         ScenarioConditionDto condition = new ScenarioConditionDto();
         condition.setSensorId(proto.getSensorId());
         condition.setType(ConditionType.valueOf(proto.getType().name()));
@@ -162,7 +164,7 @@ public class ProtoToModelConverter {
         return condition;
     }
 
-    private DeviceActionDto convertAction(ru.yandex.practicum.grpc.telemetry.messages.DeviceActionProto proto) {
+    private DeviceActionDto convertAction(DeviceActionProto proto) {
         DeviceActionDto action = new DeviceActionDto();
         action.setSensorId(proto.getSensorId());
         action.setType(ActionType.valueOf(proto.getType().name()));
@@ -179,7 +181,7 @@ public class ProtoToModelConverter {
         ));
     }
 
-    private void setCommonHubFields(HubEventDto event, ru.yandex.practicum.grpc.telemetry.messages.HubEventProto proto) {
+    private void setCommonHubFields(HubEventDto event, HubEventProto proto) {
         event.setHubId(proto.getHubId());
         event.setTimestamp(Instant.ofEpochSecond(
                 proto.getTimestamp().getSeconds(),

@@ -2,6 +2,7 @@ package ru.yandex.practicum.grpc.converter.hub;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import ru.yandex.practicum.grpc.telemetry.messages.HubEventProto;
 import ru.yandex.practicum.kafka.telemetry.event.HubEvent;
 
 @Service
@@ -14,22 +15,22 @@ public class HubProtoToAvroConverter implements HubConverter {
     private final DeviceRemoveToAvroConverter deviceRemoveToAvroConverter;
 
     @Override
-    public HubEvent convertToScenarioAdded(ru.yandex.practicum.grpc.telemetry.messages.HubEventProto proto) {
+    public HubEvent convertToScenarioAdded(HubEventProto proto) {
         return scenarioAddedToAvroConverter.convertToAvro(proto);
     }
 
     @Override
-    public HubEvent convertToScenarioRemove(ru.yandex.practicum.grpc.telemetry.messages.HubEventProto proto) {
+    public HubEvent convertToScenarioRemove(HubEventProto proto) {
         return scenarioRemoveToAvroConverter.convertToAvro(proto);
     }
 
     @Override
-    public HubEvent convertToDeviceAdded(ru.yandex.practicum.grpc.telemetry.messages.HubEventProto proto) {
+    public HubEvent convertToDeviceAdded(HubEventProto proto) {
         return deviceAddedToAvroConverter.convertToAvro(proto);
     }
 
     @Override
-    public HubEvent convertToDeviceRemove(ru.yandex.practicum.grpc.telemetry.messages.HubEventProto proto) {
+    public HubEvent convertToDeviceRemove(HubEventProto proto) {
         return deviceRemoveToAvroConverter.convertToAvro(proto);
     }
 }

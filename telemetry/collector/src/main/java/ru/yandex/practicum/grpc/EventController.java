@@ -64,7 +64,7 @@ public class EventController extends CollectorControllerGrpc.CollectorController
         }
     }
 
-    private SensorEvent getSensorAvroObject(ru.yandex.practicum.grpc.telemetry.messages.SensorEventProto request) {
+    private SensorEvent getSensorAvroObject(SensorEventProto request) {
         return switch (request.getPayloadCase()) {
             case MOTION_SENSOR -> protoToAvroConverter.convertToMotionAvro(request);
             case TEMPERATURE_SENSOR -> protoToAvroConverter.convertToTemperatureAvro(request);
@@ -75,7 +75,7 @@ public class EventController extends CollectorControllerGrpc.CollectorController
         };
     }
 
-    private HubEvent getHubAvroObject(ru.yandex.practicum.grpc.telemetry.messages.HubEventProto request) {
+    private HubEvent getHubAvroObject(HubEventProto request) {
         return switch (request.getPayloadCase()) {
             case DEVICE_ADDED -> hubProtoToAvroConverter.convertToDeviceAdded(request);
             case DEVICE_REMOVED -> hubProtoToAvroConverter.convertToDeviceRemove(request);

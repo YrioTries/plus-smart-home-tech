@@ -16,7 +16,7 @@ public class DeviceRemoveToAvroConverter {
 
         return HubEvent.newBuilder()
                 .setHubId(proto.getHubId())
-                .setTimestamp(protoTimestamp.getSeconds())
+                .setTimestamp(protoTimestamp.getSeconds() + protoTimestamp.getNanos())
                 .setPayload(deviceRemoveToAvroConverter)
                 .build();
     }

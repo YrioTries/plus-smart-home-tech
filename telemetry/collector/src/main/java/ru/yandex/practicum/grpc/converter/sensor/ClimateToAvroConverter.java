@@ -17,7 +17,7 @@ public class ClimateToAvroConverter {
         return SensorEvent.newBuilder()
                 .setId(proto.getId())
                 .setHubId(proto.getHubId())
-                .setTimestamp(protoTimestamp.getSeconds())
+                .setTimestamp(protoTimestamp.getSeconds() + protoTimestamp.getNanos())
                 .setPayload(climatePayload)
                 .build();
     }
