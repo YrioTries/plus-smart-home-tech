@@ -12,8 +12,8 @@ import java.util.stream.Collectors;
 @Component
 public class HubEventMapper {
 
-    public HubEvent toAvro(HubEventDto eventDto) {
-        HubEvent.Builder hubEventBuilder = HubEvent.newBuilder()
+    public HubEventAvro toAvro(HubEventDto eventDto) {
+        HubEventAvro.Builder hubEventBuilder = HubEventAvro.newBuilder()
                 .setHubId(eventDto.getHubId())
                 .setTimestamp(eventDto.getTimestamp().toEpochMilli());
 
@@ -21,7 +21,7 @@ public class HubEventMapper {
         switch (eventDto.getType()) {
             case DEVICE_ADDED:
                 DeviceAddedEventDto addedEventDto = (DeviceAddedEventDto) eventDto;
-                DeviceAddedEvent deviceAdded = DeviceAddedEvent.newBuilder()
+                DeviceAddedEventAvro deviceAdded = DeviceAddedEventAvro.newBuilder()
                         .setId(addedEventDto.getId())
                         .setDeviceType(addedEventDto.getDeviceType())
                         .build();
@@ -31,7 +31,7 @@ public class HubEventMapper {
 
             case DEVICE_REMOVED:
                 DeviceRemovedEventDto removedEventDto = (DeviceRemovedEventDto) eventDto;
-                DeviceRemovedEvent deviceRemoved = DeviceRemovedEvent.newBuilder()
+                DeviceRemovedEventAvro deviceRemoved = DeviceRemovedEventAvro.newBuilder()
                         .setId(removedEventDto.getId())
                         .build();
                 hubEventBuilder.setPayload(deviceRemoved);
@@ -40,13 +40,13 @@ public class HubEventMapper {
 
             case SCENARIO_ADDED:
                 ScenarioAddedEventDto scenarioAddedDto = (ScenarioAddedEventDto) eventDto;
-                List<ScenarioCondition> conditions = scenarioAddedDto.getConditions().stream()
+                List<ScenarioConditionAvro> conditions = scenarioAddedDto.getConditions().stream()
                         .map(this::convertScenarioCondition)
                         .collect(Collectors.toList());
-                List<DeviceAction> actions = scenarioAddedDto.getActions().stream()
+                List<DeviceActionAvro> actions = scenarioAddedDto.getActions().stream()
                         .map(this::convertDeviceAction)
                         .collect(Collectors.toList());
-                ScenarioAddedEvent scenarioAdded = ScenarioAddedEvent.newBuilder()
+                ScenarioAddedEventAvro scenarioAdded = ScenarioAddedEventAvro.newBuilder()
                         .setName(scenarioAddedDto.getName())
                         .setConditions(conditions)
                         .setActions(actions)
@@ -57,7 +57,7 @@ public class HubEventMapper {
 
             case SCENARIO_REMOVED:
                 ScenarioRemovedEventDto scenarioRemovedDto = (ScenarioRemovedEventDto) eventDto;
-                ScenarioRemovedEvent scenarioRemoved = ScenarioRemovedEvent.newBuilder()
+                ScenarioRemovedEventAvro scenarioRemoved = ScenarioRemovedEventAvro.newBuilder()
                         .setName(scenarioRemovedDto.getName())
                         .build();
                 hubEventBuilder.setPayload(scenarioRemoved);
@@ -71,8 +71,8 @@ public class HubEventMapper {
         return hubEventBuilder.build();
     }
 
-    private ScenarioCondition convertScenarioCondition(ScenarioConditionDto<?> conditionDto) {
-        ScenarioCondition.Builder builder = ScenarioCondition.newBuilder()
+    private ScenarioConditionAvro convertScenarioCondition(ScenarioConditionDto<?> conditionDto) {
+        ScenarioConditionAvro.Builder builder = ScenarioConditionAvro.newBuilder()
                 .setSensorId(conditionDto.getSensorId())
                 .setType(conditionDto.getType())
                 .setOperation(conditionDto.getOperation());
@@ -88,8 +88,8 @@ public class HubEventMapper {
         return builder.build();
     }
 
-    private DeviceAction convertDeviceAction(DeviceActionDto actionDto) {
-        DeviceAction.Builder builder = DeviceAction.newBuilder()
+    private DeviceActionAvro convertDeviceAction(DeviceActionDto actionDto) {
+        DeviceActionAvro.Builder builder = DeviceActionAvro.newBuilder()
                 .setSensorId(actionDto.getSensorId())
                 .setType(actionDto.getType());
 

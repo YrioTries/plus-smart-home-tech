@@ -1,14 +1,15 @@
 package ru.yandex.practicum.grpc.converter.hub;
 
-import ru.yandex.practicum.kafka.telemetry.event.HubEvent;
+import ru.yandex.practicum.grpc.telemetry.messages.HubEventProto;
+import ru.yandex.practicum.kafka.telemetry.event.HubEventAvro;
 
 public interface HubConverter {
 
-    HubEvent convertToScenarioAdded(ru.yandex.practicum.grpc.telemetry.messages.HubEventProto proto);
+    HubEventAvro convertToScenarioAdded(HubEventProto proto);
 
-    HubEvent convertToScenarioRemove(ru.yandex.practicum.grpc.telemetry.messages.HubEventProto proto);
+    HubEventAvro convertToScenarioRemove(HubEventProto proto);
 
-    HubEvent convertToDeviceAdded(ru.yandex.practicum.grpc.telemetry.messages.HubEventProto proto);
+    HubEventAvro convertToDeviceAdded(HubEventProto proto);
 
-    HubEvent convertToDeviceRemove(ru.yandex.practicum.grpc.telemetry.messages.HubEventProto proto);
+    HubEventAvro convertToDeviceRemove(HubEventProto proto);
 }

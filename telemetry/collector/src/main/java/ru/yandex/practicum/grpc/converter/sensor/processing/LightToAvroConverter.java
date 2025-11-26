@@ -1,20 +1,22 @@
-package ru.yandex.practicum.grpc.converter.sensor;
+package ru.yandex.practicum.grpc.converter.sensor.processing;
 
 import com.google.protobuf.Timestamp;
 import org.springframework.stereotype.Component;
-import ru.yandex.practicum.kafka.telemetry.event.LightSensorEvent;
-import ru.yandex.practicum.kafka.telemetry.event.SensorEvent;
+import ru.yandex.practicum.grpc.telemetry.messages.LightSensorProto;
+import ru.yandex.practicum.grpc.telemetry.messages.SensorEventProto;
+import ru.yandex.practicum.kafka.telemetry.event.LightSensorEventAvro;
+import ru.yandex.practicum.kafka.telemetry.event.SensorEventAvro;
 
 @Component
 public class LightToAvroConverter {
 
-    public SensorEvent convertToAvro(ru.yandex.practicum.grpc.telemetry.messages.SensorEventProto proto) {
+    public SensorEventAvro convertToAvro(SensorEventProto proto) {
         Timestamp protoTimestamp = proto.getTimestamp();
         //Instant instant = Instant.ofEpochSecond(protoTimestamp.getSeconds(), protoTimestamp.getNanos());
 
-        LightSensorEvent lightPayload = convert(proto.getLightSensor());
+        LightSensorEventAvro lightPayload = convert(proto.getLightSensor());
 
-        return SensorEvent.newBuilder()
+        return SensorEventAvro.newBuilder()
                 .setId(proto.getId())
                 .setHubId(proto.getHubId())
                 .setTimestamp(protoTimestamp.getSeconds() + protoTimestamp.getNanos())
@@ -22,8 +24,8 @@ public class LightToAvroConverter {
                 .build();
     }
 
-    private LightSensorEvent convert(ru.yandex.practicum.grpc.telemetry.messages.LightSensorProto protoPayload) {
-        return LightSensorEvent.newBuilder()
+    private LightSensorEventAvro convert(LightSensorProto protoPayload) {
+        return LightSensorEventAvro.newBuilder()
                 .setLinkQuality(protoPayload.getLinkQuality())
                 .setLuminosity(protoPayload.getLuminosity())
                 .build();

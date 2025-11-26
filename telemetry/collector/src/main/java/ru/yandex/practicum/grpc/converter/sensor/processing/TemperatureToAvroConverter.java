@@ -1,20 +1,22 @@
-package ru.yandex.practicum.grpc.converter.sensor;
+package ru.yandex.practicum.grpc.converter.sensor.processing;
 
 import com.google.protobuf.Timestamp;
 import org.springframework.stereotype.Component;
-import ru.yandex.practicum.kafka.telemetry.event.SensorEvent;
-import ru.yandex.practicum.kafka.telemetry.event.TemperatureSensorEvent;
+import ru.yandex.practicum.grpc.telemetry.messages.SensorEventProto;
+import ru.yandex.practicum.grpc.telemetry.messages.TemperatureSensorProto;
+import ru.yandex.practicum.kafka.telemetry.event.SensorEventAvro;
+import ru.yandex.practicum.kafka.telemetry.event.TemperatureSensorEventAvro;
 
 @Component
 public class TemperatureToAvroConverter {
 
-    public SensorEvent convertToAvro(ru.yandex.practicum.grpc.telemetry.messages.SensorEventProto proto) {
+    public SensorEventAvro convertToAvro(SensorEventProto proto) {
         Timestamp protoTimestamp = proto.getTimestamp();
         //Instant instant = Instant.ofEpochSecond(protoTimestamp.getSeconds(), protoTimestamp.getNanos());
 
-        TemperatureSensorEvent temperaturePayload = convert(proto.getTemperatureSensor());
+        TemperatureSensorEventAvro temperaturePayload = convert(proto.getTemperatureSensor());
 
-        return SensorEvent.newBuilder()
+        return SensorEventAvro.newBuilder()
                 .setId(proto.getId())
                 .setHubId(proto.getHubId())
                 .setTimestamp(protoTimestamp.getSeconds() + protoTimestamp.getNanos())
@@ -22,8 +24,8 @@ public class TemperatureToAvroConverter {
                 .build();
     }
 
-    private TemperatureSensorEvent convert(ru.yandex.practicum.grpc.telemetry.messages.TemperatureSensorProto protoPayload) {
-        return TemperatureSensorEvent.newBuilder()
+    private TemperatureSensorEventAvro convert(TemperatureSensorProto protoPayload) {
+        return TemperatureSensorEventAvro.newBuilder()
                 .setTemperatureC(protoPayload.getTemperatureC())
                 .setTemperatureF(protoPayload.getTemperatureF())
                 .build();

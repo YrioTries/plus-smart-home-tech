@@ -3,7 +3,7 @@ package ru.yandex.practicum.dto.sensor;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import ru.yandex.practicum.kafka.telemetry.event.SensorType;
+import ru.yandex.practicum.kafka.telemetry.event.SensorTypeAvro;
 
 @Getter
 @Setter
@@ -13,7 +13,7 @@ public class LightSensorEventDto extends SensorEventDto {
     private Integer luminosity;
 
     @Override
-    public SensorType getType() {
-        return SensorType.LIGHT_SENSOR_EVENT;
+    public SensorTypeAvro getType() {
+        return SensorTypeAvro.LIGHT_SENSOR_EVENT;
     }
 }

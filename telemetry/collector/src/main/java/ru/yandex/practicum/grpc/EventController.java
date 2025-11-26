@@ -15,8 +15,8 @@ import ru.yandex.practicum.grpc.converter.sensor.SensorProtoToAvroConverter;
 import ru.yandex.practicum.grpc.telemetry.messages.HubEventProto;
 import ru.yandex.practicum.grpc.telemetry.messages.SensorEventProto;
 import ru.yandex.practicum.grpc.telemetry.services.CollectorControllerGrpc;
-import ru.yandex.practicum.kafka.telemetry.event.HubEvent;
-import ru.yandex.practicum.kafka.telemetry.event.SensorEvent;
+import ru.yandex.practicum.kafka.telemetry.event.HubEventAvro;
+import ru.yandex.practicum.kafka.telemetry.event.SensorEventAvro;
 import ru.yandex.practicum.service.CollectorEventService;
 
 
@@ -64,7 +64,7 @@ public class EventController extends CollectorControllerGrpc.CollectorController
         }
     }
 
-    private SensorEvent getSensorAvroObject(SensorEventProto request) {
+    private SensorEventAvro getSensorAvroObject(SensorEventProto request) {
         return switch (request.getPayloadCase()) {
             case MOTION_SENSOR -> protoToAvroConverter.convertToMotionAvro(request);
             case TEMPERATURE_SENSOR -> protoToAvroConverter.convertToTemperatureAvro(request);
@@ -75,7 +75,7 @@ public class EventController extends CollectorControllerGrpc.CollectorController
         };
     }
 
-    private HubEvent getHubAvroObject(HubEventProto request) {
+    private HubEventAvro getHubAvroObject(HubEventProto request) {
         return switch (request.getPayloadCase()) {
             case DEVICE_ADDED -> hubProtoToAvroConverter.convertToDeviceAdded(request);
             case DEVICE_REMOVED -> hubProtoToAvroConverter.convertToDeviceRemove(request);

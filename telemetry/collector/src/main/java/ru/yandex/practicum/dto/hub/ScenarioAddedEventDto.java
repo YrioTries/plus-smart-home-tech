@@ -5,7 +5,7 @@ import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import ru.yandex.practicum.kafka.telemetry.event.HubEventType;
+import ru.yandex.practicum.kafka.telemetry.event.HubEventTypeAvro;
 
 import java.util.List;
 
@@ -22,7 +22,7 @@ public class ScenarioAddedEventDto extends HubEventDto {
     private List<DeviceActionDto> actions;
 
     @Override
-    public HubEventType getType() {
-        return HubEventType.SCENARIO_ADDED;
+    public HubEventTypeAvro getType() {
+        return HubEventTypeAvro.SCENARIO_ADDED;
     }
 }

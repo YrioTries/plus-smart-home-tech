@@ -18,7 +18,7 @@ public class AggregationService {
 
     private final Map<String, SensorsSnapshotAvro> snapshots = new ConcurrentHashMap<>();
 
-    public Optional<SensorsSnapshotAvro> updateState(SensorEvent event) {
+    public Optional<SensorsSnapshotAvro> updateState(SensorEventAvro event) {
         String hubId = event.getHubId();
         String deviceId = event.getId();
 
@@ -31,12 +31,12 @@ public class AggregationService {
                     .build();
         }
 
-        List<DeviceState> sensorsState = new ArrayList<>(snapshot.getSensorsState());
-        DeviceState existingDeviceState = null;
+        List<DeviceStateAvro> sensorsState = new ArrayList<>(snapshot.getSensorsState());
+        DeviceStateAvro existingDeviceState = null;
         int existingIndex = -1;
 
         for (int i = 0; i < sensorsState.size(); i++) {
-            DeviceState deviceState = sensorsState.get(i);
+            DeviceStateAvro deviceState = sensorsState.get(i);
             if (deviceId.equals(deviceState.getDeviceId())) {
                 existingDeviceState = deviceState;
                 existingIndex = i;
@@ -63,7 +63,7 @@ public class AggregationService {
                 .setData(event.getPayload())
                 .build();
 
-        DeviceState newDeviceState = DeviceState.newBuilder()
+        DeviceStateAvro newDeviceState = DeviceStateAvro.newBuilder()
                 .setDeviceId(deviceId)
                 .setState(newSensorState)
                 .build();

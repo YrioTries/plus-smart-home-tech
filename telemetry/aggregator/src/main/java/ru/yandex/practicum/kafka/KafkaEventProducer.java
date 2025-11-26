@@ -9,9 +9,6 @@ import org.apache.kafka.clients.producer.RecordMetadata;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.kafka.config.KafkaConfig;
 import ru.yandex.practicum.kafka.config.TopicType;
-import ru.yandex.practicum.kafka.telemetry.event.DeviceAddedEvent;
-import ru.yandex.practicum.kafka.telemetry.event.HubEvent;
-import ru.yandex.practicum.kafka.telemetry.event.ScenarioAddedEvent;
 
 import java.time.Duration;
 import java.time.Instant;
@@ -51,7 +48,6 @@ public class KafkaEventProducer implements AutoCloseable {
 
         // Логирование диагностической информации
         String eventClass = event.getClass().getSimpleName();
-        logDiagnosticInfo(event, hubId, eventClass);
 
         // Формируем запись для отправки в топик, при этом указываем ключ записи - это id хаба
         // это означает, что запись будет сохраняться в партицию в зависимости от id хаба, а это
@@ -98,33 +94,6 @@ public class KafkaEventProducer implements AutoCloseable {
         producer.close(Duration.ofSeconds(10));
     }
 
-    private void logDiagnosticInfo(SpecificRecordBase event, String hubId, String eventClass) {
-        if (event instanceof HubEvent) {
-            HubEvent hubEvent = (HubEvent) event;
-            Object payload = hubEvent.getPayload();
-
-            log.info("🔍 KAFKA DIAGNOSTICS - Before send:");
-            log.info("🔍   Event class: {}", eventClass);
-            log.info("🔍   HubId: {}", hubId);
-            log.info("🔍   Payload class: {}", payload != null ? payload.getClass().getSimpleName() : "null");
-            log.info("🔍   Payload is null: {}", payload == null);
-
-            if (payload != null) {
-                // Безопасное получение схемы
-                logPayloadSchema(payload);
-
-                // Детали для конкретных типов
-                logPayloadDetails(payload);
-            }
-        } else {
-            log.info("🔍 KAFKA DIAGNOSTICS - Non-HubEvent:");
-            log.info("🔍   Event class: {}", eventClass);
-            log.info("🔍   HubId: {}", hubId);
-            log.info("🔍   Event schema name: {}", event.getSchema().getName());
-            log.info("🔍   Event schema full: {}", event.getSchema().getFullName());
-        }
-    }
-
     /**
      * Безопасно логирует информацию о схеме payload
      */
@@ -140,25 +109,6 @@ public class KafkaEventProducer implements AutoCloseable {
             }
         } catch (Exception e) {
             log.warn("🔍   Failed to get payload schema: {}", e.getMessage());
-        }
-    }
-
-    /**
-     * Логирует детальную информацию о конкретных типах payload
-     */
-    private void logPayloadDetails(Object payload) {
-        if (payload instanceof DeviceAddedEvent) {
-            DeviceAddedEvent deviceEvent = (DeviceAddedEvent) payload;
-            log.info("🔍   DeviceAddedEvent - id: {}, type: {}",
-                    deviceEvent.getId(), deviceEvent.getDeviceType());
-        } else if (payload instanceof ScenarioAddedEvent) {
-            ScenarioAddedEvent scenarioEvent = (ScenarioAddedEvent) payload;
-            log.info("🔍   ScenarioAddedEvent - name: {}, conditions: {}, actions: {}",
-                    scenarioEvent.getName(),
-                    scenarioEvent.getConditions().size(),
-                    scenarioEvent.getActions().size());
-        } else {
-            log.info("🔍   Payload type: {}", payload.getClass().getSimpleName());
         }
     }
 }

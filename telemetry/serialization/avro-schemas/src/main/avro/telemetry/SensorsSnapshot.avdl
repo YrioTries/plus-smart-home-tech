@@ -6,21 +6,21 @@ protocol SensorsSnapshotProtocol {
 	record SensorStateAvro {
 		long timestamp;
 		union {
-			ClimateSensorEvent,
-			LightSensorEvent,
-			MotionSensorEvent,
-			SwitchSensorEvent,
-			TemperatureSensorEvent
+			ClimateSensorEventAvro,
+			LightSensorEventAvro,
+			MotionSensorEventAvro,
+			SwitchSensorEventAvro,
+			TemperatureSensorEventAvro
 		} data;
 	}
 
 	record SensorsSnapshotAvro {
 		string hubId;
 		long timestamp;
-		array<DeviceState> sensorsState;
+		array<DeviceStateAvro> sensorsState;
 	}
 
-	record DeviceState {
+	record DeviceStateAvro {
 		string deviceId;
 		SensorStateAvro state;
 	}

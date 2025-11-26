@@ -10,7 +10,7 @@ import org.apache.kafka.common.errors.WakeupException;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.kafka.config.KafkaConfig;
 import ru.yandex.practicum.kafka.config.TopicType;
-import ru.yandex.practicum.kafka.telemetry.event.SensorEvent;
+import ru.yandex.practicum.kafka.telemetry.event.SensorEventAvro;
 import ru.yandex.practicum.kafka.telemetry.event.SensorsSnapshotAvro;
 
 import java.time.Duration;
@@ -28,20 +28,20 @@ public class AggregationStarter {
 
     public void start() {
         Producer<String, SensorsSnapshotAvro> producer = new KafkaProducer<>(config.getProducerConfig());
-        Consumer<String, SensorEvent> consumer = new KafkaConsumer<>(config.getConsumerConfig());
+        Consumer<String, SensorEventAvro> consumer = new KafkaConsumer<>(config.getConsumerConfig());
 
         try {
             consumer.subscribe(Collections.singletonList("telemetry.sensors.v1"));
             log.info("Подписались на топик telemetry.sensors.v1");
 
             while (true) {
-                ConsumerRecords<String, SensorEvent> records = consumer.poll(Duration.ofMillis(100));
+                ConsumerRecords<String, SensorEventAvro> records = consumer.poll(Duration.ofMillis(100));
 
-                for (ConsumerRecord<String, SensorEvent> record : records) {
+                for (ConsumerRecord<String, SensorEventAvro> record : records) {
                     log.debug("Получено событие: key={}, offset={}", record.key(), record.offset());
 
                     try {
-                        SensorEvent event = record.value();
+                        SensorEventAvro event = record.value();
                         Optional<SensorsSnapshotAvro> updatedSnapshot = aggregationService.updateState(event);
 
                         if (updatedSnapshot.isPresent()) {

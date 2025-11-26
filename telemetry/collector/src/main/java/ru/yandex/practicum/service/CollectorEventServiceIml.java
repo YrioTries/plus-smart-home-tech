@@ -22,7 +22,7 @@ public class CollectorEventServiceIml implements CollectorEventService {
     public void processSensorEvent(SensorEventDto sensorEventDto) {
         log.info("Processing sensor event: {}", sensorEventDto);
         try {
-            SensorEvent sensorEvent = sensorEventMapper.toAvro(sensorEventDto);
+            SensorEventAvro sensorEvent = sensorEventMapper.toAvro(sensorEventDto);
 
             kafkaEventProducer.send(
                     sensorEvent,
@@ -39,7 +39,7 @@ public class CollectorEventServiceIml implements CollectorEventService {
     public void processHubEvent(HubEventDto hubEventDto) {
         log.info("Processing hub event: {}", hubEventDto);
         try {
-            HubEvent hubEvent = hubEventMapper.toAvro(hubEventDto);
+            HubEventAvro hubEvent = hubEventMapper.toAvro(hubEventDto);
 
             kafkaEventProducer.send(
                     hubEvent,

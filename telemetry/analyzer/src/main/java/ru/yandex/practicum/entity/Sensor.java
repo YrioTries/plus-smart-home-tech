@@ -2,7 +2,6 @@ package ru.yandex.practicum.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import ru.yandex.practicum.kafka.telemetry.event.DeviceType;
 
 @Entity
 @Table(name = "sensors")
