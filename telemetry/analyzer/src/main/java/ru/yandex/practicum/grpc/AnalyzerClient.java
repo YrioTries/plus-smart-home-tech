@@ -2,7 +2,6 @@ package ru.yandex.practicum.grpc;
 
 import lombok.extern.slf4j.Slf4j;
 import net.devh.boot.grpc.client.inject.GrpcClient;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.grpc.telemetry.hubrouter.HubRouterControllerGrpc;
 import ru.yandex.practicum.grpc.telemetry.messages.DeviceActionRequest;
@@ -14,7 +13,6 @@ public class AnalyzerClient {
     private final HubRouterControllerGrpc.HubRouterControllerBlockingStub hubRouterClient;
 
     public AnalyzerClient(@GrpcClient("hub-router")
-                          @Autowired(required = false)
                           HubRouterControllerGrpc.HubRouterControllerBlockingStub hubRouterClient) {
         this.hubRouterClient = hubRouterClient;
         if (hubRouterClient == null) {
