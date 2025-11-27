@@ -1,7 +1,9 @@
 package ru.yandex.practicum.grpc;
 
+import io.grpc.ManagedChannel;
+import io.grpc.ManagedChannelBuilder;
+import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
-import net.devh.boot.grpc.client.inject.GrpcClient;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.grpc.telemetry.hubrouter.HubRouterControllerGrpc;
 import ru.yandex.practicum.grpc.telemetry.messages.DeviceActionRequest;
@@ -10,24 +12,32 @@ import ru.yandex.practicum.grpc.telemetry.messages.DeviceActionRequest;
 @Service
 public class AnalyzerClient {
 
-    private final HubRouterControllerGrpc.HubRouterControllerBlockingStub hubRouterClient;
+    private HubRouterControllerGrpc.HubRouterControllerBlockingStub hubRouterClient;
 
-    public AnalyzerClient(@GrpcClient("hub-router")
-                          HubRouterControllerGrpc.HubRouterControllerBlockingStub hubRouterClient) {
-        this.hubRouterClient = hubRouterClient;
-        if (hubRouterClient == null) {
-            log.warn("gRPC клиент не инициализирован - hub-router не доступен. Analyzer будет работать без отправки команд.");
-        } else {
-            log.info("gRPC клиент успешно инициализирован");
+    @PostConstruct
+    public void init() {
+        try {
+            ManagedChannel channel = ManagedChannelBuilder
+                    .forAddress("localhost", 59090)
+                    .usePlaintext()
+                    .keepAliveWithoutCalls(true)
+                    .build();
+
+            hubRouterClient = HubRouterControllerGrpc.newBlockingStub(channel);
+            log.info("✅ gRPC клиент ручной инициализации ОК!");
+
+        } catch (Exception e) {
+            log.error("🚨 gRPC подключение НЕТ: {}", e.getMessage());
+            this.hubRouterClient = null;
         }
     }
 
     public void sendDeviceActions(DeviceActionRequest request) {
         if (hubRouterClient == null) {
-            log.warn("gRPC клиент не доступен, пропускаем отправку действия для хаба {}", request.getHubId());
+            log.warn("gRPC недоступен, пропускаю: {}", request.getScenarioName());
             return;
         }
-        log.info("Sending action to hub {} for scenario {}", request.getHubId(), request.getScenarioName());
+        log.info("🚀 Отправляю gRPC: hub={} scenario={}", request.getHubId(), request.getScenarioName());
         hubRouterClient.handleDeviceAction(request);
     }
 }
