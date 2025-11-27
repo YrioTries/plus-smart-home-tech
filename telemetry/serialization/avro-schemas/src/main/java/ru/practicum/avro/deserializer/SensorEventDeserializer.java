@@ -1,4 +1,4 @@
-package ru.praсticum.avro.deserializer;  // ← ИСПРАВИТЬ: praKticum → praCticum
+package ru.practicum.avro.deserializer;
 
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.kafka.telemetry.event.SensorEventAvro;
