@@ -78,7 +78,7 @@ public class CheckScenarios {
                 for (ScenarioAction action : actions) {
                     DeviceActionProto deviceActionProto = DeviceActionProto.newBuilder()
                             .setSensorId(action.getSensor().getId())
-                            .setType(ActionTypeProto.valueOf(action.getAction().getType()))
+                            .setType(getActionType(action.getAction().getType()))
                             .setValue(action.getAction().getValue())
                             .build();
 
@@ -154,4 +154,18 @@ public class CheckScenarios {
             case LOWER_THAN -> actual < expected;
         };
     }
+
+    private ActionTypeProto getActionType(String type) {
+        return switch (type) {
+            case "ACTIVATE" -> ActionTypeProto.ACTIVATE;
+            case "DEACTIVATE" -> ActionTypeProto.DEACTIVATE;
+            case "INVERSE" -> ActionTypeProto.INVERSE;
+            case "SET_VALUE", "SET_TEMPERATURE", "SET_HUMIDITY" -> ActionTypeProto.SET_VALUE;
+            default -> {
+                log.error("❌ Неизвестный ActionType: {}", type);
+                throw new IllegalArgumentException("Неизвестный тип действия: " + type);
+            }
+        };
+    }
+
 }
