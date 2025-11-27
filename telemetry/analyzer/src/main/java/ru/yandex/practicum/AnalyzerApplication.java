@@ -7,7 +7,10 @@ import ru.yandex.practicum.kafka.HubEventProcessor;
 import ru.yandex.practicum.kafka.SnapshotProcessor;
 
 
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = {
+        "ru.yandex.practicum",
+        "ru.practicum.avro.deserializer"
+})
 public class AnalyzerApplication {
     public static void main(String[] args) {
         ConfigurableApplicationContext context = SpringApplication.run(AnalyzerApplication.class, args);
