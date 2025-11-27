@@ -33,14 +33,18 @@ public class CheckScenarios {
     private final SensorRepository sensorRepository;
 
     public List<DeviceActionRequest> checkScenarios(SensorsSnapshotAvro snapshot) {
-        log.info("Начинаю проверку сценариев...");
-
-        List<DeviceActionRequest> result = new ArrayList<>();
+        log.info("🔍 СНАПШОТ hubId={} sensorsCount={}",
+                snapshot.getHubId(), snapshot.getSensorsState().size());
 
         List<Scenario> scenarioList = scenarioRepository.findByHubId(snapshot.getHubId());
+        log.info("📋 Найдено сценариев для {}: {}", snapshot.getHubId(), scenarioList.size());
+
         if (scenarioList.isEmpty()) {
-            return result;
+            log.warn("❌ Сценарии НЕ НАЙДЕНЫ для hub {}", snapshot.getHubId());
+            return new ArrayList<>();
         }
+
+        List<DeviceActionRequest> result = new ArrayList<>();
 
         List<Long> scenarioIds = scenarioList.stream()
                 .map(Scenario::getId)
@@ -68,6 +72,9 @@ public class CheckScenarios {
                 List<ScenarioAction> actions =
                         actionsByScenario.getOrDefault(scenario.getId(), List.of());
 
+                log.info("СРАБОТАЛ сценарий '{}' → отправляю {} команд",
+                        scenario.getName(), actions.size());
+
                 for (ScenarioAction action : actions) {
                     DeviceActionProto deviceActionProto = DeviceActionProto.newBuilder()
                             .setSensorId(action.getSensor().getId())
@@ -84,6 +91,8 @@ public class CheckScenarios {
 
                     result.add(request);
                 }
+            } else {
+                log.info("Сценарий '{}' не сработал", scenario.getName());
             }
         }
 
