@@ -97,8 +97,8 @@ public class CheckScenarios {
 
         SensorStateAvro state = snapshot.getSensorsState().get(sensorId);
         if (state == null || state.getData() == null) {
-            log.info("Данных для сенсора {} пока нет, условие не выполняется", sensorId);
-            return false;
+            log.info("Данных для сенсора {} пока нет, пропускаем проверку", sensorId);
+            return true;
         }
 
         sensorRepository.findByIdAndHubId(sensorId, hubId)
