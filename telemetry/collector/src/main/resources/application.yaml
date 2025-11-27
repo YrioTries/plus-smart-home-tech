@@ -2,6 +2,10 @@ spring:
   application:
     name: collector
 
+grpc:
+  server:
+    port: 9090
+
 logging:
   level:
     ru.yandex.practicum.telemetry: TRACE
