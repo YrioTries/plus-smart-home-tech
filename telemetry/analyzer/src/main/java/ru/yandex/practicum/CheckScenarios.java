@@ -90,7 +90,6 @@ public class CheckScenarios {
         return result;
     }
 
-
     private boolean checkCondition(ScenarioCondition condition, SensorsSnapshotAvro snapshot, String hubId) {
 
         String sensorId = condition.getSensor().getId();
