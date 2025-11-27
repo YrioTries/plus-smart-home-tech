@@ -39,6 +39,9 @@ public class KafkaConsumerConfig {
         props.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, false);
         props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "latest");
         props.put(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, 100);
+        props.put(ConsumerConfig.RECONNECT_BACKOFF_MS_CONFIG, "1000");
+        props.put(ConsumerConfig.RECONNECT_BACKOFF_MAX_MS_CONFIG, "10000");
+        props.put(ConsumerConfig.RETRY_BACKOFF_MS_CONFIG, "1000");
 
         return new KafkaConsumer<>(props);
     }

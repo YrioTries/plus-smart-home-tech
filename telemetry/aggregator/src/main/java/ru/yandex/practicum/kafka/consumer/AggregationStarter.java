@@ -73,7 +73,7 @@ public class AggregationStarter implements Runnable {
     private void pollAndProcessEvents(KafkaConsumer<String, SensorsSnapshotAvro> snapshotConsumer,
                                       KafkaConsumer<String, SensorEventAvro> eventConsumer) {
         // Обработка снапшотов
-        ConsumerRecords<String, SensorsSnapshotAvro> snapshotRecords = snapshotConsumer.poll(Duration.ofMillis(100));
+        ConsumerRecords<String, SensorsSnapshotAvro> snapshotRecords = snapshotConsumer.poll(Duration.ofMillis(500));
         for (ConsumerRecord<String, SensorsSnapshotAvro> record : snapshotRecords) {
             checkUpdateState.putSnapshot(record.value());
             log.info("Снапшот hubId={} загружен из Kafka", record.value().getHubId());
@@ -81,7 +81,7 @@ public class AggregationStarter implements Runnable {
         snapshotConsumer.commitSync();
 
         // Обработка событий
-        ConsumerRecords<String, SensorEventAvro> eventRecords = eventConsumer.poll(Duration.ofMillis(100));
+        ConsumerRecords<String, SensorEventAvro> eventRecords = eventConsumer.poll(Duration.ofMillis(500));
         for (ConsumerRecord<String, SensorEventAvro> record : eventRecords) {
             SensorEventAvro event = record.value();
             Optional<SensorsSnapshotAvro> updatedSnapshot = checkUpdateState.updateState(event);
