@@ -68,10 +68,6 @@ public class SnapshotProcessor implements Runnable {
         }
     }
 
-    public void start() {
-        new Thread(this).start();
-    }
-
     public void shutdown() {
         running = false;
     }
