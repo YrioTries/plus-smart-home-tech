@@ -25,7 +25,7 @@ public class AnalyzerApplication {
 
         Thread snapshotThread = new Thread(snapshotProcessor);
         snapshotThread.setName("SnapshotProcessorThread");
-        hubEventsThread.setDaemon(true);
+        snapshotThread.setDaemon(true);
         snapshotThread.start();
 
         addShutdownHook(context, hubEventProcessor, snapshotProcessor, hubEventsThread, snapshotThread);
@@ -39,7 +39,6 @@ public class AnalyzerApplication {
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             System.out.println("Starting graceful shutdown...");
 
-            // Останавливаем процессоры
             if (hubEventProcessor != null) {
                 hubEventProcessor.shutdown();
             }
@@ -47,7 +46,6 @@ public class AnalyzerApplication {
                 snapshotProcessor.shutdown();
             }
 
-            // Ждем завершения потоков
             try {
                 if (hubEventsThread != null && hubEventsThread.isAlive()) {
                     hubEventsThread.join(5000);
@@ -59,7 +57,6 @@ public class AnalyzerApplication {
                 Thread.currentThread().interrupt();
             }
 
-            // Закрываем контекст Spring
             context.close();
             System.out.println("Shutdown completed.");
         }));
