@@ -147,9 +147,9 @@ public class CheckScenarios {
         };
     }
 
-    private boolean checkOperation(ConditionOperationAvro operationType, Integer expected, Integer actual) {
+    private boolean checkOperation(ConditionOperationAvro operationType, int actual, Integer expected) {
         return switch (operationType) {
-            case EQUALS -> actual.equals(expected);
+            case EQUALS -> actual == expected;
             case GREATER_THAN -> actual > expected;
             case LOWER_THAN -> actual < expected;
         };
