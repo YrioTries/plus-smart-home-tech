@@ -34,5 +34,5 @@ spring:
 grpc:
   client:
     hub-router:
-      address: static://localhost:9090
+      address: static://localhost:59090
       negotiation-type: plaintext
