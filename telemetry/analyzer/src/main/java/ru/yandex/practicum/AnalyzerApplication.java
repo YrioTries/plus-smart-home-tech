@@ -20,10 +20,12 @@ public class AnalyzerApplication {
 
         Thread hubEventsThread = new Thread(hubEventProcessor);
         hubEventsThread.setName("HubEventHandlerThread");
+        hubEventsThread.setDaemon(true);
         hubEventsThread.start();
 
         Thread snapshotThread = new Thread(snapshotProcessor);
         snapshotThread.setName("SnapshotProcessorThread");
+        hubEventsThread.setDaemon(true);
         snapshotThread.start();
 
         addShutdownHook(context, hubEventProcessor, snapshotProcessor, hubEventsThread, snapshotThread);

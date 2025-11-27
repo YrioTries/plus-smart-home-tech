@@ -18,7 +18,7 @@ public class AnalyzerClient {
     public void init() {
         try {
             ManagedChannel channel = ManagedChannelBuilder
-                    .forAddress("localhost", 59090)
+                    .forAddress("localhost", 59091)
                     .usePlaintext()
                     .keepAliveWithoutCalls(true)
                     .build();
