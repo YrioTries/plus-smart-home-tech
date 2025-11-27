@@ -39,12 +39,15 @@ public class HubEventTxService {
         Scenario savedScenario = scenarioRepository.save(newScenario);
 
         added.getConditions().forEach(condition -> {
-            Integer value = null;
-            if (condition.getValue() instanceof Boolean boolVal) {
-                value = boolVal ? 1 : 0;
-            } else if (condition.getValue() instanceof Integer intVal) {
-                value = intVal;
-            }
+            Integer value = switch (condition.getType().toString()) {
+                case "MOTION", "SWITCH" -> 1;  // движение/вкл
+                default -> {
+                    Object rawValue = condition.getValue();
+                    yield (rawValue instanceof Boolean b) ? (b ? 1 : 0)
+                            : (rawValue instanceof Integer i) ? i
+                            : 0;
+                }
+            };
 
             Condition newCondition = Condition.builder()
                     .type(condition.getType().toString())
@@ -74,9 +77,21 @@ public class HubEventTxService {
         });
 
         added.getActions().forEach(action -> {
+            // Аналогично conditions - обрабатываем Object → Integer
+            Integer value = switch (action.getType().toString()) {
+                case "ACTIVATE" -> 1;
+                case "DEACTIVATE" -> 0;
+                default -> {
+                    Object rawValue = action.getValue();
+                    yield (rawValue instanceof Boolean b) ? (b ? 1 : 0)
+                            : (rawValue instanceof Integer i) ? i
+                            : 0;  // дефолт для неизвестных
+                }
+            };
+
             Action newAction = Action.builder()
                     .type(action.getType().toString())
-                    .value(action.getValue())
+                    .value(value)
                     .build();
 
             Action saveAction = actionRepository.save(newAction);
