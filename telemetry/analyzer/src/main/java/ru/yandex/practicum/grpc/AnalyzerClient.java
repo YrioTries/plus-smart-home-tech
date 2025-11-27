@@ -24,10 +24,10 @@ public class AnalyzerClient {
                     .build();
 
             hubRouterClient = HubRouterControllerGrpc.newBlockingStub(channel);
-            log.info("✅ gRPC клиент ручной инициализации ОК!");
+            log.info("gRPC клиент ручной инициализации ОК!");
 
         } catch (Exception e) {
-            log.error("🚨 gRPC подключение НЕТ: {}", e.getMessage());
+            log.error("gRPC подключение НЕТ: {}", e.getMessage());
             this.hubRouterClient = null;
         }
     }
@@ -37,7 +37,12 @@ public class AnalyzerClient {
             log.warn("gRPC недоступен, пропускаю: {}", request.getScenarioName());
             return;
         }
-        log.info("🚀 Отправляю gRPC: hub={} scenario={}", request.getHubId(), request.getScenarioName());
-        hubRouterClient.handleDeviceAction(request);
+        try {
+            log.info("🚀 Отправляю gRPC: hub={} scenario={}", request.getHubId(), request.getScenarioName());
+            hubRouterClient.handleDeviceAction(request);
+            log.info("✅ gRPC отправлено: hub={} scenario={}", request.getHubId(), request.getScenarioName());
+        } catch (Exception e) {
+            log.error("❌ gRPC ОШИБКА для {}: {}", request.getScenarioName(), e.getMessage());
+        }
     }
 }
