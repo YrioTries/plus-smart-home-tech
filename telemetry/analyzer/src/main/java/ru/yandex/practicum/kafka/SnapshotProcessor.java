@@ -46,7 +46,11 @@ public class SnapshotProcessor implements Runnable {
 
                     for (ConsumerRecord<String, SensorsSnapshotAvro> record : records) {
                         SensorsSnapshotAvro snapshot = record.value();
+                        log.info("📥 SNAPSHOT получен: hubId={}", snapshot.getHubId());
                         List<DeviceActionRequest> actions = checkScenarios.checkScenarios(snapshot);
+                        if (!actions.isEmpty()) {
+                            log.info("🚀 Найдено {} команд для отправки", actions.size());
+                        }
                         actions.forEach(service::sendDeviceActions);
                     }
                 }
