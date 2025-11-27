@@ -1,6 +1,5 @@
 package ru.yandex.practicum.grpc;
 
-import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import net.devh.boot.grpc.client.inject.GrpcClient;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,28 +13,23 @@ public class AnalyzerClient {
 
     private final HubRouterControllerGrpc.HubRouterControllerBlockingStub hubRouterClient;
 
-    @Autowired
     public AnalyzerClient(@GrpcClient("hub-router")
+                          @Autowired(required = false)
                           HubRouterControllerGrpc.HubRouterControllerBlockingStub hubRouterClient) {
         this.hubRouterClient = hubRouterClient;
-    }
-
-    @PostConstruct
-    public void init() {
-        log.info("AnalyzerClient initialized with gRPC stub: {}", hubRouterClient != null);
+        if (hubRouterClient == null) {
+            log.warn("gRPC клиент не инициализирован - hub-router не доступен. Analyzer будет работать без отправки команд.");
+        } else {
+            log.info("gRPC клиент успешно инициализирован");
+        }
     }
 
     public void sendDeviceActions(DeviceActionRequest request) {
         if (hubRouterClient == null) {
-            log.error("gRPC client is null! Check gRPC configuration.");
+            log.warn("gRPC клиент не доступен, пропускаем отправку действия для хаба {}", request.getHubId());
             return;
         }
-
-        try {
-            log.info("Sending action to hub {} for scenario {}", request.getHubId(), request.getScenarioName());
-            hubRouterClient.handleDeviceAction(request);
-        } catch (Exception e) {
-            log.error("Failed to send action to hub {}: {}", request.getHubId(), e.getMessage());
-        }
+        log.info("Sending action to hub {} for scenario {}", request.getHubId(), request.getScenarioName());
+        hubRouterClient.handleDeviceAction(request);
     }
 }
