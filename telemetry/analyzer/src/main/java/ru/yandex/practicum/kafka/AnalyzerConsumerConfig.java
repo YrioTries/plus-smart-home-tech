@@ -5,8 +5,8 @@ import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
-import ru.practicum.avro.deserializer.HubEventDeserializer;  // ← исправленный package
-import ru.practicum.avro.deserializer.SensorsSnapshotDeserializer;  // ← исправленный package
+import ru.practicum.avro.deserializer.HubEventDeserializer;
+import ru.practicum.avro.deserializer.SensorsSnapshotDeserializer;
 import ru.yandex.practicum.kafka.telemetry.event.HubEventAvro;
 import ru.yandex.practicum.kafka.telemetry.event.SensorsSnapshotAvro;
 
@@ -21,7 +21,6 @@ public class AnalyzerConsumerConfig {
     private final SensorsSnapshotDeserializer snapshotDeserializer;
     private final HubEventDeserializer hubEventDeserializer;
 
-    // Конструктор с исправленными типами
     public AnalyzerConsumerConfig(SensorsSnapshotDeserializer snapshotDeserializer,
                                   HubEventDeserializer hubEventDeserializer) {
         this.snapshotDeserializer = snapshotDeserializer;
@@ -34,7 +33,7 @@ public class AnalyzerConsumerConfig {
         props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
         props.put(ConsumerConfig.GROUP_ID_CONFIG, "analyzer-snapshots-group");
         props.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, false);
-        props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
+        props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest"); // Важно: earliest
 
         return new KafkaConsumer<>(props, new StringDeserializer(), snapshotDeserializer);
     }
@@ -45,7 +44,7 @@ public class AnalyzerConsumerConfig {
         props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
         props.put(ConsumerConfig.GROUP_ID_CONFIG, "analyzer-hub-events-group");
         props.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, false);
-        props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
+        props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest"); // Важно: earliest
 
         return new KafkaConsumer<>(props, new StringDeserializer(), hubEventDeserializer);
     }

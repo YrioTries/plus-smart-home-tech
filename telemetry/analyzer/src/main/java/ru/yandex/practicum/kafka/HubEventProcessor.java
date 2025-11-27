@@ -24,56 +24,33 @@ public class HubEventProcessor implements Runnable {
     @Value("${spring.kafka.topics.hub-topic-name}")
     private String hubEventTopic;
 
-    private volatile boolean running = true;
-    private KafkaConsumer<String, HubEventAvro> consumer;
-
     @Override
     public void run() {
-        log.info("Starting HubEventProcessor...");
-
+        KafkaConsumer<String, HubEventAvro> consumer = null;
         try {
             consumer = consumerConfig.createHubEventConsumer();
             consumer.subscribe(Collections.singletonList(hubEventTopic));
-            log.info("HubEventProcessor successfully subscribed to topic: {}", hubEventTopic);
 
-            while (running) {
-                ConsumerRecords<String, HubEventAvro> records = consumer.poll(Duration.ofMillis(1000));
+            while (true) {
+                ConsumerRecords<String, HubEventAvro> records = consumer.poll(Duration.ofMillis(100));
+                log.debug("Получено {} записей", records.count());
 
-                if (!records.isEmpty()) {
-                    log.info("Processing {} hub event records", records.count());
-
-                    try {
-                        service.saveHubEvent(records);
-                        log.debug("Successfully processed {} hub events", records.count());
-                    } catch (Exception e) {
-                        log.error("Error processing hub events batch. Count: {}", records.count(), e);
-                    }
-                }
+                service.saveHubEvent(records);
 
                 consumer.commitSync();
             }
-        } catch (WakeupException e) {
-            log.info("HubEventProcessor received wakeup signal");
+        } catch (WakeupException ignored) {
+            // Игнорируем при shutdown
         } catch (Exception e) {
-            log.error("Unexpected error in HubEventProcessor", e);
+            log.error("Ошибка при обработке событий Kafka", e);
         } finally {
             if (consumer != null) {
-                try {
-                    consumer.close();
-                    log.info("HubEventProcessor Kafka consumer closed");
-                } catch (Exception e) {
-                    log.warn("Error closing Kafka consumer", e);
-                }
+                consumer.close();
             }
-            log.info("HubEventProcessor stopped");
         }
     }
 
     public void shutdown() {
-        log.info("Shutting down HubEventProcessor...");
-        running = false;
-        if (consumer != null) {
-            consumer.wakeup();
-        }
+        // Будет вызван извне для остановки
     }
 }
