@@ -24,51 +24,62 @@ public class SnapshotProcessor implements Runnable {
 
     private final AnalyzerConsumerConfig consumerConfig;
     private final CheckScenarios checkScenarios;
-    private final AnalyzerClient service;
+    private final AnalyzerClient analyzerClient;
 
     @Value("${spring.kafka.topics.snapshots-topic-name}")
     private String snapshotsTopic;
 
     private volatile boolean running = true;
+    private KafkaConsumer<String, SensorsSnapshotAvro> consumer;
 
     @Override
     public void run() {
-        KafkaConsumer<String, SensorsSnapshotAvro> consumer = null;
         try {
             consumer = consumerConfig.createSensorsSnapshotConsumer();
             consumer.subscribe(Collections.singletonList(snapshotsTopic));
+            log.info("SnapshotProcessor started. Subscribed to topic: {}", snapshotsTopic);
 
             while (running) {
                 ConsumerRecords<String, SensorsSnapshotAvro> records = consumer.poll(Duration.ofSeconds(3));
 
                 if (!records.isEmpty()) {
-                    log.info("Получено {} записей", records.count());
+                    log.info("Received {} snapshot records", records.count());
 
                     for (ConsumerRecord<String, SensorsSnapshotAvro> record : records) {
-                        SensorsSnapshotAvro snapshot = record.value();
-                        List<DeviceActionRequest> actions = checkScenarios.checkScenarios(snapshot);
-                        actions.forEach(service::sendDeviceActions);
+                        try {
+                            SensorsSnapshotAvro snapshot = record.value();
+                            log.debug("Processing snapshot for hub: {}", snapshot.getHubId());
+
+                            List<DeviceActionRequest> actions = checkScenarios.checkScenarios(snapshot);
+                            log.info("Found {} actions to execute for hub: {}", actions.size(), snapshot.getHubId());
+
+                            for (DeviceActionRequest action : actions) {
+                                analyzerClient.sendDeviceActions(action);
+                            }
+                        } catch (Exception e) {
+                            log.error("Error processing snapshot: {}", record.value(), e);
+                        }
                     }
                 }
 
                 consumer.commitSync();
             }
         } catch (WakeupException ignored) {
-            // Игнорируем при shutdown
+            log.info("SnapshotProcessor wakeup called");
         } catch (Exception e) {
-            log.error("Ошибка при агрегации событий от датчиков", e);
+            log.error("Error in SnapshotProcessor", e);
         } finally {
             if (consumer != null) {
                 consumer.close();
+                log.info("SnapshotProcessor consumer closed");
             }
         }
     }
 
-    public void start() {
-        new Thread(this).start();
-    }
-
     public void shutdown() {
         running = false;
+        if (consumer != null) {
+            consumer.wakeup();
+        }
     }
 }

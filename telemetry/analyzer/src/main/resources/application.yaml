@@ -8,6 +8,13 @@ spring:
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       snapshot-group-id: analyzer-snapshots-group
       hub-event-group-id: analyzer-hub-events-group
+      auto-offset-reset: earliest
+      enable-auto-commit: false
+      properties:
+        session.timeout.ms: 30000
+        heartbeat.interval.ms: 10000
+        max.poll.interval.ms: 300000
+        max.poll.records: 500
     topics:
       hub-topic-name: telemetry.hubs.v1
       snapshots-topic-name: telemetry.snapshots.v1

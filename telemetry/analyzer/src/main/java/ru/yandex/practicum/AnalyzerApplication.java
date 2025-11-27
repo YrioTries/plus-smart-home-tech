@@ -1,65 +1,61 @@
 package ru.yandex.practicum;
 
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.event.EventListener;
+import org.springframework.stereotype.Component;
 import ru.yandex.practicum.kafka.HubEventProcessor;
 import ru.yandex.practicum.kafka.SnapshotProcessor;
-
 
 @SpringBootApplication
 public class AnalyzerApplication {
     public static void main(String[] args) {
-        ConfigurableApplicationContext context = SpringApplication.run(AnalyzerApplication.class, args);
-
-        // Получаем бины процессоров
-        final HubEventProcessor hubEventProcessor = context.getBean(HubEventProcessor.class);
-        final SnapshotProcessor snapshotProcessor = context.getBean(SnapshotProcessor.class);
-
-        // Запускаем обработчики в отдельных потоках
-        Thread hubEventsThread = new Thread(hubEventProcessor);
-        hubEventsThread.setName("HubEventHandlerThread");
-        hubEventsThread.start();
-
-        Thread snapshotThread = new Thread(snapshotProcessor);
-        snapshotThread.setName("SnapshotProcessorThread");
-        snapshotThread.start();
-
-        // Добавляем обработчик graceful shutdown
-        addShutdownHook(context, hubEventProcessor, snapshotProcessor, hubEventsThread, snapshotThread);
+        SpringApplication.run(AnalyzerApplication.class, args);
     }
 
-    private static void addShutdownHook(ConfigurableApplicationContext context,
-                                        HubEventProcessor hubEventProcessor,
-                                        SnapshotProcessor snapshotProcessor,
-                                        Thread hubEventsThread,
-                                        Thread snapshotThread) {
-        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            System.out.println("Starting graceful shutdown...");
+    @Slf4j
+    @Component
+    @RequiredArgsConstructor
+    public static class KafkaProcessorsStarter {
 
-            // Останавливаем процессоры
-            if (hubEventProcessor != null) {
+        private final HubEventProcessor hubEventProcessor;
+        private final SnapshotProcessor snapshotProcessor;
+
+        @EventListener(ApplicationReadyEvent.class)
+        public void startAllProcessors() {
+            log.info("Starting all Kafka processors...");
+
+            // Запускаем HubEventProcessor
+            Thread hubEventThread = new Thread(hubEventProcessor, "HubEventProcessor-Thread");
+            hubEventThread.setDaemon(true);
+            hubEventThread.start();
+            log.info("HubEventProcessor started");
+
+            // Запускаем SnapshotProcessor
+            Thread snapshotThread = new Thread(snapshotProcessor, "SnapshotProcessor-Thread");
+            snapshotThread.setDaemon(true);
+            snapshotThread.start();
+            log.info("SnapshotProcessor started");
+
+            // Добавляем shutdown hook
+            addShutdownHook();
+
+            log.info("All Kafka processors started successfully");
+        }
+
+        private void addShutdownHook() {
+            Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+                log.info("Starting graceful shutdown...");
+
+                // Останавливаем процессоры
                 hubEventProcessor.shutdown();
-            }
-            if (snapshotProcessor != null) {
                 snapshotProcessor.shutdown();
-            }
 
-            // Ждем завершения потоков
-            try {
-                if (hubEventsThread != null && hubEventsThread.isAlive()) {
-                    hubEventsThread.join(5000);
-                }
-                if (snapshotThread != null && snapshotThread.isAlive()) {
-                    snapshotThread.join(5000);
-                }
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-            }
-
-            // Закрываем контекст Spring
-            context.close();
-            System.out.println("Shutdown completed.");
-        }));
+                log.info("Graceful shutdown initiated");
+            }));
+        }
     }
 }
