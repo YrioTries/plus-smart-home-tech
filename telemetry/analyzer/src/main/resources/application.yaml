@@ -4,14 +4,10 @@ server:
 spring:
   kafka:
     bootstrap-servers: localhost:9092
-
     consumer:
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-      snapshot-value-deserializer: ru.practicum.avro.deserializer.SensorsSnapshotDeserializer
       snapshot-group-id: analyzer-snapshots-group
-      hub-event-value-deserializer: ru.practicum.avro.deserializer.HubEventDeserializer
       hub-event-group-id: analyzer-hub-events-group
-
     topics:
       hub-topic-name: telemetry.hubs.v1
       snapshots-topic-name: telemetry.snapshots.v1
