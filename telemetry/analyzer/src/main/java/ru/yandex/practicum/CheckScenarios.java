@@ -106,11 +106,8 @@ public class CheckScenarios {
         SensorStateAvro state = snapshot.getSensorsState().get(sensorId);
         if (state == null || state.getData() == null) {
             log.info("Данных для сенсора {} пока нет, пропускаем проверку", sensorId);
-            return true;
+            return false;
         }
-
-        sensorRepository.findByIdAndHubId(sensorId, hubId)
-                .orElseThrow(() -> new EntityNotFoundException("Датчик " + sensorId + " не найден"));
 
         ConditionOperationAvro operation = ConditionOperationAvro.valueOf(condition.getCondition().getOperation());
 
