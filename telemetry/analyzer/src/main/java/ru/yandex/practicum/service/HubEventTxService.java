@@ -5,9 +5,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.yandex.practicum.entity.*;
-import ru.yandex.practicum.kafka.telemetry.event.HubEventAvro;
-import ru.yandex.practicum.kafka.telemetry.event.ScenarioAddedEventAvro;
+import ru.yandex.practicum.kafka.telemetry.event.*;
 import ru.yandex.practicum.repository.*;
+
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -30,91 +34,63 @@ public class HubEventTxService {
     }
 
     @Transactional
-    public void saveScenario(HubEventAvro event, ScenarioAddedEventAvro added) {
-        Scenario newScenario = Scenario.builder()
-                .hubId(event.getHubId())
-                .name(added.getName())
-                .build();
+    public Scenario saveScenario(ScenarioAddedEventAvro event, String hubId) {
+        //Собираем набор по условиям и действиям
+        Set<String> sensors = new HashSet<>();
+        event.getConditions().forEach(condition -> sensors.add(condition.getSensorId()));
+        event.getActions().forEach(action -> sensors.add(action.getSensorId()));
 
-        Scenario savedScenario = scenarioRepository.save(newScenario);
+        //проверяем, что всё есть, можно дальше работать.
+        boolean allSensorsExists = sensorRepository.existsByIdInAndHubId(sensors, hubId);
+        if(!allSensorsExists) {
+            throw new IllegalStateException("Нет возможности создать сценарий с использованием неизвестного устройства");
+        }
 
-        added.getConditions().forEach(condition -> {
-            Integer value = switch (condition.getType().toString()) {
-                case "MOTION", "SWITCH" -> 1;  // движение/вкл
-                default -> {
-                    Object rawValue = condition.getValue();
-                    yield (rawValue instanceof Boolean b) ? (b ? 1 : 0)
-                            : (rawValue instanceof Integer i) ? i
-                            : 0;
-                }
-            };
+        //Пытаемся найти уже существующий сценарий.
+        //Если нет-создаём, если есть-удаляет старое
+        Optional<Scenario> maybeExist = scenarioRepository.findByHubIdAndName(hubId, event.getName());
 
-            Condition newCondition = Condition.builder()
-                    .type(condition.getType().toString())
-                    .operation(condition.getOperation().toString())
-                    .value(value)
-                    .build();
+        Scenario scenario;
+        if(maybeExist.isEmpty()) {
+            scenario = new Scenario();
+            scenario.setName(event.getName());
+            scenario.setHubId(hubId);
+        } else {
+            scenario = maybeExist.get();
+            Map<String, Condition> conditions = scenario.getConditions();
+            conditionRepository.deleteAll(conditions.values());
+            scenario.getConditions().clear();
 
-            Condition savedCondition = conditionRepository.save(newCondition);
+            Map<String, Action> actions = scenario.getActions();
+            actionRepository.deleteAll(actions.values());
+            scenario.getActions().clear();
+        }
 
-            Sensor sensor = sensorRepository.findByIdAndHubId(condition.getSensorId(), event.getHubId())
-                    .orElseThrow(() -> new EntityNotFoundException("Сенсор " + condition.getSensorId() + " не найден"));
+        //Заново пересобираем новые условия и действия.
+        for (ScenarioConditionAvro eventCondition : event.getConditions()) {
+            Condition condition = new Condition();
+            condition.setType(eventCondition.getType().toString());
+            condition.setOperation(setStringOperation(eventCondition.getOperation()));
+            condition.setValue(mapValue(eventCondition.getValue()));
 
-            ScenarioConditionId sensorId = ScenarioConditionId.builder()
-                    .scenarioId(savedScenario.getId())
-                    .sensorId(sensor.getId())
-                    .conditionId(savedCondition.getId())
-                    .build();
+            scenario.addCondition(eventCondition.getSensorId(), condition);
+        }
 
-            ScenarioCondition scenarioCondition = ScenarioCondition.builder()
-                    .id(sensorId)
-                    .scenario(savedScenario)
-                    .sensor(sensor)
-                    .condition(savedCondition)
-                    .build();
+        for (DeviceActionAvro eventAction : event.getActions()) {
+            Action action = new Action();
+            action.setType(eventAction.getType().toString());
+            if(eventAction.getType().equals(ActionTypeAvro.SET_VALUE)) {
+                action.setValue(mapValue(eventAction.getValue()));
+            }
 
-            scenarioConditionRepository.save(scenarioCondition);
-        });
-
-        added.getActions().forEach(action -> {
-            // Аналогично conditions - обрабатываем Object → Integer
-            Integer value = switch (action.getType().toString()) {
-                case "ACTIVATE" -> 1;
-                case "DEACTIVATE" -> 0;
-                default -> {
-                    Object rawValue = action.getValue();
-                    yield (rawValue instanceof Boolean b) ? (b ? 1 : 0)
-                            : (rawValue instanceof Integer i) ? i
-                            : 0;  // дефолт для неизвестных
-                }
-            };
-
-            Action newAction = Action.builder()
-                    .type(action.getType().toString())
-                    .value(value)
-                    .build();
-
-            Action saveAction = actionRepository.save(newAction);
-
-            Sensor sensor = sensorRepository.findByIdAndHubId(action.getSensorId(), event.getHubId())
-                    .orElseThrow(() -> new EntityNotFoundException("Сенсор " + action.getSensorId() + " не найден"));
-
-            ScenarioActionId actionId = ScenarioActionId.builder()
-                    .scenarioId(savedScenario.getId())
-                    .sensorId(sensor.getId())
-                    .actionId(saveAction.getId())
-                    .build();
-
-            ScenarioAction scenarioAction = ScenarioAction.builder()
-                    .id(actionId)
-                    .scenario(savedScenario)
-                    .sensor(sensor)
-                    .action(saveAction)
-                    .build();
-
-            scenarioActionRepository.save(scenarioAction);
-        });
+            scenario.addAction(eventAction.getSensorId(), action);
+        }
+        // И только когда уже всё собрано, в самом конце, запоминаем по таблицам
+        conditionRepository.saveAll(scenario.getConditions().values());
+        actionRepository.saveAll(scenario.getActions().values());
+        return scenarioRepository.save(scenario);
     }
+
 
     @Transactional
     public void removeDevice(String sensorId, String hubId) {
@@ -124,9 +100,26 @@ public class HubEventTxService {
     }
 
     @Transactional
-    public void removeScenario(String name, String hubId) {
+    public void removeScenario(String hubId, String name) {
         Scenario scenario = scenarioRepository.findByHubIdAndName(name, hubId)
                 .orElseThrow(() -> new EntityNotFoundException("Сценарий " + name + " не найден"));
         scenarioRepository.delete(scenario);
+    }
+
+    private String setStringOperation(ConditionOperationAvro operationType) {
+        return switch (operationType) {
+            case EQUALS -> "EQUALS";
+            case GREATER_THAN -> "GREATER_THAN";
+            case LOWER_THAN -> "LOWER_THAN";
+        };
+    }
+
+    private Integer mapValue(Object rawValue) {
+        return switch (rawValue) {
+            case Boolean b -> b ? 1 : 0;
+            case Integer i -> i;
+            case null -> 0;
+            default -> 0;
+        };
     }
 }

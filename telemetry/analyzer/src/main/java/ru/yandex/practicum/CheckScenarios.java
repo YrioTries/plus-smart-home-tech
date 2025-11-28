@@ -1,7 +1,6 @@
 package ru.yandex.practicum;
 
 import com.google.protobuf.util.Timestamps;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -72,7 +71,7 @@ public class CheckScenarios {
                 List<ScenarioAction> actions =
                         actionsByScenario.getOrDefault(scenario.getId(), List.of());
 
-                log.info("СРАБОТАЛ сценарий '{}' → отправляю {} команд",
+                log.info("Сработал сценарий '{}' → отправляю {} команд",
                         scenario.getName(), actions.size());
 
                 for (ScenarioAction action : actions) {

@@ -24,7 +24,7 @@ public class HubEventService {
             }
 
             if (payload instanceof ScenarioAddedEventAvro scenarioAdded) {
-                hubEventTxService.saveScenario(event, scenarioAdded);
+                hubEventTxService.saveScenario(scenarioAdded, event.getHubId());
                 log.info("Сценарий {} успешно добавлен!", scenarioAdded.getName());
             }
 
