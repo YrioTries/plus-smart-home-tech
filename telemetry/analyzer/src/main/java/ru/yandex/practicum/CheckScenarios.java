@@ -39,7 +39,7 @@ public class CheckScenarios {
         log.info("📋 Найдено сценариев для {}: {}", snapshot.getHubId(), scenarioList.size());
 
         if (scenarioList.isEmpty()) {
-            log.warn("❌ Сценарии НЕ НАЙДЕНЫ для hub {}", snapshot.getHubId());
+            log.warn("❌❌❌❌❌❌ Сценарии НЕ НАЙДЕНЫ для hub {}", snapshot.getHubId());
             return new ArrayList<>();
         }
 
