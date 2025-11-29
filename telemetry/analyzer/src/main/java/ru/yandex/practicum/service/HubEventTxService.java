@@ -110,8 +110,10 @@ public class HubEventTxService {
         for (DeviceActionAvro eventAction : event.getActions()) {
             Action action = new Action();
             action.setType(eventAction.getType().toString());
-            if(eventAction.getType().equals(ActionTypeAvro.SET_VALUE)) {
+            if (eventAction.getType().equals(ActionTypeAvro.SET_VALUE)) {
                 action.setValue(mapValue(eventAction.getValue()));
+            } else {
+                action.setValue(0); // или 1, если тебе так логичнее
             }
 
             scenario.addAction(eventAction.getSensorId(), action);
