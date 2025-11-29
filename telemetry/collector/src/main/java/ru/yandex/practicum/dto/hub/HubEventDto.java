@@ -7,7 +7,7 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import ru.yandex.practicum.kafka.telemetry.event.HubEventType;
+import ru.yandex.practicum.kafka.telemetry.event.HubEventTypeAvro;
 
 import java.time.Instant;
 
@@ -33,5 +33,5 @@ public abstract class HubEventDto {
     private Instant timestamp = Instant.now();
 
     @JsonProperty("type")
-    public abstract HubEventType getType();
+    public abstract HubEventTypeAvro getType();
 }

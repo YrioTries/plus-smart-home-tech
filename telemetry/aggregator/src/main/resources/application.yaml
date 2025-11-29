@@ -1,0 +1,22 @@
+server:
+  port: 8081
+
+spring:
+  kafka:
+    bootstrap-servers: localhost:9092
+
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: ru.practicum.avro.serializer.GeneralAvroSerializer
+
+    consumer:
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      sensor-event-value-deserializer: ru.practicum.avro.deserializer.SensorEventDeserializer
+      sensor-event-group-id: sensor-events-group
+      snapshot-value-deserializer: ru.practicum.avro.deserializer.SensorsSnapshotDeserializer
+      snapshot-group-id: snapshots-group
+
+    topics:
+      hub-topic-name: telemetry.hubs.v1
+      sensor-topic-name: telemetry.sensors.v1
+      snapshots-topic-name: telemetry.snapshots.v1

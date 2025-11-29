@@ -7,8 +7,8 @@ import org.apache.avro.specific.SpecificDatumReader;
 import org.apache.avro.specific.SpecificRecordBase;
 import org.apache.kafka.common.errors.SerializationException;
 import org.apache.kafka.common.serialization.Deserializer;
-import ru.yandex.practicum.kafka.telemetry.event.HubEvent;
-import ru.yandex.practicum.kafka.telemetry.event.SensorEvent;
+import ru.yandex.practicum.kafka.telemetry.event.HubEventAvro;
+import ru.yandex.practicum.kafka.telemetry.event.SensorEventAvro;
 
 public class GeneralAvroDeserializer implements Deserializer<SpecificRecordBase> {
     private final DecoderFactory decoderFactory = DecoderFactory.get();
@@ -20,8 +20,8 @@ public class GeneralAvroDeserializer implements Deserializer<SpecificRecordBase>
                 BinaryDecoder decoder = decoderFactory.binaryDecoder(bytes, null);
 
                 DatumReader<SpecificRecordBase> reader = switch (topic) {
-                    case "telemetry.sensors.v1" -> new SpecificDatumReader<>(SensorEvent.getClassSchema());
-                    case "telemetry.hub.v1" -> new SpecificDatumReader<>(HubEvent.getClassSchema());
+                    case "telemetry.sensors.v1" -> new SpecificDatumReader<>(SensorEventAvro.getClassSchema());
+                    case "telemetry.hub.v1" -> new SpecificDatumReader<>(HubEventAvro.getClassSchema());
                     default -> throw new IllegalArgumentException("Неизвестный топик: " + topic);
                 };
 
