@@ -27,15 +27,18 @@ public class AnalyzerConsumerConfig {
         this.hubEventDeserializer = hubEventDeserializer;
     }
 
-    public KafkaConsumer<String, SensorsSnapshotAvro> createSensorsSnapshotConsumer() {
+    public Properties getConsumerProperties() {
         Properties props = new Properties();
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
         props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
         props.put(ConsumerConfig.GROUP_ID_CONFIG, "analyzer-snapshots-group");
         props.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, false);
-        props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest"); // Важно: earliest
+        props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
+        return props;
+    }
 
-        return new KafkaConsumer<>(props, new StringDeserializer(), snapshotDeserializer);
+    public KafkaConsumer<String, SensorsSnapshotAvro> createSensorsSnapshotConsumer() {
+        return new KafkaConsumer<>(getConsumerProperties(), new StringDeserializer(), snapshotDeserializer);
     }
 
     public KafkaConsumer<String, HubEventAvro> createHubEventConsumer() {

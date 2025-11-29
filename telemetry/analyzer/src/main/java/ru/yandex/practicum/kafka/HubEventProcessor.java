@@ -12,6 +12,7 @@ import ru.yandex.practicum.service.HubEventService;
 
 import java.time.Duration;
 import java.util.Collections;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 @Slf4j
 @Component
@@ -24,33 +25,37 @@ public class HubEventProcessor implements Runnable {
     @Value("${spring.kafka.topics.hub-topic-name}")
     private String hubEventTopic;
 
+    private final AtomicBoolean running = new AtomicBoolean(true);
+
     @Override
     public void run() {
-        KafkaConsumer<String, HubEventAvro> consumer = null;
-        try {
-            consumer = consumerConfig.createHubEventConsumer();
+        log.info("🎯 HubEventProcessor RUN! Топик: {}, Group: {}",
+                hubEventTopic, consumerConfig.getConsumerProperties().get("group.id"));
+
+        try (KafkaConsumer<String, HubEventAvro> consumer = consumerConfig.createHubEventConsumer()) {
             consumer.subscribe(Collections.singletonList(hubEventTopic));
 
-            while (true) {
+            while (running.get()) {
                 ConsumerRecords<String, HubEventAvro> records = consumer.poll(Duration.ofMillis(100));
-                log.debug("Получено {} записей", records.count());
+                log.info("📨 HUB EVENTS: {} записей из {}", records.count(), hubEventTopic);
 
-                service.saveHubEvent(records);
-
-                consumer.commitSync();
+                if (!records.isEmpty()) {
+                    service.saveHubEvent(records);
+                    consumer.commitSync();
+                    log.info("✅ {} событий обработано", records.count());
+                }
             }
         } catch (WakeupException ignored) {
-            // Игнорируем при shutdown
+            log.info("🛑 HubEventProcessor остановлен по WakeupException");
         } catch (Exception e) {
-            log.error("Ошибка при обработке событий Kafka", e);
-        } finally {
-            if (consumer != null) {
-                consumer.close();
-            }
+            log.error("💥 ОШИБКА HubEventProcessor!", e);
         }
+
+        log.info("👋 HubEventProcessor завершил работу");
     }
 
     public void shutdown() {
-        // Будет вызван извне для остановки
+        log.info("🔻 Запрошена остановка HubEventProcessor");
+        running.set(false);
     }
 }
