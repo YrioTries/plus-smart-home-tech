@@ -127,11 +127,59 @@ public class HubEventTxService {
         conditionRepository.saveAll(scenario.getConditions().values());
         actionRepository.saveAll(scenario.getActions().values());
 
-        // И только когда уже всё собрано, в самом конце, запоминаем сценарий
         Scenario savedScenario = scenarioRepository.save(scenario);
+
+        // 2. Строим связи scenario_conditions
+        for (Map.Entry<String, Condition> entry : scenario.getConditions().entrySet()) {
+            String sensorId = entry.getKey();
+            Condition condition = entry.getValue();
+
+            Sensor sensor = sensorRepository.findByIdAndHubId(sensorId, hubId)
+                    .orElseThrow(() -> new EntityNotFoundException("Сенсор " + sensorId + " не найден при связывании условия"));
+
+            ScenarioConditionId id = ScenarioConditionId.builder()
+                    .scenarioId(savedScenario.getId())
+                    .sensorId(sensor.getId())
+                    .conditionId(condition.getId())
+                    .build();
+
+            ScenarioCondition sc = ScenarioCondition.builder()
+                    .id(id)
+                    .scenario(savedScenario)
+                    .sensor(sensor)
+                    .condition(condition)
+                    .build();
+
+            scenarioConditionRepository.save(sc);
+        }
+
+        // 3. Строим связи scenario_actions
+        for (Map.Entry<String, Action> entry : scenario.getActions().entrySet()) {
+            String sensorId = entry.getKey();
+            Action action = entry.getValue();
+
+            Sensor sensor = sensorRepository.findByIdAndHubId(sensorId, hubId)
+                    .orElseThrow(() -> new EntityNotFoundException("Сенсор " + sensorId + " не найден при связывании действия"));
+
+            ScenarioActionId id = ScenarioActionId.builder()
+                    .scenarioId(savedScenario.getId())
+                    .sensorId(sensor.getId())
+                    .actionId(action.getId())
+                    .build();
+
+            ScenarioAction sa = ScenarioAction.builder()
+                    .id(id)
+                    .scenario(savedScenario)
+                    .sensor(sensor)
+                    .action(action)
+                    .build();
+
+            scenarioActionRepository.save(sa);
+        }
+
         log.info("🎉 СЦЕНАРИЙ СОХРАНЁН: id={}, name='{}', hubId={}, conditions={}, actions={}",
                 savedScenario.getId(), savedScenario.getName(), savedScenario.getHubId(),
-                savedScenario.getConditions().size(), savedScenario.getActions().size());
+                scenario.getConditions().size(), scenario.getActions().size());
 
         return savedScenario;
     }
