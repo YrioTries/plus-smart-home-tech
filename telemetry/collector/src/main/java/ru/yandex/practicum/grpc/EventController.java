@@ -19,7 +19,6 @@ import ru.yandex.practicum.kafka.telemetry.event.HubEventAvro;
 import ru.yandex.practicum.kafka.telemetry.event.SensorEventAvro;
 import ru.yandex.practicum.service.CollectorEventService;
 
-
 @Slf4j
 @GrpcService
 @RequiredArgsConstructor
