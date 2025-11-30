@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package telemetry.service.hubrouter;
+package telemetry.service.collector;
 
 import "google/protobuf/empty.proto";
 import "telemetry/messages/hub_event.proto";
@@ -9,6 +9,6 @@ option java_package = "ru.yandex.practicum.grpc.telemetry.hubrouter";
 option java_outer_classname = "HubRouterControllerProto";
 
 service HubRouterController {
-    rpc handleDeviceAction (message.event.DeviceActionRequest)
+    rpc handleDeviceAction (messages.DeviceActionRequest)
             returns (google.protobuf.Empty);
 }
