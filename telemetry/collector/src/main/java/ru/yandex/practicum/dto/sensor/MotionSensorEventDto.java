@@ -3,7 +3,7 @@ package ru.yandex.practicum.dto.sensor;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import ru.yandex.practicum.kafka.telemetry.event.SensorType;
+import ru.yandex.practicum.kafka.telemetry.event.SensorTypeAvro;
 
 @Getter
 @Setter
@@ -14,7 +14,7 @@ public class MotionSensorEventDto extends SensorEventDto {
     private Integer voltage;
 
     @Override
-    public SensorType getType() {
-        return SensorType.MOTION_SENSOR_EVENT;
+    public SensorTypeAvro getType() {
+        return SensorTypeAvro.MOTION_SENSOR_EVENT;
     }
 }
