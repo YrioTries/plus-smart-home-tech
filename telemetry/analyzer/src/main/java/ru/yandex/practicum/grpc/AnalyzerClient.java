@@ -14,14 +14,16 @@ public class AnalyzerClient {
 
     public AnalyzerClient() {
         ManagedChannel channel = ManagedChannelBuilder
-                .forAddress("localhost", 59091)
+                .forAddress("localhost", 59090)
                 .usePlaintext()
                 .keepAliveWithoutCalls(true)
                 .build();
 
         this.hubRouterClient = HubRouterControllerGrpc.newBlockingStub(channel);
-        log.info("gRPC клиент ручной инициализирован: localhost:59091");
+        log.info("gRPC клиент ручной инициализирован: localhost:59090");
     }
+
+
 
     public void sendDeviceActions(DeviceActionRequest request) {
         try {
