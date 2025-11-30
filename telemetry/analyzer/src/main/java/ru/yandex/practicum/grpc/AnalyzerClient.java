@@ -23,8 +23,6 @@ public class AnalyzerClient {
         log.info("gRPC клиент ручной инициализирован: localhost:59090");
     }
 
-
-
     public void sendDeviceActions(DeviceActionRequest request) {
         try {
             log.info("🚀 Отправляю gRPC: hub={} scenario={}", request.getHubId(), request.getScenarioName());
