@@ -9,7 +9,17 @@ spring:
       retry:
         useRandomPolicy: true
         max-interval: 6000
+      discovery:
+        enabled: true
+        serviceId: config-server
+grpc:
+  server:
+    port: 59092
+  client:
+    hub-router:
+      address: 'discovery:///hub-router'
+
 eureka:
   client:
     serviceUrl:
-      defaultZone: http://localhost:8761/eureka/
+      defaultZone: http://${eureka.instance.hostname:localhost}:${eureka.instance.port:8761}/eureka/
