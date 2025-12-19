@@ -8,9 +8,6 @@ import ru.yandex.practicum.interaction_api.model.dto.ProductDto;
 import ru.yandex.practicum.interaction_api.model.dto.request.SetProductQuantityStateRequest;
 import ru.yandex.practicum.shopping_store.services.ShoppingStoreService;
 
-import java.util.ArrayList;
-
-
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(path = "/api/v1/shopping-store")
@@ -20,7 +17,7 @@ public class ShoppingStoreController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public ProductDto getPageableListOfProducts(Pageable pageable, @RequestBody String category) {
+    public ProductDto getPageableListOfProducts(@RequestBody Pageable pageable, @RequestBody String category) {
         return shoppingStoreService.getPageableListOfProducts(pageable, category);
     }
 
