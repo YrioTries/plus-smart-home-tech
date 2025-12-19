@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.interaction_api.model.dto.ProductDto;
 import ru.yandex.practicum.interaction_api.model.dto.ShoppingCartDto;
 import ru.yandex.practicum.interaction_api.model.dto.request.ChangeProductQuantityRequest;
+import ru.yandex.practicum.shopping_cart.services.ShoppingCartService;
 
 import java.util.List;
 
@@ -14,32 +15,35 @@ import java.util.List;
 @RequestMapping(path = "/api/v1/shopping-cart")
 public class ShoppingCartController {
 
+    private final ShoppingCartService shoppingCartService;
+
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public ShoppingCartDto getCurrentSoppingCart(String username) {
-        return new ShoppingCartDto();
+        return shoppingCartService.getCurrentSoppingCart(username);
     }
 
     @PostMapping("/remove")
     @ResponseStatus(HttpStatus.OK)
     public ShoppingCartDto removeFromShoppingCart(String username, @RequestBody List<String> productIds) {
-        return new ShoppingCartDto();
+        return shoppingCartService.removeFromShoppingCart(username, productIds);
     }
 
     @PostMapping("/change-quantity")
     @ResponseStatus(HttpStatus.OK)
     public ShoppingCartDto changeProductQuantity(String username, @RequestBody ChangeProductQuantityRequest request) {
-        return new ShoppingCartDto();
+        return shoppingCartService.changeProductQuantity(username, request);
     }
 
     @PutMapping
     @ResponseStatus(HttpStatus.OK)
     public ShoppingCartDto addInShoppingCart(String username, @RequestBody List<ProductDto> productList) {
-        return new ShoppingCartDto();
+        return shoppingCartService.addInShoppingCart(username, productList);
     }
 
     @DeleteMapping
     @ResponseStatus(HttpStatus.OK)
     public void deactivateShoppingCart(String username) {
+        shoppingCartService.deactivateShoppingCart(username);
     }
 }
