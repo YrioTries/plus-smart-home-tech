@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.interaction_api.model.dto.Pageable;
 import ru.yandex.practicum.interaction_api.model.dto.ProductDto;
 import ru.yandex.practicum.interaction_api.model.dto.request.SetProductQuantityStateRequest;
+import ru.yandex.practicum.shopping_store.services.ShoppingStoreService;
 
 import java.util.ArrayList;
 
@@ -15,39 +16,41 @@ import java.util.ArrayList;
 @RequestMapping(path = "/api/v1/shopping-store")
 public class ShoppingStoreController {
 
+    private final ShoppingStoreService shoppingStoreService;
+
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public ProductDto getPageableListOfProducts(Pageable pageable, @RequestBody String category) {
-        return new ProductDto();
+        return shoppingStoreService.getPageableListOfProducts(pageable, category);
     }
 
     @GetMapping("/{productId}")
     @ResponseStatus(HttpStatus.OK)
     public ProductDto getProductInfo(@PathVariable Long productId) {
-        return new ProductDto();
+        return shoppingStoreService.getProductInfo(productId);
     }
 
     @PutMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ProductDto createProduct(@RequestBody ProductDto productDto) {
-        return new ProductDto();
+        return shoppingStoreService.createProduct(productDto);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.OK)
     public ProductDto updateProduct(@RequestBody ProductDto productDto) {
-        return new ProductDto();
+        return shoppingStoreService.updateProduct(productDto);
     }
 
     @PostMapping("/quantityState")
     @ResponseStatus(HttpStatus.OK)
     public Boolean setProductStatus(@RequestBody SetProductQuantityStateRequest request) {
-        return true;
+        return shoppingStoreService.setProductStatus(request);
     }
 
     @PostMapping("/removeProductFromStore")
     @ResponseStatus(HttpStatus.OK)
     public Boolean deleteProduct(@RequestBody String productId) {
-        return true;
+        return shoppingStoreService.deleteProduct(productId);
     }
 }
