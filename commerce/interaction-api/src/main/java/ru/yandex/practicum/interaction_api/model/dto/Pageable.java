@@ -1,4 +1,4 @@
-package ru.yandex.practicum.interaction_api.dto;
+package ru.yandex.practicum.interaction_api.model.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
