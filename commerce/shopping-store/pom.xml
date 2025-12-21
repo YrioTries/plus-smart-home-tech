@@ -19,6 +19,11 @@
         </dependency>
 
         <dependency>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>ru.yandex.practicum</groupId>
             <artifactId>interaction-api</artifactId>
             <version>1.0-SNAPSHOT</version>
