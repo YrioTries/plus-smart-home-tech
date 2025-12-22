@@ -11,16 +11,17 @@ import ru.yandex.practicum.interaction_api.model.entity.helpers.CartProductId;
 @IdClass(CartProductId.class)
 @Table(name = "products_cart", schema = "public")
 public class CartProductEntity {
+
     @Id
     @ManyToOne
     @JoinColumn(name = "cart_id", nullable = false)
     private ShoppingCartEntity shoppingCart;
 
     @Id
-    @ManyToOne
-    @JoinColumn(name = "product_id", nullable = false)
-    private ProductEntity product;
+    @Column(name = "product_id", nullable = false)
+    private String productId;
 
     @Column(name = "quantity", nullable = false)
     private Integer quantity = 1;
 }
+
