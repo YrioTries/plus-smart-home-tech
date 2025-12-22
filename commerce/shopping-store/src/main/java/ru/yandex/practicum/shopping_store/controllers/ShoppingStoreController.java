@@ -8,6 +8,8 @@ import ru.yandex.practicum.interaction_api.model.dto.ProductDto;
 import ru.yandex.practicum.interaction_api.model.dto.request.SetProductQuantityStateRequest;
 import ru.yandex.practicum.shopping_store.services.ShoppingStoreService;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(path = "/api/v1/shopping-store")
@@ -17,13 +19,15 @@ public class ShoppingStoreController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public ProductDto getPageableListOfProducts(@RequestBody Pageable pageable, @RequestBody String category) {
+    public List<ProductDto> getPageableListOfProducts(
+            @RequestParam String category,
+            @ModelAttribute Pageable pageable) {
         return shoppingStoreService.getPageableListOfProducts(pageable, category);
     }
 
     @GetMapping("/{productId}")
     @ResponseStatus(HttpStatus.OK)
-    public ProductDto getProductInfo(@PathVariable Long productId) {
+    public ProductDto getProductInfo(@PathVariable("productId") String productId) {
         return shoppingStoreService.getProductInfo(productId);
     }
 
@@ -41,8 +45,8 @@ public class ShoppingStoreController {
 
     @PostMapping("/quantityState")
     @ResponseStatus(HttpStatus.OK)
-    public Boolean setProductStatus(@RequestBody SetProductQuantityStateRequest request) {
-        return shoppingStoreService.setProductStatus(request);
+    public Boolean setProductQuantityState(@RequestBody SetProductQuantityStateRequest request) {
+        return shoppingStoreService.setProductQuantityState(request);
     }
 
     @PostMapping("/removeProductFromStore")
