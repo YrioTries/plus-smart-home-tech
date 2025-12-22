@@ -2,10 +2,10 @@ package ru.yandex.practicum.interaction_api.model.dto;
 
 import lombok.Data;
 
-import java.util.List;
+import java.util.Map;
 
 @Data
 public class ShoppingCartDto {
     private String shoppingCartId;
-    private List<Integer> products;
+    private Map<String, Integer> products;
 }
