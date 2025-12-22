@@ -1,4 +1,4 @@
-package ru.yandex.practicum.interaction_api.model;
+package ru.yandex.practicum.interaction_api.model.entity.helpers;
 
 import lombok.*;
 

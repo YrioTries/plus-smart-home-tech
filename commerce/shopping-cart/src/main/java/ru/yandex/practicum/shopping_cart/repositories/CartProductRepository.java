@@ -3,7 +3,7 @@ package ru.yandex.practicum.shopping_cart.repositories;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import ru.yandex.practicum.interaction_api.model.CartProductId;
+import ru.yandex.practicum.interaction_api.model.entity.helpers.CartProductId;
 import ru.yandex.practicum.interaction_api.model.entity.CartProductEntity;
 
 import java.util.List;

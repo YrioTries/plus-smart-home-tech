@@ -3,7 +3,7 @@ package ru.yandex.practicum.interaction_api.model.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import ru.yandex.practicum.interaction_api.model.CartProductId;
+import ru.yandex.practicum.interaction_api.model.entity.helpers.CartProductId;
 
 @Entity
 @Getter
