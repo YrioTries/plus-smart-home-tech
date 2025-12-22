@@ -16,15 +16,39 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class ShoppingCartServiceImpl implements ShoppingCartService{
 
-    private final ShoppingCartRepository repository;
+    private final ShoppingCartRepository shoppingCartRepository;
+    private final CartProductRepository cartProductRepository;
+    private final ProductRepository productRepository;
+    private final ShoppingCartMapper shoppingCartMapper;
 
     public ShoppingCartDto getCurrentSoppingCart(String username) {
-        ShoppingCartDto cartDto = repository.findByOwner(username).orElseGet()
-        return new ShoppingCartDto();
+        // Находим корзину пользователя
+        ShoppingCartEntity cart = shoppingCartRepository.findByOwner(username)
+                .orElseThrow(() -> new RuntimeException("Корзина не найдена для пользователя: " + username));
+
+        // Загружаем товары в корзине (если lazy loading)
+        List<CartProductEntity> cartItems = cartProductRepository.findByCartId(cart.getId());
+        cart.setCartProducts(cartItems);
+
+        // Используем маппер для преобразования в DTO
+        return shoppingCartMapper.toDto(cart);
     }
 
     public ShoppingCartDto removeFromShoppingCart(String username, List<String> productIds) {
-        return new ShoppingCartDto();
+        // Находим корзину пользователя
+        ShoppingCartEntity cart = shoppingCartRepository.findByOwner(username)
+                .orElseThrow(() -> new RuntimeException("Корзина не найдена для пользователя: " + username));
+
+        // Проверяем, что корзина активна
+        validateCartState(cart);
+
+        // Удаляем каждый указанный товар из корзины
+        for (String productId : productIds) {
+            cartProductRepository.deleteByCartIdAndProductId(cart.getId(), productId);
+        }
+
+        // Получаем обновленное состояние корзины
+        return getCurrentSoppingCart(username);
     }
 
     public ShoppingCartDto changeProductQuantity(String username, ChangeProductQuantityRequest request) {
@@ -32,7 +56,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService{
     }
 
     public ShoppingCartDto addInShoppingCart(String username, List<ProductDto> productList) {
-        ShoppingCartEntity cart = repository.findByOwner(username)
+        ShoppingCartEntity cart = shoppingCartRepository.findByOwner(username)
                 .orElseGet(() -> {
                     ShoppingCartEntity newCart = new ShoppingCartEntity();
                     newCart.setId(UUID.randomUUID().toString());
