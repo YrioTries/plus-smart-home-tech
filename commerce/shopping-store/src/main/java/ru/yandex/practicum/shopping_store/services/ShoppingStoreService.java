@@ -6,18 +6,20 @@ import ru.yandex.practicum.interaction_api.model.dto.Pageable;
 import ru.yandex.practicum.interaction_api.model.dto.ProductDto;
 import ru.yandex.practicum.interaction_api.model.dto.request.SetProductQuantityStateRequest;
 
+import java.util.List;
+
 @Service
 public interface ShoppingStoreService {
 
-    ProductDto getPageableListOfProducts(Pageable pageable, String category);
+    List<ProductDto> getPageableListOfProducts(Pageable pageable, String category);
 
-    ProductDto getProductInfo(Long productId);
+    ProductDto getProductInfo(String productId);
 
     ProductDto createProduct(ProductDto productDto);
 
     ProductDto updateProduct(ProductDto productDto);
 
-    Boolean setProductStatus(SetProductQuantityStateRequest request);
+    Boolean setProductQuantityState(SetProductQuantityStateRequest request);
 
     Boolean deleteProduct(String productId);
 }
