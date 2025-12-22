@@ -1,7 +1,6 @@
 package ru.yandex.practicum.warehouse.clients;
 
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.interaction_api.model.dto.Pageable;
 import ru.yandex.practicum.interaction_api.model.dto.ProductDto;
@@ -11,10 +10,10 @@ import ru.yandex.practicum.interaction_api.model.dto.request.SetProductQuantityS
 public interface ShoppingStoreClient {
 
     @GetMapping
-    ProductDto getPageableListOfProducts(@RequestBody Pageable pageable, @RequestBody String category);
+    ProductDto getPageableListOfProducts(@RequestParam Pageable pageable, @RequestParam String category);
 
     @GetMapping("/{productId}")
-    ProductDto getProductInfo(@PathVariable Long productId);
+    ProductDto getProductInfo(@PathVariable("productId") String productId);
 
     @PutMapping
     ProductDto createProduct(@RequestBody ProductDto productDto);
