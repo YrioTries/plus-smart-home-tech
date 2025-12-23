@@ -1,17 +1,2 @@
 server:
   port: 0
-
-resilience4j.circuitbreaker:
-  configs:
-    default:
-      slidingWindowSize: 50
-      failureRateThreshold: 50
-
-  instances:
-    myFeignClient:
-      slidingWindowSize: 10
-      waitDurationInOpenState: 10000
-      permittedNumberOfCallsInHalfOpenState: 3
-      slidingWindowType: COUNT_BASED
-      minimumNumberOfCalls: 5
-      automaticTransitionFromOpenToHalfOpenEnabled: true

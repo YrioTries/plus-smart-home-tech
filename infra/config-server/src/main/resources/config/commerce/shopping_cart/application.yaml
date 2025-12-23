@@ -8,7 +8,7 @@ resilience4j.circuitbreaker:
       failureRateThreshold: 50
 
   instances:
-    myFeignClient:
+    warehouse:
       slidingWindowSize: 10
       waitDurationInOpenState: 10000
       permittedNumberOfCallsInHalfOpenState: 3
