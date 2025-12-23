@@ -1,4 +1,4 @@
-package ru.yandex.practicum.interaction_api.model.entity.helpers;
+package ru.yandex.practicum.shopping_cart.entity;
 
 import lombok.*;
 

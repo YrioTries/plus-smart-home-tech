@@ -8,10 +8,9 @@ import ru.yandex.practicum.interaction_api.exception.NoProductsInShoppingCartExc
 import ru.yandex.practicum.interaction_api.model.dto.ProductDto;
 import ru.yandex.practicum.interaction_api.model.dto.ShoppingCartDto;
 import ru.yandex.practicum.interaction_api.model.dto.request.ChangeProductQuantityRequest;
-import ru.yandex.practicum.interaction_api.model.entity.CartProductEntity;
-import ru.yandex.practicum.interaction_api.model.entity.ProductEntity;
-import ru.yandex.practicum.interaction_api.model.entity.ShoppingCartEntity;
-import ru.yandex.practicum.interaction_api.model.mappers.ShoppingCartMapper;
+import ru.yandex.practicum.shopping_cart.entity.CartProductEntity;
+import ru.yandex.practicum.shopping_cart.entity.ShoppingCartEntity;
+import ru.yandex.practicum.shopping_cart.entity.ShoppingCartMapper;
 import ru.yandex.practicum.shopping_cart.repositories.CartProductRepository;
 import ru.yandex.practicum.shopping_cart.repositories.ShoppingCartRepository;
 

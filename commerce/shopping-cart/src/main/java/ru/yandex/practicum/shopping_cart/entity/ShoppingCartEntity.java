@@ -1,4 +1,4 @@
-package ru.yandex.practicum.interaction_api.model.entity;
+package ru.yandex.practicum.shopping_cart.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

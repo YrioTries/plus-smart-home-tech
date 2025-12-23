@@ -10,7 +10,7 @@ import ru.yandex.practicum.interaction_api.model.dto.BookedProductsDto;
 import ru.yandex.practicum.interaction_api.model.dto.ShoppingCartDto;
 import ru.yandex.practicum.interaction_api.model.dto.request.AddProductToWarehouseRequest;
 import ru.yandex.practicum.interaction_api.model.dto.request.NewProductInWarehouseRequest;
-import ru.yandex.practicum.interaction_api.model.entity.WarehouseProductEntity;
+import ru.yandex.practicum.warehouse.entity.WarehouseProductEntity;
 import ru.yandex.practicum.warehouse.repositories.WarehouseRepository;
 
 import java.security.SecureRandom;

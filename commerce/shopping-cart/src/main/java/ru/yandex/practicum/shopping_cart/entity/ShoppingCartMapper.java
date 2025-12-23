@@ -1,9 +1,7 @@
-package ru.yandex.practicum.interaction_api.model.mappers;
+package ru.yandex.practicum.shopping_cart.entity;
 
 import org.mapstruct.*;
 import ru.yandex.practicum.interaction_api.model.dto.ShoppingCartDto;
-import ru.yandex.practicum.interaction_api.model.entity.ShoppingCartEntity;
-import ru.yandex.practicum.interaction_api.model.entity.CartProductEntity;
 
 import java.util.HashMap;
 import java.util.List;

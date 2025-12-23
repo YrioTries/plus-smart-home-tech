@@ -6,7 +6,7 @@ import org.springframework.data.repository.query.Param;
 import ru.yandex.practicum.interaction_api.enums.ProductCategory;
 import ru.yandex.practicum.interaction_api.enums.ProductState;
 import ru.yandex.practicum.interaction_api.enums.QuantityState;
-import ru.yandex.practicum.interaction_api.model.entity.ProductEntity;
+import ru.yandex.practicum.shopping_store.entity.ProductEntity;
 
 import java.util.List;
 import java.util.Optional;

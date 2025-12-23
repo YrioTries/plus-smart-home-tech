@@ -1,4 +1,4 @@
-package ru.yandex.practicum.interaction_api.model.mappers;
+package ru.yandex.practicum.shopping_store.entity;
 
 import org.mapstruct.InjectionStrategy;
 import org.mapstruct.Mapper;

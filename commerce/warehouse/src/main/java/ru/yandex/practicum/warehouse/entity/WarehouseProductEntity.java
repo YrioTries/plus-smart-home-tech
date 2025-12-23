@@ -1,4 +1,4 @@
-package ru.yandex.practicum.interaction_api.model.entity;
+package ru.yandex.practicum.warehouse.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

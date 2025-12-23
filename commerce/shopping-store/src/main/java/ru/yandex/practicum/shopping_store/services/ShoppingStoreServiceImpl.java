@@ -9,8 +9,8 @@ import ru.yandex.practicum.interaction_api.exception.ProductNotFoundException;
 import ru.yandex.practicum.interaction_api.model.dto.Pageable;
 import ru.yandex.practicum.interaction_api.model.dto.ProductDto;
 import ru.yandex.practicum.interaction_api.model.dto.request.SetProductQuantityStateRequest;
-import ru.yandex.practicum.interaction_api.model.entity.ProductEntity;
-import ru.yandex.practicum.interaction_api.model.mappers.ProductMapper;
+import ru.yandex.practicum.shopping_store.entity.ProductEntity;
+import ru.yandex.practicum.shopping_store.entity.ProductMapper;
 import ru.yandex.practicum.shopping_store.repositories.ProductRepository;
 
 import java.util.List;
