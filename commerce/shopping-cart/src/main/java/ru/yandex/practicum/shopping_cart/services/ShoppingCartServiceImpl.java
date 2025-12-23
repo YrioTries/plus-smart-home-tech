@@ -2,6 +2,7 @@ package ru.yandex.practicum.shopping_cart.services;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import ru.yandex.practicum.interaction_api.clients.WarehouseClient;
 import ru.yandex.practicum.interaction_api.enums.ShoppingCartState;
 import ru.yandex.practicum.interaction_api.exception.NoProductsInShoppingCartException;
 import ru.yandex.practicum.interaction_api.model.dto.ProductDto;
@@ -23,8 +24,9 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
     private final ShoppingCartRepository shoppingCartRepository;
     private final CartProductRepository cartProductRepository;
-
     private final ShoppingCartMapper shoppingCartMapper;
+
+    private final WarehouseClient warehouseClient;
 
     private ShoppingCartEntity getCartOrThrow(String username) {
         return shoppingCartRepository.findByOwner(username)
@@ -91,7 +93,6 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
         for (ProductDto dto : productList) {
             String productId = dto.getProductId();
-
             CartProductEntity productItem = cartProductRepository
                     .findByShoppingCart_IdAndProductId(cart.getId(), productId)
                     .orElseGet(() -> {
@@ -101,12 +102,14 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
                         newItem.setQuantity(0);
                         return newItem;
                     });
-
             productItem.setQuantity(productItem.getQuantity() + 1);
             cartProductRepository.save(productItem);
         }
 
-        return getCurrentSoppingCart(username);
+        ShoppingCartDto cartDto = getCurrentSoppingCart(username);
+        warehouseClient.checkProductsWarehouse(cartDto);
+
+        return cartDto;
     }
 
     @Override
