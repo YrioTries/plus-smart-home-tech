@@ -67,7 +67,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
                 .findByShoppingCart_IdAndProductId(cart.getId(), request.getProductId())
                 .orElseThrow(() -> new RuntimeException("Товар не найден в корзине"));
 
-        item.setQuantity(request.getNewQuantity()); // или плюс/минус, как в схеме
+        item.setQuantity(request.getNewQuantity());
         if (item.getQuantity() <= 0) {
             cartProductRepository.delete(item);
         } else {
