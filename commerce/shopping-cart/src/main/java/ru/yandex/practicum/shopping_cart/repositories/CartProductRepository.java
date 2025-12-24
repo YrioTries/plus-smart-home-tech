@@ -11,8 +11,6 @@ public interface CartProductRepository extends JpaRepository<CartProductEntity, 
 
     List<CartProductEntity> findByShoppingCart_Id(String cartId);
 
-    Integer getTotalItemsCount(String cartId);
-
     Optional<CartProductEntity> findByShoppingCart_IdAndProductId(String shoppingCartId, String productId);
 
     void deleteByShoppingCart_IdAndProductId(String shoppingCartId, String productId);
