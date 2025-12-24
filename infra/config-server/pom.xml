@@ -10,7 +10,7 @@
     </parent>
 
     <artifactId>config-server</artifactId>
-    <packaging>pom</packaging>
+    <packaging>jar</packaging>
 
     <dependencies>
         <dependency>
