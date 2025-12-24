@@ -9,7 +9,7 @@ import java.util.Optional;
 
 public interface CartProductRepository extends JpaRepository<CartProductEntity, CartProductId> {
 
-    List<CartProductEntity> findByCartId(String cartId);
+    List<CartProductEntity> findByShoppingCart_Id(String cartId);
 
     Integer getTotalItemsCount(String cartId);
 

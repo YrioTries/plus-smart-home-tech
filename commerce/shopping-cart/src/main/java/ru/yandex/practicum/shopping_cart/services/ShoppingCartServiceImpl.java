@@ -41,7 +41,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     @Override
     public ShoppingCartDto getCurrentSoppingCart(String username) {
         ShoppingCartEntity shoppingCart = getCartOrThrow(username);
-        List<CartProductEntity> cartProductList = cartProductRepository.findByCartId(shoppingCart.getId());
+        List<CartProductEntity> cartProductList = cartProductRepository.findByShoppingCart_Id(shoppingCart.getId());
         shoppingCart.setCartProducts(cartProductList);
         return shoppingCartMapper.toDto(shoppingCart);
     }
