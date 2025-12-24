@@ -11,5 +11,5 @@ import java.io.Serializable;
 @EqualsAndHashCode
 public class CartProductId implements Serializable {
     private String shoppingCart;  // cart_id
-    private String product;      // product_id
+    private String productId;    // product_id
 }
