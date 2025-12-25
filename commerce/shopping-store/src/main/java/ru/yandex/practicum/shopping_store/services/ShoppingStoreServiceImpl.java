@@ -14,6 +14,7 @@ import ru.yandex.practicum.shopping_store.entity.ProductMapper;
 import ru.yandex.practicum.shopping_store.repositories.ProductRepository;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -50,27 +51,38 @@ public class ShoppingStoreServiceImpl implements ShoppingStoreService{
 
     @Override
     public ProductDto createProduct(ProductDto productDto) {
-        ProductEntity productEntity = productRepository
-                .findById(productDto.getProductId()).orElseGet(() -> {
-            ProductEntity entity = new ProductEntity();
-            entity.setId(productDto.getProductId());
-            entity.setName(productDto.getProductName());
-            entity.setDescription(productDto.getDescription());
-            entity.setImageSrc(productDto.getImageSrc());
-            entity.setQuantityState(productDto.getQuantityState());
-            entity.setProductState(productDto.getProductState());
-            entity.setProductCategory(productDto.getProductCategory());
-            entity.setPrice(productDto.getPrice());
-            return entity;
-        });
+        final String productId;
+        String tempId = productDto.getProductId();
+        if (tempId == null || tempId.isEmpty()) {
+            productId = UUID.randomUUID().toString();
+        } else {
+            productId = tempId;
+        }
 
-        if (productEntity.getProductState() == null)
+        ProductEntity productEntity = productRepository
+                .findById(productId)
+                .orElseGet(() -> {
+                    ProductEntity entity = new ProductEntity();
+                    entity.setId(productId);
+                    entity.setName(productDto.getProductName());
+                    entity.setDescription(productDto.getDescription());
+                    entity.setImageSrc(productDto.getImageSrc());
+                    entity.setQuantityState(productDto.getQuantityState());
+                    entity.setProductState(productDto.getProductState());
+                    entity.setProductCategory(productDto.getProductCategory());
+                    entity.setPrice(productDto.getPrice());
+                    return entity;
+                });
+
+        if (productEntity.getProductState() == null) {
             productEntity.setProductState(ProductState.ACTIVE);
+        }
 
         productRepository.save(productEntity);
 
         return productMapper.toDto(productEntity);
     }
+
 
     @Override
     public ProductDto updateProduct(ProductDto productDto) {
