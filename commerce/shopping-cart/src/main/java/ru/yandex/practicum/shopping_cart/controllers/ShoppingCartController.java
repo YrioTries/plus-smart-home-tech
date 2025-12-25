@@ -37,8 +37,8 @@ public class ShoppingCartController {
 
     @PutMapping
     @ResponseStatus(HttpStatus.OK)
-    public ShoppingCartDto addInShoppingCart(@RequestParam String username, @RequestBody List<ProductDto> productList) {
-        return shoppingCartService.addInShoppingCart(username, productList);
+    public ShoppingCartDto addInShoppingCart(@RequestParam String username, @RequestBody ProductDto productDto) {
+        return shoppingCartService.addInShoppingCart(username, productDto);
     }
 
     @DeleteMapping

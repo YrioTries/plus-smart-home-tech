@@ -79,7 +79,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     }
 
     @Override
-    public ShoppingCartDto addInShoppingCart(String username, List<ProductDto> productList) {
+    public ShoppingCartDto addInShoppingCart(String username, ProductDto product) {
         ShoppingCartEntity cart = shoppingCartRepository.findByOwner(username)
                 .orElseGet(() -> {
                     ShoppingCartEntity newCart = new ShoppingCartEntity();
@@ -91,26 +91,26 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
         validateActive(cart);
 
-        for (ProductDto dto : productList) {
-            String productId = dto.getProductId();
-            CartProductEntity productItem = cartProductRepository
-                    .findByShoppingCart_IdAndProductId(cart.getId(), productId)
-                    .orElseGet(() -> {
-                        CartProductEntity newItem = new CartProductEntity();
-                        newItem.setShoppingCart(cart);
-                        newItem.setProductId(productId);
-                        newItem.setQuantity(0);
-                        return newItem;
-                    });
-            productItem.setQuantity(productItem.getQuantity() + 1);
-            cartProductRepository.save(productItem);
-        }
+        String productId = product.getProductId();
+        CartProductEntity productItem = cartProductRepository
+                .findByShoppingCart_IdAndProductId(cart.getId(), productId)
+                .orElseGet(() -> {
+                    CartProductEntity newItem = new CartProductEntity();
+                    newItem.setShoppingCart(cart);
+                    newItem.setProductId(productId);
+                    newItem.setQuantity(0);
+                    return newItem;
+                });
+
+        productItem.setQuantity(productItem.getQuantity() + 1);
+        cartProductRepository.save(productItem);
 
         ShoppingCartDto cartDto = getCurrentSoppingCart(username);
         warehouseClient.checkProductsWarehouse(cartDto);
 
         return cartDto;
     }
+
 
     @Override
     public void deactivateShoppingCart(String username) {

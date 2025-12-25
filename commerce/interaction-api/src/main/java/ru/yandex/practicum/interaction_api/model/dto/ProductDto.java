@@ -10,7 +10,6 @@ import ru.yandex.practicum.interaction_api.enums.QuantityState;
 @Getter
 @Setter
 public class ProductDto {
-    @JsonProperty("product_id")
     private String productId;
     private String productName;
     private String description;

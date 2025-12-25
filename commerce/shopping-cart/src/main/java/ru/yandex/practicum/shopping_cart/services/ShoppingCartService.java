@@ -14,7 +14,7 @@ public interface ShoppingCartService {
 
     ShoppingCartDto changeProductQuantity(String username, ChangeProductQuantityRequest request);
 
-    ShoppingCartDto addInShoppingCart(String username, List<ProductDto> productList);
+    ShoppingCartDto addInShoppingCart(String username, ProductDto productDto);
 
     void deactivateShoppingCart(String username);
 }
