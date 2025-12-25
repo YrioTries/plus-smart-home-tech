@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import ru.yandex.practicum.interaction_api.clients.WarehouseClient;
 import ru.yandex.practicum.interaction_api.enums.ShoppingCartState;
 import ru.yandex.practicum.interaction_api.exception.NoProductsInShoppingCartException;
+import ru.yandex.practicum.interaction_api.exception.NotAuthorizedUserException;
 import ru.yandex.practicum.interaction_api.model.dto.ProductDto;
 import ru.yandex.practicum.interaction_api.model.dto.ShoppingCartDto;
 import ru.yandex.practicum.interaction_api.model.dto.request.ChangeProductQuantityRequest;
@@ -65,7 +66,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
         CartProductEntity item = cartProductRepository
                 .findByShoppingCart_IdAndProductId(cart.getId(), request.getProductId())
-                .orElseThrow(() -> new RuntimeException("Товар не найден в корзине"));
+                .orElseThrow(() -> new NoProductsInShoppingCartException("Товар не найден в корзине"));
 
         item.setQuantity(request.getNewQuantity());
         if (item.getQuantity() <= 0) {

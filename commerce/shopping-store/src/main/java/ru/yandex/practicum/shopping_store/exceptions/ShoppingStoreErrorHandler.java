@@ -18,7 +18,7 @@ public class ShoppingStoreErrorHandler {
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorResponse notFound(final ProductNotFoundException e) {
         log.error("Ресурс не найден: {}", e.getMessage());
-        return new ErrorResponse("ERROR[404]: Произошла ошибка NotFoundException: ", e.getMessage());
+        return new ErrorResponse("ERROR[404]: Произошла ошибка ProductNotFoundException: ", e.getMessage());
     }
 
     @ExceptionHandler(HttpMediaTypeNotSupportedException.class)
