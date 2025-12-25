@@ -17,6 +17,7 @@ import ru.yandex.practicum.interaction_api.enums.QuantityState;
 @Table(name = "products", schema = "public")
 public class ProductEntity {
     @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id", length = 36, nullable = false)
     private String id;
 
