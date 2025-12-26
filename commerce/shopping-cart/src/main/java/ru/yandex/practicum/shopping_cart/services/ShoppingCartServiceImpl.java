@@ -1,10 +1,12 @@
 package ru.yandex.practicum.shopping_cart.services;
 
+import feign.FeignException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.interaction_api.clients.WarehouseClient;
 import ru.yandex.practicum.interaction_api.enums.ShoppingCartState;
 import ru.yandex.practicum.interaction_api.exception.NoProductsInShoppingCartException;
+import ru.yandex.practicum.interaction_api.exception.NoSpecifiedProductInWarehouseException;
 import ru.yandex.practicum.interaction_api.exception.NotAuthorizedUserException;
 import ru.yandex.practicum.interaction_api.model.dto.ProductDto;
 import ru.yandex.practicum.interaction_api.model.dto.ShoppingCartDto;
@@ -114,11 +116,17 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         cartProductRepository.save(productItem);
 
         ShoppingCartDto cartDto = getCurrentSoppingCart(username);
-        warehouseClient.checkProductsWarehouse(cartDto);
+
+        try {
+            warehouseClient.checkProductsWarehouse(cartDto);
+        } catch (FeignException.NotFound ex) {
+            throw new NoSpecifiedProductInWarehouseException(
+                    "Товар не найден на складе: " + productId
+            );
+        }
 
         return cartDto;
     }
-
 
     @Override
     public void deactivateShoppingCart(String username) {
