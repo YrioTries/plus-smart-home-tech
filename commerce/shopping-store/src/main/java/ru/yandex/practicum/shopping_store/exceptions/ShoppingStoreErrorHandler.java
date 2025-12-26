@@ -34,4 +34,18 @@ public class ShoppingStoreErrorHandler {
         log.error("Ошибка чтения HTTP сообщения: {}", e.getMessage());
         return new ErrorResponse("ERROR[400]: Произошла ошибка HttpMessageNotReadableException: ", e.getMessage());
     }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse illegalArgument(final IllegalArgumentException e) {
+        log.error("Некорректный аргумент: {}", e.getMessage());
+        return new ErrorResponse("ERROR[400]: Некорректный параметр: ", e.getMessage());
+    }
+
+    @ExceptionHandler(Exception.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ErrorResponse handleGenericException(final Exception e) {
+        log.error("Внутренняя ошибка сервера: {}", e.getMessage(), e);
+        return new ErrorResponse("ERROR[500]: Внутренняя ошибка сервера: ", e.getMessage());
+    }
 }
