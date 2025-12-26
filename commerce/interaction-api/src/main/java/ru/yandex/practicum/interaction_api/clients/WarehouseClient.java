@@ -18,7 +18,8 @@ public interface WarehouseClient {
     AddressDto getAddress();
 
     @PostMapping("/check")
-    BookedProductsDto checkProductsWarehouse(@RequestBody ShoppingCartDto shoppingCartDto);
+    BookedProductsDto checkProductsWarehouse(
+            @RequestBody ShoppingCartDto shoppingCartDto);
 
     @PostMapping("/add")
     void acceptProductToWareHouse(@RequestBody AddProductToWarehouseRequest request);

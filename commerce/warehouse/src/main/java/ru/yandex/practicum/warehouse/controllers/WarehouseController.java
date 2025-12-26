@@ -18,21 +18,25 @@ public class WarehouseController implements WarehouseClient {
     private final WarehouseService warehouseService;
 
     @Override
+    @GetMapping("/address")
     public AddressDto getAddress() {
         return warehouseService.getAddress();
     }
 
     @Override
+    @PostMapping(value = "/check", consumes = "application/json", produces = "application/json")
     public BookedProductsDto checkProductsWarehouse(@RequestBody ShoppingCartDto shoppingCartDto) {
         return warehouseService.checkProductsWarehouse(shoppingCartDto);
     }
 
     @Override
+    @PostMapping(value = "/add", consumes = "application/json")
     public void acceptProductToWareHouse(@RequestBody AddProductToWarehouseRequest request) {
         warehouseService.acceptProductToWareHouse(request);
     }
 
     @Override
+    @PutMapping(consumes = "application/json")
     public void addProductToWareHouse(@RequestBody NewProductInWarehouseRequest request) {
         warehouseService.addProductToWareHouse(request);
     }
