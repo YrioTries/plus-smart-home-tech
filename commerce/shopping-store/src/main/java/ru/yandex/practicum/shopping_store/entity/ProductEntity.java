@@ -9,6 +9,8 @@ import ru.yandex.practicum.interaction_api.enums.ProductCategory;
 import ru.yandex.practicum.interaction_api.enums.ProductState;
 import ru.yandex.practicum.interaction_api.enums.QuantityState;
 
+import java.math.BigDecimal;
+
 @Entity
 @Getter
 @Setter
@@ -42,5 +44,5 @@ public class ProductEntity {
     private ProductCategory productCategory;
 
     @Column(name = "price", nullable = false)
-    private Integer price;
+    private BigDecimal price;
 }

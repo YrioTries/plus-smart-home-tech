@@ -6,6 +6,6 @@ CREATE TABLE IF NOT EXISTS products (
     quantity_state   VARCHAR(10)   NOT NULL,
     product_state    VARCHAR(10)   NOT NULL,
     product_category VARCHAR(20)   NOT NULL,
-    price            INTEGER       NOT NULL,
+    price            NUMERIC(10,2) NOT NULL,
     CONSTRAINT pk_p PRIMARY KEY (id)
 );
