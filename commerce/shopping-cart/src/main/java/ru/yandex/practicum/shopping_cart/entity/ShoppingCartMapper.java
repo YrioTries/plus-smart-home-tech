@@ -27,5 +27,4 @@ public interface ShoppingCartMapper {
         }
         return result;
     }
-
 }

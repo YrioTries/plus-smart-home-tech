@@ -66,15 +66,15 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         ShoppingCartEntity cart = getCartOrThrow(username);
         validateActive(cart);
 
-        CartProductEntity item = cartProductRepository
+        CartProductEntity carProductEntity = cartProductRepository
                 .findByShoppingCart_IdAndProductId(cart.getId(), request.getProductId())
                 .orElseThrow(() -> new NoProductsInShoppingCartException("Товар не найден в корзине"));
 
-        item.setQuantity(request.getNewQuantity());
-        if (item.getQuantity() <= 0) {
-            cartProductRepository.delete(item);
+        carProductEntity.setQuantity(request.getNewQuantity());
+        if (carProductEntity.getQuantity() <= 0) {
+            cartProductRepository.delete(carProductEntity);
         } else {
-            cartProductRepository.save(item);
+            cartProductRepository.save(carProductEntity);
         }
 
         return getCurrentSoppingCart(username);
@@ -89,8 +89,10 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
                     newCart.setId(UUID.randomUUID().toString());
                     newCart.setOwner(username);
                     newCart.setState(ShoppingCartState.ACTIVE);
-                    return shoppingCartRepository.save(newCart);
+                    return newCart;
                 });
+
+        shoppingCartRepository.save(cart);
 
         validateActive(cart);
 
