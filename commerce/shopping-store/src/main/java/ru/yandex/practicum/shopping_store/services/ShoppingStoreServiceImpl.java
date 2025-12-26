@@ -31,14 +31,16 @@ public class ShoppingStoreServiceImpl implements ShoppingStoreService{
 
     @Override
     public List<ProductDto> getPageableListOfProducts(Pageable pageable, String category) {
-        List<ProductEntity> entities = productRepository
-                .findByProductCategory(ProductCategory.valueOf(category));
+        int page = pageable.getPage() == null ? 0 : pageable.getPage();
+        int size = pageable.getSize() == null ? 10 : pageable.getSize();
 
-        return entities
-                .stream()
+        List<ProductEntity> entities =
+                productRepository.findByProductCategory(ProductCategory.valueOf(category));
+
+        return entities.stream()
                 .filter(p -> p.getProductState() == ProductState.ACTIVE)
-                .skip((long) pageable.getPage() * pageable.getSize())
-                .limit(pageable.getSize())
+                .skip((long) page * size)
+                .limit(size)
                 .map(productMapper::toDto)
                 .toList();
     }
