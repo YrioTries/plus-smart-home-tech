@@ -80,6 +80,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
     @Override
     public ShoppingCartDto addInShoppingCart(String username, ProductDto product) {
+
         ShoppingCartEntity cart = shoppingCartRepository.findByOwner(username)
                 .orElseGet(() -> {
                     ShoppingCartEntity newCart = new ShoppingCartEntity();
@@ -91,7 +92,14 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
         validateActive(cart);
 
-        String productId = product.getProductId();
+        final String productId;
+        String tempId = product.getProductId();
+        if (tempId == null || tempId.isEmpty()) {
+            productId = UUID.randomUUID().toString();
+        } else {
+            productId = tempId;
+        }
+
         CartProductEntity productItem = cartProductRepository
                 .findByShoppingCart_IdAndProductId(cart.getId(), productId)
                 .orElseGet(() -> {
