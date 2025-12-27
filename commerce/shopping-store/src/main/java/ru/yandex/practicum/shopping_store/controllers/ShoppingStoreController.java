@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.interaction_api.enums.ProductCategory;
+import ru.yandex.practicum.interaction_api.enums.QuantityState;
 import ru.yandex.practicum.interaction_api.model.dto.Pageable;
 import ru.yandex.practicum.interaction_api.model.dto.ProductDto;
 import ru.yandex.practicum.interaction_api.model.dto.request.SetProductQuantityStateRequest;
@@ -47,8 +48,9 @@ public class ShoppingStoreController {
 
     @PostMapping("/quantityState")
     @ResponseStatus(HttpStatus.OK)
-    public boolean setProductQuantityState(@RequestBody SetProductQuantityStateRequest request) {
-        return shoppingStoreService.setProductQuantityState(request);
+    public boolean setProductQuantityState(@RequestParam UUID productId,
+                                           @RequestParam QuantityState quantityState) {
+        return shoppingStoreService.setProductQuantityState(productId, quantityState);
     }
 
     @PostMapping("/removeProductFromStore")

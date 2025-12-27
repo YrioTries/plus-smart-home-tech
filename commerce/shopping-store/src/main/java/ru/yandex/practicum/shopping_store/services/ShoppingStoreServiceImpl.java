@@ -2,6 +2,7 @@ package ru.yandex.practicum.shopping_store.services;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 import ru.yandex.practicum.interaction_api.enums.ProductCategory;
 import ru.yandex.practicum.interaction_api.enums.ProductState;
 import ru.yandex.practicum.interaction_api.enums.QuantityState;
@@ -96,10 +97,10 @@ public class ShoppingStoreServiceImpl implements ShoppingStoreService{
     }
 
     @Override
-    public Boolean setProductQuantityState(SetProductQuantityStateRequest request) {
-        ProductEntity productEntity = getProductOrThrow(request.getProductId());
+    public Boolean setProductQuantityState(UUID productId, QuantityState quantityState) {
+        ProductEntity productEntity = getProductOrThrow(productId);
 
-        productEntity.setQuantityState(request.getQuantityState());
+        productEntity.setQuantityState(quantityState);
         productRepository.save(productEntity);
         return true;
     }
