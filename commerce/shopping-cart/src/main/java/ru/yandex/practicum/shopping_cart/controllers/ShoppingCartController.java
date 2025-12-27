@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.interaction_api.model.dto.ProductDto;
 import ru.yandex.practicum.interaction_api.model.dto.ShoppingCartDto;
 import ru.yandex.practicum.interaction_api.model.dto.request.ChangeProductQuantityRequest;
+import ru.yandex.practicum.interaction_api.model.dto.request.RemoveProductsRequest;
 import ru.yandex.practicum.shopping_cart.services.ShoppingCartService;
 
 import java.util.List;
@@ -26,8 +27,8 @@ public class ShoppingCartController {
 
     @PostMapping("/remove")
     @ResponseStatus(HttpStatus.OK)
-    public ShoppingCartDto removeFromShoppingCart(@RequestParam String username, @RequestBody List<UUID> productIds) {
-        return shoppingCartService.removeFromShoppingCart(username, productIds);
+    public ShoppingCartDto removeFromShoppingCart(@RequestParam String username, @RequestBody RemoveProductsRequest request) {
+        return shoppingCartService.removeFromShoppingCart(username, request);
     }
 
     @PostMapping("/change-quantity")

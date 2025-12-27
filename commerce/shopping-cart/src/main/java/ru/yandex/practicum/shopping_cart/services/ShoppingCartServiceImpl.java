@@ -11,6 +11,7 @@ import ru.yandex.practicum.interaction_api.exception.NotAuthorizedUserException;
 import ru.yandex.practicum.interaction_api.model.dto.ProductDto;
 import ru.yandex.practicum.interaction_api.model.dto.ShoppingCartDto;
 import ru.yandex.practicum.interaction_api.model.dto.request.ChangeProductQuantityRequest;
+import ru.yandex.practicum.interaction_api.model.dto.request.RemoveProductsRequest;
 import ru.yandex.practicum.shopping_cart.entity.CartProductEntity;
 import ru.yandex.practicum.shopping_cart.entity.ShoppingCartEntity;
 import ru.yandex.practicum.shopping_cart.entity.ShoppingCartMapper;
@@ -50,11 +51,11 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     }
 
     @Override
-    public ShoppingCartDto removeFromShoppingCart(String username, List<UUID> productIds) {
+    public ShoppingCartDto removeFromShoppingCart(String username, RemoveProductsRequest request) {
         ShoppingCartEntity shoppingCart = getCartOrThrow(username);
         validateActive(shoppingCart);
 
-        for (UUID productId : productIds) {
+        for (UUID productId : request.getProductIds()) {
             cartProductRepository.deleteByShoppingCart_IdAndProductId(shoppingCart.getId(), productId);
         }
 

@@ -1,6 +1,7 @@
 package ru.yandex.practicum.warehouse.controllers;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.interaction_api.clients.WarehouseClient;
 import ru.yandex.practicum.interaction_api.model.dto.AddressDto;
@@ -31,6 +32,7 @@ public class WarehouseController implements WarehouseClient {
 
     @Override
     @PostMapping("/add")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void acceptProductToWareHouse(@RequestBody AddProductToWarehouseRequest request) {
         warehouseService.acceptProductToWareHouse(request);
     }
