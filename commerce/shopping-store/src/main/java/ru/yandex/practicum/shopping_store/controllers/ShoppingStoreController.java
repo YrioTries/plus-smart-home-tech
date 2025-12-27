@@ -29,7 +29,7 @@ public class ShoppingStoreController {
 
     @GetMapping("/{productId}")
     @ResponseStatus(HttpStatus.OK)
-    public ProductDto getProductInfo(@PathVariable("productId") UUID productId) {
+    public ProductDto getProductInfo(@PathVariable UUID productId) {
         return shoppingStoreService.getProductInfo(productId);
     }
 
@@ -47,7 +47,7 @@ public class ShoppingStoreController {
 
     @PostMapping("/quantityState")
     @ResponseStatus(HttpStatus.OK)
-    public Boolean setProductQuantityState( @RequestBody SetProductQuantityStateRequest request) {
+    public boolean setProductQuantityState(@RequestBody SetProductQuantityStateRequest request) {
         return shoppingStoreService.setProductQuantityState(request);
     }
 
