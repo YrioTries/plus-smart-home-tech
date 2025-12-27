@@ -14,6 +14,7 @@ import ru.yandex.practicum.warehouse.entity.WarehouseProductEntity;
 import ru.yandex.practicum.warehouse.repositories.WarehouseRepository;
 
 import java.security.SecureRandom;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -43,7 +44,7 @@ public class WarehouseServiceImpl implements WarehouseService{
         boolean fragile = false;
 
         for (var entry : shoppingCartDto.getProducts().entrySet()) {
-            String productId = entry.getKey();
+            UUID productId = entry.getKey();
             int qty = entry.getValue();
 
             WarehouseProductEntity wp = warehouseRepository.findById(productId)
@@ -87,15 +88,14 @@ public class WarehouseServiceImpl implements WarehouseService{
             throw new SpecifiedProductAlreadyInWarehouseException("Товар уже есть на складе: "
                     + request.getProductId());
 
-        WarehouseProductEntity entity = new WarehouseProductEntity();
-        entity.setProductId(request.getProductId());
-        entity.setFragile(request.isFragile());
-        entity.setWidth(request.getDimension().getWidth());
-        entity.setHeight(request.getDimension().getHeight());
-        entity.setDepth(request.getDimension().getDepth());
-        entity.setWeight(request.getWeight());
-        entity.setQuantity(0);
+        WarehouseProductEntity WarehouseProductEntity = new WarehouseProductEntity();
+        WarehouseProductEntity.setFragile(request.isFragile());
+        WarehouseProductEntity.setWidth(request.getDimension().getWidth());
+        WarehouseProductEntity.setHeight(request.getDimension().getHeight());
+        WarehouseProductEntity.setDepth(request.getDimension().getDepth());
+        WarehouseProductEntity.setWeight(request.getWeight());
+        WarehouseProductEntity.setQuantity(0);
 
-        warehouseRepository.save(entity);
+        warehouseRepository.save(WarehouseProductEntity);
     }
 }

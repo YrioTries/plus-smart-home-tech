@@ -5,9 +5,11 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import ru.yandex.practicum.warehouse.entity.WarehouseProductEntity;
 
-public interface WarehouseRepository extends JpaRepository<WarehouseProductEntity, String> {
-    boolean existsByProductId(String productId);
+import java.util.UUID;
+
+public interface WarehouseRepository extends JpaRepository<WarehouseProductEntity, UUID> {
+    boolean existsByProductId(UUID productId);
 
     @Query("SELECT w.quantity FROM WarehouseProductEntity w WHERE w.productId = :productId")
-    Integer findQuantityByProductId(@Param("productId") String productId);
+    Integer findQuantityByProductId(@Param("productId") UUID productId);
 }
