@@ -54,19 +54,19 @@ public class ShoppingStoreServiceImpl implements ShoppingStoreService{
     @Override
     public ProductDto createProduct(ProductDto productDto) {
 
-        ProductEntity productEntity = productRepository
-                .findById(productDto.getProductId())
-                .orElseGet(() -> {
-                    ProductEntity entity = new ProductEntity();
-                    entity.setName(productDto.getProductName());
-                    entity.setDescription(productDto.getDescription());
-                    entity.setImageSrc(productDto.getImageSrc());
-                    entity.setQuantityState(productDto.getQuantityState());
-                    entity.setProductState(productDto.getProductState());
-                    entity.setProductCategory(productDto.getProductCategory());
-                    entity.setPrice(productDto.getPrice());
-                    return entity;
-                });
+        ProductEntity productEntity = new ProductEntity();
+        productEntity.setName(productDto.getProductName());
+        productEntity.setDescription(productDto.getDescription());
+        productEntity.setImageSrc(productDto.getImageSrc());
+        productEntity.setQuantityState(productDto.getQuantityState());
+        productEntity.setProductState(
+                productDto.getProductState() != null ?
+                        productDto.getProductState() :
+                        ProductState.ACTIVE
+        );
+        productEntity.setProductCategory(productDto.getProductCategory());
+        productEntity.setPrice(productDto.getPrice());
+
 
         if (productEntity.getProductState() == null) {
             productEntity.setProductState(ProductState.ACTIVE);

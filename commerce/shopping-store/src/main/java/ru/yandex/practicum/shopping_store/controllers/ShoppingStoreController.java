@@ -47,7 +47,7 @@ public class ShoppingStoreController {
 
     @PostMapping("/quantityState")
     @ResponseStatus(HttpStatus.OK)
-    public Boolean setProductQuantityState( @RequestParam SetProductQuantityStateRequest request) {
+    public Boolean setProductQuantityState( @RequestBody SetProductQuantityStateRequest request) {
         return shoppingStoreService.setProductQuantityState(request);
     }
 
