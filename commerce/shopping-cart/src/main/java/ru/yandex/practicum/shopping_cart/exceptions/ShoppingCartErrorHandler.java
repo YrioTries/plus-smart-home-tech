@@ -50,4 +50,10 @@ public class ShoppingCartErrorHandler {
         log.error("Ресурс не найден: {}", e.getMessage());
         return new ErrorResponse("ERROR[404]: Произошла ошибка NotFoundException: ", e.getMessage());
     }
+
+    @ExceptionHandler(Exception.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ErrorResponse handleGenericException(Exception ex) {
+        return new ErrorResponse("ERROR[404]: Внутренняя ошибка сервера: ", ex.getMessage());
+    }
 }
