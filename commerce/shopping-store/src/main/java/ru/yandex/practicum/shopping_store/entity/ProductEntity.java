@@ -5,11 +5,13 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.UuidGenerator;
 import ru.yandex.practicum.interaction_api.enums.ProductCategory;
 import ru.yandex.practicum.interaction_api.enums.ProductState;
 import ru.yandex.practicum.interaction_api.enums.QuantityState;
 
 import java.math.BigDecimal;
+import java.util.UUID;
 
 @Entity
 @Getter
@@ -19,8 +21,9 @@ import java.math.BigDecimal;
 @Table(name = "products", schema = "public")
 public class ProductEntity {
     @Id
-    @Column(name = "id", length = 36, nullable = false)
-    private String id;
+    @UuidGenerator
+    @Column(name = "id")
+    private UUID id;
 
     @Column(name = "name", length = 40, nullable = false)
     private String name;

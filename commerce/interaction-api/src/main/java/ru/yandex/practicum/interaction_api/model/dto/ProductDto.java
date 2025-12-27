@@ -7,11 +7,12 @@ import ru.yandex.practicum.interaction_api.enums.ProductState;
 import ru.yandex.practicum.interaction_api.enums.QuantityState;
 
 import java.math.BigDecimal;
+import java.util.UUID;
 
 @Getter
 @Setter
 public class ProductDto {
-    private String productId;
+    private UUID productId;
     private String productName;
     private String description;
     private String imageSrc;

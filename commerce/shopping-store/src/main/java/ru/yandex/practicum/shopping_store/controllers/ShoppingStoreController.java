@@ -3,12 +3,14 @@ package ru.yandex.practicum.shopping_store.controllers;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import ru.yandex.practicum.interaction_api.enums.ProductCategory;
 import ru.yandex.practicum.interaction_api.model.dto.Pageable;
 import ru.yandex.practicum.interaction_api.model.dto.ProductDto;
 import ru.yandex.practicum.interaction_api.model.dto.request.SetProductQuantityStateRequest;
 import ru.yandex.practicum.shopping_store.services.ShoppingStoreService;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
@@ -20,14 +22,14 @@ public class ShoppingStoreController {
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public List<ProductDto> getPageableListOfProducts(
-            @RequestParam String category,
+            @RequestParam ProductCategory category,
             @ModelAttribute Pageable pageable) {
         return shoppingStoreService.getPageableListOfProducts(pageable, category);
     }
 
     @GetMapping("/{productId}")
     @ResponseStatus(HttpStatus.OK)
-    public ProductDto getProductInfo(@PathVariable("productId") String productId) {
+    public ProductDto getProductInfo(@PathVariable("productId") UUID productId) {
         return shoppingStoreService.getProductInfo(productId);
     }
 
@@ -51,7 +53,7 @@ public class ShoppingStoreController {
 
     @PostMapping("/removeProductFromStore")
     @ResponseStatus(HttpStatus.OK)
-    public Boolean deleteProduct(@RequestBody String productId) {
+    public Boolean deleteProduct(@RequestBody UUID productId) {
         return shoppingStoreService.deleteProduct(productId);
     }
 }

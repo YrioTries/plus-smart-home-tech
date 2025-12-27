@@ -23,19 +23,19 @@ public class ShoppingStoreServiceImpl implements ShoppingStoreService{
     private final ProductMapper productMapper;
     private final ProductRepository productRepository;
 
-    private ProductEntity getProductOrThrow(String productId) {
+    private ProductEntity getProductOrThrow(UUID productId) {
         return productRepository
                 .findById(productId)
                 .orElseThrow(() -> new ProductNotFoundException("Товар с id:" + productId +"не найден"));
     }
 
     @Override
-    public List<ProductDto> getPageableListOfProducts(Pageable pageable, String category) {
+    public List<ProductDto> getPageableListOfProducts(Pageable pageable, ProductCategory category) {
         int page = pageable.getPage() == null ? 0 : pageable.getPage();
         int size = pageable.getSize() == null ? 10 : pageable.getSize();
 
         List<ProductEntity> entities =
-                productRepository.findByProductCategory(ProductCategory.valueOf(category));
+                productRepository.findByProductCategory(category);
 
         return entities.stream()
                 .filter(p -> p.getProductState() == ProductState.ACTIVE)
@@ -46,26 +46,18 @@ public class ShoppingStoreServiceImpl implements ShoppingStoreService{
     }
 
     @Override
-    public ProductDto getProductInfo(String productId) {
+    public ProductDto getProductInfo(UUID productId) {
         ProductEntity productEntity = getProductOrThrow(productId);
         return productMapper.toDto(productEntity);
     }
 
     @Override
     public ProductDto createProduct(ProductDto productDto) {
-        final String productId;
-        String tempId = productDto.getProductId();
-        if (tempId == null || tempId.isEmpty()) {
-            productId = UUID.randomUUID().toString();
-        } else {
-            productId = tempId;
-        }
 
         ProductEntity productEntity = productRepository
-                .findById(productId)
+                .findById(productDto.getProductId())
                 .orElseGet(() -> {
                     ProductEntity entity = new ProductEntity();
-                    entity.setId(productId);
                     entity.setName(productDto.getProductName());
                     entity.setDescription(productDto.getDescription());
                     entity.setImageSrc(productDto.getImageSrc());
@@ -107,13 +99,13 @@ public class ShoppingStoreServiceImpl implements ShoppingStoreService{
     public Boolean setProductQuantityState(SetProductQuantityStateRequest request) {
         ProductEntity productEntity = getProductOrThrow(request.getProductId());
 
-        productEntity.setQuantityState(QuantityState.valueOf(request.getQuantityState()));
+        productEntity.setQuantityState(request.getQuantityState());
         productRepository.save(productEntity);
         return true;
     }
 
     @Override
-    public Boolean deleteProduct(String productId) {
+    public Boolean deleteProduct(UUID productId) {
         ProductEntity productEntity = getProductOrThrow(productId);
 
         productEntity.setProductState(ProductState.DEACTIVATE);

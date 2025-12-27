@@ -2,18 +2,20 @@ package ru.yandex.practicum.shopping_store.services;
 
 
 import org.springframework.stereotype.Service;
+import ru.yandex.practicum.interaction_api.enums.ProductCategory;
 import ru.yandex.practicum.interaction_api.model.dto.Pageable;
 import ru.yandex.practicum.interaction_api.model.dto.ProductDto;
 import ru.yandex.practicum.interaction_api.model.dto.request.SetProductQuantityStateRequest;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public interface ShoppingStoreService {
 
-    List<ProductDto> getPageableListOfProducts(Pageable pageable, String category);
+    List<ProductDto> getPageableListOfProducts(Pageable pageable, ProductCategory category);
 
-    ProductDto getProductInfo(String productId);
+    ProductDto getProductInfo(UUID productId);
 
     ProductDto createProduct(ProductDto productDto);
 
@@ -21,5 +23,5 @@ public interface ShoppingStoreService {
 
     Boolean setProductQuantityState(SetProductQuantityStateRequest request);
 
-    Boolean deleteProduct(String productId);
+    Boolean deleteProduct(UUID productId);
 }
