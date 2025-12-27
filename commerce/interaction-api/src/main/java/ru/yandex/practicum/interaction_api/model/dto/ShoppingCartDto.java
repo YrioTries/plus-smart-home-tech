@@ -8,5 +8,5 @@ import java.util.UUID;
 @Data
 public class ShoppingCartDto {
     private UUID shoppingCartId;
-    private Map<String, Integer> products;
+    private Map<UUID, Integer> products;
 }
