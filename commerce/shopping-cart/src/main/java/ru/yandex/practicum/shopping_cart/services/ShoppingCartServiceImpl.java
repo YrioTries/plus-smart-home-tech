@@ -50,11 +50,11 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     }
 
     @Override
-    public ShoppingCartDto removeFromShoppingCart(String username, List<String> productIds) {
+    public ShoppingCartDto removeFromShoppingCart(String username, List<UUID> productIds) {
         ShoppingCartEntity shoppingCart = getCartOrThrow(username);
         validateActive(shoppingCart);
 
-        for (String productId : productIds) {
+        for (UUID productId : productIds) {
             cartProductRepository.deleteByShoppingCart_IdAndProductId(shoppingCart.getId(), productId);
         }
 
@@ -86,7 +86,6 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         ShoppingCartEntity cart = shoppingCartRepository.findByOwner(username)
                 .orElseGet(() -> {
                     ShoppingCartEntity newCart = new ShoppingCartEntity();
-                    newCart.setId(UUID.randomUUID().toString());
                     newCart.setOwner(username);
                     newCart.setState(ShoppingCartState.ACTIVE);
                     return newCart;
@@ -95,23 +94,16 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         shoppingCartRepository.save(cart);
 
         validateActive(cart);
-
-        final String productId;
-        String tempId = product.getProductId();
-        if (tempId == null || tempId.isEmpty()) {
-            productId = UUID.randomUUID().toString();
-        } else {
-            productId = tempId;
-        }
+        final UUID productId = product.getProductId();
 
         CartProductEntity productItem = cartProductRepository
                 .findByShoppingCart_IdAndProductId(cart.getId(), productId)
                 .orElseGet(() -> {
-                    CartProductEntity newItem = new CartProductEntity();
-                    newItem.setShoppingCart(cart);
-                    newItem.setProductId(productId);
-                    newItem.setQuantity(0);
-                    return newItem;
+                    CartProductEntity newCartProductEntity = new CartProductEntity();
+                    newCartProductEntity.setShoppingCart(cart);
+                    newCartProductEntity.setProductId(productId);
+                    newCartProductEntity.setQuantity(0);
+                    return newCartProductEntity;
                 });
 
         productItem.setQuantity(productItem.getQuantity() + 1);

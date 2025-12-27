@@ -5,9 +5,11 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.UuidGenerator;
 import ru.yandex.practicum.interaction_api.enums.ShoppingCartState;
 
 import java.util.List;
+import java.util.UUID;
 
 @Entity
 @Getter
@@ -17,8 +19,9 @@ import java.util.List;
 @Table(name = "shopping_carts", schema = "public")
 public class ShoppingCartEntity {
     @Id
+    @UuidGenerator
     @Column(name = "id")
-    private String id;
+    private UUID id;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "state", length = 10)

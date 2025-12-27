@@ -3,6 +3,7 @@ package ru.yandex.practicum.shopping_cart.entity;
 import lombok.*;
 
 import java.io.Serializable;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -10,6 +11,6 @@ import java.io.Serializable;
 @AllArgsConstructor
 @EqualsAndHashCode
 public class CartProductId implements Serializable {
-    private String shoppingCart;  // cart_id
-    private String productId;    // product_id
+    private UUID shoppingCart;  // cart_id
+    private UUID productId;    // product_id
 }

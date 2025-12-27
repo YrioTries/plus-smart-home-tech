@@ -4,13 +4,14 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.UUID;
+
 @Entity
 @Getter
 @Setter
 @IdClass(CartProductId.class)
 @Table(name = "products_cart", schema = "public")
 public class CartProductEntity {
-
     @Id
     @ManyToOne
     @JoinColumn(name = "cart_id", nullable = false)
@@ -18,7 +19,7 @@ public class CartProductEntity {
 
     @Id
     @Column(name = "product_id", nullable = false)
-    private String productId;
+    private UUID productId;
 
     @Column(name = "quantity", nullable = false)
     private Integer quantity = 1;

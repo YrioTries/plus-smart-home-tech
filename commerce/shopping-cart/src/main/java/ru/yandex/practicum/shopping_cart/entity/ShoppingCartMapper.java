@@ -6,6 +6,7 @@ import ru.yandex.practicum.interaction_api.model.dto.ShoppingCartDto;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 @Mapper(componentModel = "spring",
         injectionStrategy = InjectionStrategy.CONSTRUCTOR)
@@ -17,8 +18,8 @@ public interface ShoppingCartMapper {
     ShoppingCartDto toDto(ShoppingCartEntity entity);
 
     @Named("mapCartProductsToMap")
-    default Map<String, Integer> mapCartProductsToMap(List<CartProductEntity> cartProducts) {
-        Map<String, Integer> result = new HashMap<>();
+    default Map<UUID, Integer> mapCartProductsToMap(List<CartProductEntity> cartProducts) {
+        Map<UUID, Integer> result = new HashMap<>();
         if (cartProducts == null) return result;
 
         for (CartProductEntity cart : cartProducts) {

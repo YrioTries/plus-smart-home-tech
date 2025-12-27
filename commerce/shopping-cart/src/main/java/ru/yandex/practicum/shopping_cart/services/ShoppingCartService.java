@@ -5,12 +5,13 @@ import ru.yandex.practicum.interaction_api.model.dto.ShoppingCartDto;
 import ru.yandex.practicum.interaction_api.model.dto.request.ChangeProductQuantityRequest;
 
 import java.util.List;
+import java.util.UUID;
 
 public interface ShoppingCartService {
 
     ShoppingCartDto getCurrentSoppingCart(String username);
 
-    ShoppingCartDto removeFromShoppingCart(String username, List<String> productIds);
+    ShoppingCartDto removeFromShoppingCart(String username, List<UUID> productIds);
 
     ShoppingCartDto changeProductQuantity(String username, ChangeProductQuantityRequest request);
 
