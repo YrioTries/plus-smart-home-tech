@@ -88,14 +88,15 @@ public class WarehouseServiceImpl implements WarehouseService{
             throw new SpecifiedProductAlreadyInWarehouseException("Товар уже есть на складе: "
                     + request.getProductId());
 
-        WarehouseProductEntity WarehouseProductEntity = new WarehouseProductEntity();
-        WarehouseProductEntity.setFragile(request.isFragile());
-        WarehouseProductEntity.setWidth(request.getDimension().getWidth());
-        WarehouseProductEntity.setHeight(request.getDimension().getHeight());
-        WarehouseProductEntity.setDepth(request.getDimension().getDepth());
-        WarehouseProductEntity.setWeight(request.getWeight());
-        WarehouseProductEntity.setQuantity(0);
+        WarehouseProductEntity warehouseProductEntity = new WarehouseProductEntity();
+        warehouseProductEntity.setProductId(request.getProductId());
+        warehouseProductEntity.setFragile(request.isFragile());
+        warehouseProductEntity.setWidth(request.getDimension().getWidth());
+        warehouseProductEntity.setHeight(request.getDimension().getHeight());
+        warehouseProductEntity.setDepth(request.getDimension().getDepth());
+        warehouseProductEntity.setWeight(request.getWeight());
+        warehouseProductEntity.setQuantity(0);
 
-        warehouseRepository.save(WarehouseProductEntity);
+        warehouseRepository.save(warehouseProductEntity);
     }
 }
