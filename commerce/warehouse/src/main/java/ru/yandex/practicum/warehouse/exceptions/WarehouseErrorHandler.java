@@ -38,10 +38,10 @@ public class WarehouseErrorHandler {
     }
 
     @ExceptionHandler(NoSpecifiedProductInWarehouseException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse notFound(final NoSpecifiedProductInWarehouseException e) {
         log.error("Ресурс не найден: {}", e.getMessage());
-        return new ErrorResponse("ERROR[404]: Произошла ошибка NoSpecifiedProductInWarehouseException: ", e.getMessage());
+        return new ErrorResponse("ERROR[400]: Произошла ошибка NoSpecifiedProductInWarehouseException: ", e.getMessage());
     }
 
     @ExceptionHandler(SpecifiedProductAlreadyInWarehouseException.class)
