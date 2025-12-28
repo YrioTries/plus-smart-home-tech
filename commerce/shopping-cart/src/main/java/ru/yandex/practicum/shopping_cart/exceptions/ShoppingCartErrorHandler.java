@@ -39,8 +39,15 @@ public class ShoppingCartErrorHandler {
 
     @ExceptionHandler(FeignException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ErrorResponse notFound(final FeignException e) {
+    public ErrorResponse notFoundFeign(final FeignException e) {
         log.error("Ресурс не найден: {}", e.getMessage());
         return new ErrorResponse("ERROR[404]: FeignException: ", e.getMessage());
+    }
+
+    @ExceptionHandler(NoProductsInShoppingCartException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorResponse notFound(final NoProductsInShoppingCartException e) {
+        log.error("Ресурс не найден: {}", e.getMessage());
+        return new ErrorResponse("ERROR[404]: Произошла ошибка NotFoundException: ", e.getMessage());
     }
 }
