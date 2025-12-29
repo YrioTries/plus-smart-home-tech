@@ -2,6 +2,7 @@ package ru.yandex.practicum.shopping_store.services;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.interaction_api.enums.ProductCategory;
@@ -32,8 +33,18 @@ public class ShoppingStoreServiceImpl implements ShoppingStoreService{
 
     @Override
     public Page<ProductDto> getPageableListOfProducts(Pageable pageable, ProductCategory category) {
-        Page<ProductEntity> products = productRepository.findAllByProductCategory(category, pageable);
-        return products.map(productMapper::toDto);
+        Page<ProductEntity> entityPage = productRepository.findByProductCategory(category, pageable);
+
+        if (entityPage.isEmpty()) {
+            throw new ProductNotFoundException("No products found for category: " + category);
+        }
+
+        List<ProductDto> productDtos = entityPage.getContent().stream()
+                .filter(p -> p.getProductState() == ProductState.ACTIVE)
+                .map(productMapper::toDto)
+                .collect(Collectors.toList());
+
+        return new PageImpl<>(productDtos);
     }
 
     @Override

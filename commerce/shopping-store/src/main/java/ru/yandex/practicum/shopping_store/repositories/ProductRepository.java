@@ -13,5 +13,5 @@ public interface ProductRepository extends JpaRepository<ProductEntity, UUID> {
     @Override
     Optional<ProductEntity> findById(UUID id);
 
-    Page<ProductEntity> findAllByProductCategory(ProductCategory category, Pageable pageable);
+    Page<ProductEntity> findByProductCategory(ProductCategory category, Pageable pageable);
 }
