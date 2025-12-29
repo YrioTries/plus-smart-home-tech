@@ -26,7 +26,7 @@ public class ProductEntity {
     private UUID id;
 
     @Column(name = "name", length = 40, nullable = false)
-    private String name;
+    private String productName;
 
     @Column(name = "description", nullable = false)
     private String description;

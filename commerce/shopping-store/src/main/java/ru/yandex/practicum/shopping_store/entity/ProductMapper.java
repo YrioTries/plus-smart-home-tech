@@ -10,10 +10,8 @@ import ru.yandex.practicum.interaction_api.model.dto.ProductDto;
 public interface ProductMapper {
 
     @Mapping(target = "productId", source = "id")
-    @Mapping(target = "productName", source = "name")
     ProductDto toDto(ProductEntity entity);
 
     @Mapping(target = "id", source = "productId")
-    @Mapping(target = "name", source = "productName")
     ProductEntity toEntity(ProductDto dto);
 }

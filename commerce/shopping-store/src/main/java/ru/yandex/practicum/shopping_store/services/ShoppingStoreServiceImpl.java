@@ -58,7 +58,7 @@ public class ShoppingStoreServiceImpl implements ShoppingStoreService{
     public ProductDto createProduct(ProductDto productDto) {
 
         ProductEntity productEntity = new ProductEntity();
-        productEntity.setName(productDto.getProductName());
+        productEntity.setProductName(productDto.getProductName());
         productEntity.setDescription(productDto.getDescription());
         productEntity.setImageSrc(productDto.getImageSrc());
         productEntity.setQuantityState(productDto.getQuantityState());
@@ -85,7 +85,7 @@ public class ShoppingStoreServiceImpl implements ShoppingStoreService{
     public ProductDto updateProduct(ProductDto productDto) {
         ProductEntity productEntity = getProductOrThrow(productDto.getProductId());
 
-        productEntity.setName(productDto.getProductName());
+        productEntity.setProductName(productDto.getProductName());
         productEntity.setDescription(productDto.getDescription());
         productEntity.setImageSrc(productDto.getImageSrc());
         productEntity.setQuantityState(productDto.getQuantityState());

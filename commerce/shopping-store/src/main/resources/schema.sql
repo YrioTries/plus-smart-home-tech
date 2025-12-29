@@ -1,6 +1,6 @@
 CREATE TABLE IF NOT EXISTS products (
     id               UUID          NOT NULL,
-    name             VARCHAR(40)   NOT NULL,
+    productName      VARCHAR(40)   NOT NULL,
     description      VARCHAR(200)  NOT NULL,
     imageSrc         VARCHAR(500),
     quantity_state   VARCHAR(10)   NOT NULL,
