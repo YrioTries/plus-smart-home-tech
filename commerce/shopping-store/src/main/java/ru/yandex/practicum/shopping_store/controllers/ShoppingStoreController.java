@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.interaction_api.enums.ProductCategory;
 import ru.yandex.practicum.interaction_api.enums.QuantityState;
+import ru.yandex.practicum.interaction_api.model.dto.Page;
 import ru.yandex.practicum.interaction_api.model.dto.Pageable;
 import ru.yandex.practicum.interaction_api.model.dto.ProductDto;
 import ru.yandex.practicum.interaction_api.model.dto.request.SetProductQuantityStateRequest;
@@ -22,7 +23,7 @@ public class ShoppingStoreController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<ProductDto> getPageableListOfProducts(
+    public Page<ProductDto> getPageableListOfProducts(
             @RequestParam ProductCategory category,
             @ModelAttribute Pageable pageable) {
         return shoppingStoreService.getPageableListOfProducts(pageable, category);
