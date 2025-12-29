@@ -2,9 +2,9 @@ package ru.yandex.practicum.warehouse.services;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.yandex.practicum.interaction_api.exception.NoSpecifiedProductInWarehouseException;
-import ru.yandex.practicum.interaction_api.exception.ProductInShoppingCartLowQuantityInWarehouse;
-import ru.yandex.practicum.interaction_api.exception.SpecifiedProductAlreadyInWarehouseException;
+import ru.yandex.practicum.error_handler.exception.NoSpecifiedProductInWarehouseException;
+import ru.yandex.practicum.error_handler.exception.ProductInShoppingCartLowQuantityInWarehouse;
+import ru.yandex.practicum.error_handler.exception.SpecifiedProductAlreadyInWarehouseException;
 import ru.yandex.practicum.interaction_api.model.dto.AddressDto;
 import ru.yandex.practicum.interaction_api.model.dto.BookedProductsDto;
 import ru.yandex.practicum.interaction_api.model.dto.ShoppingCartDto;
