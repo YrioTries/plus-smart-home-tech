@@ -2,20 +2,17 @@ package ru.yandex.practicum.shopping_store.services;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestParam;
 import ru.yandex.practicum.interaction_api.enums.ProductCategory;
 import ru.yandex.practicum.interaction_api.enums.ProductState;
 import ru.yandex.practicum.interaction_api.enums.QuantityState;
 import ru.yandex.practicum.interaction_api.exception.ProductNotFoundException;
-import ru.yandex.practicum.interaction_api.model.dto.Pageable;
 import ru.yandex.practicum.interaction_api.model.dto.ProductDto;
-
 import ru.yandex.practicum.shopping_store.entity.ProductEntity;
 import ru.yandex.practicum.shopping_store.entity.ProductMapper;
 import ru.yandex.practicum.shopping_store.repositories.ProductRepository;
 
-import java.util.List;
 import java.util.UUID;
 
 @Service
