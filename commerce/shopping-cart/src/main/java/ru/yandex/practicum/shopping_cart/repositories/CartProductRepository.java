@@ -9,10 +9,9 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface CartProductRepository extends JpaRepository<CartProductEntity, CartProductId> {
+    Optional<CartProductEntity> findByCartIdAndProductId(UUID cartId, UUID productId);
 
-    List<CartProductEntity> findByShoppingCart_Id(UUID cartId);
+    List<CartProductEntity> findByCartId(UUID cartId);
 
-    Optional<CartProductEntity> findByShoppingCart_IdAndProductId(UUID shoppingCartId, UUID productId);
-
-    void deleteByShoppingCart_IdAndProductId(UUID shoppingCartId, UUID productId);
+    void deleteByCartIdAndProductId(UUID cartId, UUID productId);
 }

@@ -11,6 +11,6 @@ import java.util.UUID;
 @AllArgsConstructor
 @EqualsAndHashCode
 public class CartProductId implements Serializable {
-    private UUID shoppingCart;  // cart_id
+    private UUID cartId;        // cart_id
     private UUID productId;    // product_id
 }

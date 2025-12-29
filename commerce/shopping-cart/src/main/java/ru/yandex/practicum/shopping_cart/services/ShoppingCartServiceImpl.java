@@ -44,8 +44,8 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     @Override
     public ShoppingCartDto getCurrentSoppingCart(String username) {
         ShoppingCartEntity shoppingCart = getCartOrThrow(username);
-        List<CartProductEntity> cartProductList = cartProductRepository.findByShoppingCart_Id(shoppingCart.getId());
-        shoppingCart.setCartProducts(cartProductList);
+        List<CartProductEntity> cartProductList = cartProductRepository.findByCartId(shoppingCart.getId());
+        shoppingCart.setCartProducts(cartProductList);  // Для mapper
         return shoppingCartMapper.toDto(shoppingCart);
     }
 
@@ -55,7 +55,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         validateActive(shoppingCart);
 
         for (UUID productId : request.getProductIds()) {
-            cartProductRepository.deleteByShoppingCart_IdAndProductId(shoppingCart.getId(), productId);
+            cartProductRepository.deleteByCartIdAndProductId(shoppingCart.getId(), productId);
         }
 
         return getCurrentSoppingCart(username);
@@ -67,7 +67,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         validateActive(cart);
 
         CartProductEntity carProductEntity = cartProductRepository
-                .findByShoppingCart_IdAndProductId(cart.getId(), request.getProductId())
+                .findByCartIdAndProductId(cart.getId(), request.getProductId())
                 .orElseThrow(() -> new NoProductsInShoppingCartException("Товар не найден в корзине"));
 
         carProductEntity.setQuantity(request.getNewQuantity());
@@ -97,12 +97,13 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         final UUID productId = product.getProductId();
 
         CartProductEntity productItem = cartProductRepository
-                .findByShoppingCart_IdAndProductId(cart.getId(), productId)
+                .findByCartIdAndProductId(cart.getId(), productId)  // ✅ Изменить метод
                 .orElseGet(() -> {
                     CartProductEntity newCartProductEntity = new CartProductEntity();
-                    newCartProductEntity.setShoppingCart(cart);
+                    newCartProductEntity.setCartId(cart.getId());
                     newCartProductEntity.setProductId(productId);
                     newCartProductEntity.setQuantity(0);
+                    newCartProductEntity.setShoppingCart(cart);  // ✅ Связь
                     return newCartProductEntity;
                 });
 
