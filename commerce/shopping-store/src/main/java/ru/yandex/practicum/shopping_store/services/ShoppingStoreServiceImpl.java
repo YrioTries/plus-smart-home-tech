@@ -1,6 +1,7 @@
 package ru.yandex.practicum.shopping_store.services;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
 import ru.yandex.practicum.interaction_api.enums.ProductCategory;
@@ -9,8 +10,7 @@ import ru.yandex.practicum.interaction_api.enums.QuantityState;
 import ru.yandex.practicum.interaction_api.exception.ProductNotFoundException;
 import ru.yandex.practicum.interaction_api.model.dto.Pageable;
 import ru.yandex.practicum.interaction_api.model.dto.ProductDto;
-import ru.yandex.practicum.interaction_api.model.dto.ProductPageDto;
-import ru.yandex.practicum.interaction_api.model.dto.request.SetProductQuantityStateRequest;
+
 import ru.yandex.practicum.shopping_store.entity.ProductEntity;
 import ru.yandex.practicum.shopping_store.entity.ProductMapper;
 import ru.yandex.practicum.shopping_store.repositories.ProductRepository;
@@ -32,21 +32,12 @@ public class ShoppingStoreServiceImpl implements ShoppingStoreService{
     }
 
     @Override
-    public ProductPageDto getPageableListOfProducts(Pageable pageable, ProductCategory category) {
-        int page = pageable.getPage() == null ? 0 : pageable.getPage();
-        int size = pageable.getSize() == null ? 10 : pageable.getSize();
-
-        List<ProductEntity> entities =
-                productRepository.findByProductCategory(category);
-
-        List<ProductDto> products = entities.stream()
-                .filter(p -> p.getProductState() == ProductState.ACTIVE)
-                .skip((long) page * size)
-                .limit(size)
-                .map(productMapper::toDto)
-                .toList();
-
-        return new ProductPageDto(products);
+    public Page<ProductDto> getProducts(ProductCategory category, Pageable pageable) {
+        return productRepository.findAllByProductCategoryAndProductStateOrderById(
+                category,
+                ProductState.ACTIVE,
+                pageable
+        ).map(productMapper::toDto);
     }
 
     @Override
