@@ -44,7 +44,7 @@ public class ShoppingStoreServiceImpl implements ShoppingStoreService{
                 .map(productMapper::toDto)
                 .collect(Collectors.toList());
 
-        return new PageImpl<>(productDtos, pageable, productDtos.size());
+        return new PageImpl<>(productDtos);
     }
 
 
