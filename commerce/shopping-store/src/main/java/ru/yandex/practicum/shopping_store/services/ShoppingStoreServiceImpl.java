@@ -13,6 +13,7 @@ import ru.yandex.practicum.shopping_store.entity.ProductEntity;
 import ru.yandex.practicum.shopping_store.entity.ProductMapper;
 import ru.yandex.practicum.shopping_store.repositories.ProductRepository;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -44,14 +45,18 @@ public class ShoppingStoreServiceImpl implements ShoppingStoreService{
                 .map(productMapper::toDto)
                 .toList();
 
+        if (data.isEmpty() && !entities.isEmpty()) {
+            data = Collections.emptyList();
+        }
+
         Page<ProductDto> result = new Page<>();
         result.setContent(data);
         result.setNumber(page);
         result.setSize(size);
         result.setTotalElements(entities.size());
-        result.setTotalPages((int) Math.ceil((double) entities.size() / size));
+        result.setTotalPages(entities.isEmpty() ? 0 : (int) Math.ceil((double) entities.size() / size));
         result.setFirst(page == 0);
-        result.setLast(page >= (Math.ceil((double) entities.size() / size) - 1));
+        result.setLast(entities.isEmpty() || page >= (Math.ceil((double) entities.size() / size) - 1));
 
         return result;
     }
