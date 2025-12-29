@@ -1,21 +1,22 @@
 package ru.yandex.practicum.shopping_store.services;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.interaction_api.enums.ProductCategory;
 import ru.yandex.practicum.interaction_api.enums.ProductState;
 import ru.yandex.practicum.interaction_api.enums.QuantityState;
 import ru.yandex.practicum.interaction_api.exception.ProductNotFoundException;
-import ru.yandex.practicum.interaction_api.model.dto.Page;
-import ru.yandex.practicum.interaction_api.model.dto.Pageable;
 import ru.yandex.practicum.interaction_api.model.dto.ProductDto;
 import ru.yandex.practicum.shopping_store.entity.ProductEntity;
 import ru.yandex.practicum.shopping_store.entity.ProductMapper;
 import ru.yandex.practicum.shopping_store.repositories.ProductRepository;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -32,33 +33,14 @@ public class ShoppingStoreServiceImpl implements ShoppingStoreService{
 
     @Override
     public Page<ProductDto> getPageableListOfProducts(Pageable pageable, ProductCategory category) {
-        int page = pageable.getPage() == null ? 0 : pageable.getPage();
-        int size = pageable.getSize() == null ? 10 : pageable.getSize();
+        Page<ProductEntity> entityPage = productRepository.findByProductCategory(category, pageable);
 
-        List<ProductEntity> entities = productRepository.findByProductCategory(category).stream()
+        List<ProductDto> productDtos = entityPage.getContent().stream()
                 .filter(p -> p.getProductState() == ProductState.ACTIVE)
-                .toList();
-
-        List<ProductDto> data = entities.stream()
-                .skip((long) page * size)
-                .limit(size)
                 .map(productMapper::toDto)
-                .toList();
+                .collect(Collectors.toList());
 
-        if (data.isEmpty() && !entities.isEmpty()) {
-            data = Collections.emptyList();
-        }
-
-        Page<ProductDto> result = new Page<>();
-        result.setContent(data);
-        result.setNumber(page);
-        result.setSize(size);
-        result.setTotalElements(entities.size());
-        result.setTotalPages(entities.isEmpty() ? 0 : (int) Math.ceil((double) entities.size() / size));
-        result.setFirst(page == 0);
-        result.setLast(entities.isEmpty() || page >= (Math.ceil((double) entities.size() / size) - 1));
-
-        return result;
+        return new PageImpl<>(productDtos, pageable, productDtos.size());
     }
 
     @Override
