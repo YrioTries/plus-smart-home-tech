@@ -6,6 +6,7 @@ import ru.yandex.practicum.interaction_api.enums.ProductCategory;
 import ru.yandex.practicum.interaction_api.enums.QuantityState;
 import ru.yandex.practicum.interaction_api.model.dto.Pageable;
 import ru.yandex.practicum.interaction_api.model.dto.ProductDto;
+import ru.yandex.practicum.interaction_api.model.dto.ProductPageDto;
 import ru.yandex.practicum.interaction_api.model.dto.request.SetProductQuantityStateRequest;
 
 import java.util.List;
@@ -14,7 +15,7 @@ import java.util.UUID;
 @Service
 public interface ShoppingStoreService {
 
-    List<ProductDto> getPageableListOfProducts(Pageable pageable, ProductCategory category);
+    ProductPageDto getPageableListOfProducts(Pageable pageable, ProductCategory category);
 
     ProductDto getProductInfo(UUID productId);
 
