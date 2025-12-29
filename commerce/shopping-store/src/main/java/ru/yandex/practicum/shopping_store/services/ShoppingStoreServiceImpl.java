@@ -47,7 +47,6 @@ public class ShoppingStoreServiceImpl implements ShoppingStoreService{
         return new PageImpl<>(productDtos);
     }
 
-
     @Override
     public ProductDto getProductInfo(UUID productId) {
         ProductEntity productEntity = getProductOrThrow(productId);
@@ -69,7 +68,6 @@ public class ShoppingStoreServiceImpl implements ShoppingStoreService{
         );
         productEntity.setProductCategory(productDto.getProductCategory());
         productEntity.setPrice(productDto.getPrice());
-
 
         if (productEntity.getProductState() == null) {
             productEntity.setProductState(ProductState.ACTIVE);
