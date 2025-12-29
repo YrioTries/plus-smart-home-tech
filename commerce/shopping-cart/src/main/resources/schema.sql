@@ -6,8 +6,8 @@ CREATE TABLE IF NOT EXISTS shopping_carts (
 );
 
 CREATE TABLE IF NOT EXISTS products_cart (
-    cart_id    UUID NOT NULL,
-    product_id UUID NOT NULL,
+    cartId    UUID NOT NULL,
+    productId UUID NOT NULL,
     quantity   INT  NOT NULL DEFAULT 1,
     CONSTRAINT pk_pc PRIMARY KEY (cart_id, product_id),
     CONSTRAINT fk_cart_id FOREIGN KEY (cart_id) REFERENCES shopping_carts(id) ON DELETE CASCADE

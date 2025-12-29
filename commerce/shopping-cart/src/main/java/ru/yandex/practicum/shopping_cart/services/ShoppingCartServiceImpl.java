@@ -97,13 +97,13 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         final UUID productId = product.getProductId();
 
         CartProductEntity productItem = cartProductRepository
-                .findByCartIdAndProductId(cart.getId(), productId)  // ✅ Изменить метод
+                .findByCartIdAndProductId(cart.getId(), productId)
                 .orElseGet(() -> {
                     CartProductEntity newCartProductEntity = new CartProductEntity();
                     newCartProductEntity.setCartId(cart.getId());
                     newCartProductEntity.setProductId(productId);
                     newCartProductEntity.setQuantity(0);
-                    newCartProductEntity.setShoppingCart(cart);  // ✅ Связь
+                    newCartProductEntity.setShoppingCart(cart);
                     return newCartProductEntity;
                 });
 

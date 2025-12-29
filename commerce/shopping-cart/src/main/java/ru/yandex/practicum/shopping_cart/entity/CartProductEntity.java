@@ -13,18 +13,18 @@ import java.util.UUID;
 @Table(name = "products_cart", schema = "public")
 public class CartProductEntity {
     @Id
-    @Column(name = "cart_id", nullable = false)
+    @Column(name = "cartId", nullable = false)
     private UUID cartId;
 
     @Id
-    @Column(name = "product_id", nullable = false)
+    @Column(name = "productId", nullable = false)
     private UUID productId;
 
     @Column(name = "quantity", nullable = false)
     private Integer quantity = 1;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "cart_id", insertable = false, updatable = false)
+    @JoinColumn(name = "cartId", insertable = false, updatable = false)
     private ShoppingCartEntity shoppingCart;
 }
 
