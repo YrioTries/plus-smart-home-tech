@@ -30,8 +30,8 @@ public class ShoppingStoreServiceImpl implements ShoppingStoreService{
 
     @Override
     public Page<ProductDto> getProducts(ProductCategory category, Pageable pageable) {
-        return productRepository.findAllByProductCategoryAndProductStateOrderById(
-                category,
+        return productRepository.findAllByProductCategoryNameAndProductState(
+                category.getProductName(),  // ← строка из enum'а
                 ProductState.ACTIVE,
                 pageable
         ).map(productMapper::toDto);

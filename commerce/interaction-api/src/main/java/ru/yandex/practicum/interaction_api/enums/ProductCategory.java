@@ -13,7 +13,7 @@ public enum ProductCategory {
         this.product = product;
     }
 
-    public String getProduct() {
+    public String getProductName() {
         return product;
     }
 
