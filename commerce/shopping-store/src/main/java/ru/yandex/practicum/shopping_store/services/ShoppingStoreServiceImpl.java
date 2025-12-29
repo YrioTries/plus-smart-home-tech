@@ -35,6 +35,10 @@ public class ShoppingStoreServiceImpl implements ShoppingStoreService{
     public Page<ProductDto> getPageableListOfProducts(Pageable pageable, ProductCategory category) {
         Page<ProductEntity> entityPage = productRepository.findByProductCategory(category, pageable);
 
+        if (entityPage.isEmpty()) {
+            throw new ProductNotFoundException("No products found for category: " + category);
+        }
+
         List<ProductDto> productDtos = entityPage.getContent().stream()
                 .filter(p -> p.getProductState() == ProductState.ACTIVE)
                 .map(productMapper::toDto)
@@ -42,6 +46,7 @@ public class ShoppingStoreServiceImpl implements ShoppingStoreService{
 
         return new PageImpl<>(productDtos, pageable, productDtos.size());
     }
+
 
     @Override
     public ProductDto getProductInfo(UUID productId) {

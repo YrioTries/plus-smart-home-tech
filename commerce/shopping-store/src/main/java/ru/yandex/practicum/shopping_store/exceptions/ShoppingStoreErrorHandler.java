@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import ru.yandex.practicum.interaction_api.exception.ErrorResponse;
+import ru.yandex.practicum.interaction_api.exception.InternalServerError;
 import ru.yandex.practicum.interaction_api.exception.ProductNotFoundException;
 
 @Slf4j
@@ -40,6 +41,13 @@ public class ShoppingStoreErrorHandler {
     public ErrorResponse illegalArgument(final IllegalArgumentException e) {
         log.error("Некорректный аргумент: {}", e.getMessage());
         return new ErrorResponse("ERROR[400]: Некорректный параметр: ", e.getMessage());
+    }
+
+    @ExceptionHandler(InternalServerError.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ErrorResponse handleGenericException(final InternalServerError e) {
+        log.error("Внутренняя ошибка сервера: {}", e.getMessage(), e);
+        return new ErrorResponse("ERROR[500]: Внутренняя ошибка сервера: ", e.getMessage());
     }
 
     @ExceptionHandler(Exception.class)
