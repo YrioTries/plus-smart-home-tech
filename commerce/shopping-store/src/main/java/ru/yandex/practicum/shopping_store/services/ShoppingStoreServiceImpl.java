@@ -1,18 +1,18 @@
 package ru.yandex.practicum.shopping_store.services;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.interaction_api.enums.ProductCategory;
 import ru.yandex.practicum.interaction_api.enums.ProductState;
 import ru.yandex.practicum.interaction_api.enums.QuantityState;
 import ru.yandex.practicum.interaction_api.exception.ProductNotFoundException;
+import ru.yandex.practicum.interaction_api.model.dto.Pageable;
 import ru.yandex.practicum.interaction_api.model.dto.ProductDto;
 import ru.yandex.practicum.shopping_store.entity.ProductEntity;
 import ru.yandex.practicum.shopping_store.entity.ProductMapper;
 import ru.yandex.practicum.shopping_store.repositories.ProductRepository;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -29,12 +29,19 @@ public class ShoppingStoreServiceImpl implements ShoppingStoreService{
     }
 
     @Override
-    public Page<ProductDto> getProducts(ProductCategory category, Pageable pageable) {
-        return productRepository.findAllByProductCategoryNameAndProductState(
-                category.getProductName(),
-                ProductState.ACTIVE,
-                pageable
-        ).map(productMapper::toDto);
+    public List<ProductDto> getPageableListOfProducts(Pageable pageable, ProductCategory category) {
+        int page = pageable.getPage() == null ? 0 : pageable.getPage();
+        int size = pageable.getSize() == null ? 10 : pageable.getSize();
+
+        List<ProductEntity> entities =
+                productRepository.findByProductCategory(category);
+
+        return entities.stream()
+                .filter(p -> p.getProductState() == ProductState.ACTIVE)
+                .skip((long) page * size)
+                .limit(size)
+                .map(productMapper::toDto)
+                .toList();
     }
 
     @Override
