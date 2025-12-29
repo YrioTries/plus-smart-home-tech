@@ -3,6 +3,7 @@ package ru.yandex.practicum.shopping_store.controllers;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.interaction_api.enums.ProductCategory;
@@ -10,7 +11,6 @@ import ru.yandex.practicum.interaction_api.enums.QuantityState;
 import ru.yandex.practicum.interaction_api.model.dto.ProductDto;
 import ru.yandex.practicum.shopping_store.services.ShoppingStoreService;
 
-import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -24,7 +24,7 @@ public class ShoppingStoreController {
     @ResponseStatus(HttpStatus.OK)
     public Page<ProductDto> getPageableListOfProducts(
             @RequestParam ProductCategory category,
-            @ModelAttribute Pageable pageable) {
+            @PageableDefault(size = 10) Pageable pageable) {
         return shoppingStoreService.getPageableListOfProducts(pageable, category);
     }
 
