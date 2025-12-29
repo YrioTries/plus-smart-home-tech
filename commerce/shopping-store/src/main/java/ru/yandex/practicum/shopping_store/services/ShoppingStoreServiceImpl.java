@@ -34,17 +34,26 @@ public class ShoppingStoreServiceImpl implements ShoppingStoreService{
         int page = pageable.getPage() == null ? 0 : pageable.getPage();
         int size = pageable.getSize() == null ? 10 : pageable.getSize();
 
-        List<ProductEntity> entities =
-                productRepository.findByProductCategory(category);
+        List<ProductEntity> entities = productRepository.findByProductCategory(category).stream()
+                .filter(p -> p.getProductState() == ProductState.ACTIVE)
+                .toList();
 
         List<ProductDto> data = entities.stream()
-                .filter(p -> p.getProductState() == ProductState.ACTIVE)
                 .skip((long) page * size)
                 .limit(size)
                 .map(productMapper::toDto)
                 .toList();
 
-        return new Page(data);
+        Page<ProductDto> result = new Page<>();
+        result.setContent(data);
+        result.setNumber(page);
+        result.setSize(size);
+        result.setTotalElements(entities.size());
+        result.setTotalPages((int) Math.ceil((double) entities.size() / size));
+        result.setFirst(page == 0);
+        result.setLast(page >= (Math.ceil((double) entities.size() / size) - 1));
+
+        return result;
     }
 
     @Override
