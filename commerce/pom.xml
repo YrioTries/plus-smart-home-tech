@@ -17,6 +17,7 @@
         <module>shopping-store</module>
         <module>warehouse</module>
         <module>interaction-api</module>
+        <module>error-handler</module>
     </modules>
 
     <dependencies>
