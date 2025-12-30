@@ -162,7 +162,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
         UUID cartId = shoppingCart.getShoppingCartId();
         List<CartProductEntity> cartProductEntities = cartProductRepository
-                .findByCartIdAndProductIdsIn(cartId, new ArrayList<>(products.keySet()));
+                .findByCartIdAndProductIdIn(cartId, new ArrayList<>(products.keySet()));
 
         Map<UUID, CartProductEntity> existingProducts = cartProductEntities.stream()
                 .collect(Collectors.toMap(CartProductEntity::getProductId, entity -> entity));
