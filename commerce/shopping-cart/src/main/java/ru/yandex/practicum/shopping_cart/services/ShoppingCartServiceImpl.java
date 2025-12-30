@@ -95,28 +95,76 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         return getCurrentSoppingCart(username);
     }
 
+//    @Override
+//    public ShoppingCartDto addInShoppingCart(String username, Map<UUID, Integer> products) {
+//        if (username == null || products == null || products.isEmpty()) {
+//            throw new NotAuthorizedUserException("Имя пользователя или продукты не могут быть пустыми!");
+//        }
+//
+//        ShoppingCartEntity cart = shoppingCartRepository.findByOwner(username)
+//                .orElseGet(() -> {
+//                    ShoppingCartEntity newCart = new ShoppingCartEntity();
+//                    newCart.setOwner(username);
+//                    newCart.setState(ShoppingCartState.ACTIVE);
+//                    return newCart;
+//                });
+//
+//        ShoppingCartEntity savedCart = shoppingCartRepository.save(cart);
+//        validateActive(savedCart);
+//
+//        List<UUID> productIds = new ArrayList<>(products.keySet());
+//        List<CartProductEntity> existingProducts = cartProductRepository
+//                .findByCartIdAndProductIdIn(savedCart.getShoppingCartId(), productIds);
+//
+//        Map<UUID, CartProductEntity> existingMap = existingProducts.stream()
+//                .collect(Collectors.toMap(CartProductEntity::getProductId, entity -> entity));
+//
+//        List<CartProductEntity> toSave = new ArrayList<>();
+//
+//        for (Map.Entry<UUID, Integer> entry : products.entrySet()) {
+//            UUID productId = entry.getKey();
+//            Integer quantity = entry.getValue();
+//
+//            CartProductEntity productItem = existingMap.get(productId);
+//            if (productItem == null) {
+//                productItem = new CartProductEntity();
+//                productItem.setCartId(savedCart.getShoppingCartId());
+//                productItem.setProductId(productId);
+//                productItem.setShoppingCart(savedCart);
+//                productItem.setQuantity(0);
+//            }
+//
+//            productItem.setQuantity(productItem.getQuantity() + quantity);
+//            toSave.add(productItem);
+//        }
+//
+//        cartProductRepository.saveAll(toSave);
+//
+//        List<CartProductEntity> allCartProducts = cartProductRepository.findByCartId(savedCart.getShoppingCartId());
+//        savedCart.setCartProducts(allCartProducts);
+//
+//        ShoppingCartDto cartDto = shoppingCartMapper.toDto(savedCart);
+//        warehouseClient.checkProductsWarehouse(cartDto);
+//
+//        return cartDto;
+//    }
+
     @Override
     public ShoppingCartDto addInShoppingCart(String username, Map<UUID, Integer> products) {
-        if (username == null || products == null || products.isEmpty()) {
-            throw new NotAuthorizedUserException("Имя пользователя или продукты не могут быть пустыми!");
-        }
-
-        ShoppingCartEntity cart = shoppingCartRepository.findByOwner(username)
+        ShoppingCartEntity shoppingCart = shoppingCartRepository
+                .findByOwner(username)
                 .orElseGet(() -> {
                     ShoppingCartEntity newCart = new ShoppingCartEntity();
                     newCart.setOwner(username);
                     newCart.setState(ShoppingCartState.ACTIVE);
-                    return newCart;
+                    return shoppingCartRepository.save(newCart);  // ID генерируется
                 });
 
-        ShoppingCartEntity savedCart = shoppingCartRepository.save(cart);
-        validateActive(savedCart);
+        UUID cartId = shoppingCart.getShoppingCartId();
+        List<CartProductEntity> cartProductEntities = cartProductRepository
+                .findByCartIdAndProductIdsIn(cartId, new ArrayList<>(products.keySet()));
 
-        List<UUID> productIds = new ArrayList<>(products.keySet());
-        List<CartProductEntity> existingProducts = cartProductRepository
-                .findByCartIdAndProductIdIn(savedCart.getShoppingCartId(), productIds);
-
-        Map<UUID, CartProductEntity> existingMap = existingProducts.stream()
+        Map<UUID, CartProductEntity> existingProducts = cartProductEntities.stream()
                 .collect(Collectors.toMap(CartProductEntity::getProductId, entity -> entity));
 
         List<CartProductEntity> toSave = new ArrayList<>();
@@ -125,29 +173,31 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
             UUID productId = entry.getKey();
             Integer quantity = entry.getValue();
 
-            CartProductEntity productItem = existingMap.get(productId);
-            if (productItem == null) {
+            CartProductEntity productItem = existingProducts.get(productId);
+
+            if (productItem != null) {
+                productItem.setQuantity(productItem.getQuantity() + quantity);
+            } else {
                 productItem = new CartProductEntity();
-                productItem.setCartId(savedCart.getShoppingCartId());
+                productItem.setCartId(cartId);
                 productItem.setProductId(productId);
-                productItem.setShoppingCart(savedCart);
-                productItem.setQuantity(0);
+                productItem.setQuantity(quantity);
+                productItem.setShoppingCart(shoppingCart);
             }
 
-            productItem.setQuantity(productItem.getQuantity() + quantity);
             toSave.add(productItem);
         }
 
         cartProductRepository.saveAll(toSave);
 
-        List<CartProductEntity> allCartProducts = cartProductRepository.findByCartId(savedCart.getShoppingCartId());
-        savedCart.setCartProducts(allCartProducts);
+        List<CartProductEntity> allProducts = cartProductRepository.findByCartId(cartId);
+        shoppingCart.setCartProducts(allProducts);
 
-        ShoppingCartDto cartDto = shoppingCartMapper.toDto(savedCart);
+        ShoppingCartDto cartDto = shoppingCartMapper.toDto(shoppingCart);
         warehouseClient.checkProductsWarehouse(cartDto);
-
         return cartDto;
     }
+
 
     @Override
     public void deactivateShoppingCart(String username) {
