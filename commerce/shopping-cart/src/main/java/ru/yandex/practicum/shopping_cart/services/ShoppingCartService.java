@@ -13,7 +13,7 @@ public interface ShoppingCartService {
 
     ShoppingCartDto getCurrentSoppingCart(String username);
 
-    ShoppingCartDto removeFromShoppingCart(String username, RemoveProductsRequest request);
+    ShoppingCartDto removeFromShoppingCart(String username, List<UUID> products);
 
     ShoppingCartDto changeProductQuantity(String username, ChangeProductQuantityRequest request);
 

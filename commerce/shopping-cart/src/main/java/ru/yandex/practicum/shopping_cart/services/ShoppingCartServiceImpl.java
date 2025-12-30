@@ -65,11 +65,11 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     }
 
     @Override
-    public ShoppingCartDto removeFromShoppingCart(String username, RemoveProductsRequest request) {
+    public ShoppingCartDto removeFromShoppingCart(String username, List<UUID> products) {
         ShoppingCartEntity shoppingCart = getCartOrThrow(username);
         validateActive(shoppingCart);
 
-        for (UUID productId : request.getProductIds()) {
+        for (UUID productId : products) {
             cartProductRepository.deleteByCartIdAndProductId(shoppingCart.getShoppingCartId(), productId);
         }
 

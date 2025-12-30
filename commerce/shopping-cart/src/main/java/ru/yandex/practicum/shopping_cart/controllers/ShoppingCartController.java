@@ -26,18 +26,6 @@ public class ShoppingCartController {
         return shoppingCartService.getCurrentSoppingCart(username);
     }
 
-    @PostMapping("/remove")
-    @ResponseStatus(HttpStatus.OK)
-    public ShoppingCartDto removeFromShoppingCart(@RequestParam String username, @RequestBody RemoveProductsRequest request) {
-        return shoppingCartService.removeFromShoppingCart(username, request);
-    }
-
-    @PostMapping("/change-quantity")
-    @ResponseStatus(HttpStatus.OK)
-    public ShoppingCartDto changeProductQuantity(@RequestParam String username, @RequestBody ChangeProductQuantityRequest request) {
-        return shoppingCartService.changeProductQuantity(username, request);
-    }
-
     @PutMapping
     @ResponseStatus(HttpStatus.OK)
     public ShoppingCartDto addInShoppingCart(@RequestParam String username, @RequestBody Map<UUID, Integer> products) {
@@ -45,8 +33,20 @@ public class ShoppingCartController {
     }
 
     @DeleteMapping
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deactivateShoppingCart(@RequestParam String username) {
         shoppingCartService.deactivateShoppingCart(username);
+    }
+
+    @PostMapping("/remove")
+    @ResponseStatus(HttpStatus.OK)
+    public ShoppingCartDto removeFromShoppingCart(@RequestParam String username, @RequestBody List<UUID> products) {
+        return shoppingCartService.removeFromShoppingCart(username, products);
+    }
+
+    @PostMapping("/change-quantity")
+    @ResponseStatus(HttpStatus.OK)
+    public ShoppingCartDto changeProductQuantity(@RequestParam String username, @RequestBody ChangeProductQuantityRequest request) {
+        return shoppingCartService.changeProductQuantity(username, request);
     }
 }
