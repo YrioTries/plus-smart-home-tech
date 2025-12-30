@@ -6,6 +6,7 @@ import ru.yandex.practicum.interaction_api.model.dto.request.ChangeProductQuanti
 import ru.yandex.practicum.interaction_api.model.dto.request.RemoveProductsRequest;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 public interface ShoppingCartService {
@@ -16,7 +17,7 @@ public interface ShoppingCartService {
 
     ShoppingCartDto changeProductQuantity(String username, ChangeProductQuantityRequest request);
 
-    ShoppingCartDto addInShoppingCart(String username, ProductDto productDto);
+    ShoppingCartDto addInShoppingCart(String username, Map<UUID, Integer> products);
 
     void deactivateShoppingCart(String username);
 }

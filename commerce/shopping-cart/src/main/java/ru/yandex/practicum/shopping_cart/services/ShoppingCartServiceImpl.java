@@ -18,8 +18,11 @@ import ru.yandex.practicum.shopping_cart.entity.ShoppingCartMapper;
 import ru.yandex.practicum.shopping_cart.repositories.CartProductRepository;
 import ru.yandex.practicum.shopping_cart.repositories.ShoppingCartRepository;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -93,49 +96,57 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     }
 
     @Override
-    public ShoppingCartDto addInShoppingCart(String username, ProductDto product) {
-        if (username == null) {
-            throw new NotAuthorizedUserException("Имя пользователя не может быть пустым!");
+    public ShoppingCartDto addInShoppingCart(String username, Map<UUID, Integer> products) {
+        if (username == null || products == null || products.isEmpty()) {
+            throw new NotAuthorizedUserException("Имя пользователя или продукты не могут быть пустыми!");
         }
 
-        final UUID productId = product.getProductId();
-        ShoppingCartDto cartDto;
+        ShoppingCartEntity cart = shoppingCartRepository.findByOwner(username)
+                .orElseGet(() -> {
+                    ShoppingCartEntity newCart = new ShoppingCartEntity();
+                    newCart.setOwner(username);
+                    newCart.setState(ShoppingCartState.ACTIVE);
+                    return newCart;
+                });
 
-        try {
-            ShoppingCartEntity cart = shoppingCartRepository.findByOwner(username)
-                    .orElseGet(() -> {
-                        ShoppingCartEntity newCart = new ShoppingCartEntity();
-                        newCart.setOwner(username);
-                        newCart.setState(ShoppingCartState.ACTIVE);
-                        return newCart;
-                    });
+        ShoppingCartEntity savedCart = shoppingCartRepository.save(cart);
+        validateActive(savedCart);
 
-            // чтобы сгенерировать id
-            ShoppingCartEntity shoppingCartEntity = shoppingCartRepository.save(cart);
-            validateActive(cart);
+        List<UUID> productIds = new ArrayList<>(products.keySet());
+        List<CartProductEntity> existingProducts = cartProductRepository
+                .findByCartIdAndProductIdIn(savedCart.getShoppingCartId(), productIds);
 
-            CartProductEntity productItem = cartProductRepository
-                    .findByCartIdAndProductId(cart.getShoppingCartId(), productId)
-                    .orElseGet(() -> {
-                        CartProductEntity newCartProductEntity = new CartProductEntity();
-                        newCartProductEntity.setCartId(shoppingCartEntity.getShoppingCartId());
-                        newCartProductEntity.setProductId(productId);
-                        newCartProductEntity.setQuantity(0);
-                        newCartProductEntity.setShoppingCart(shoppingCartEntity);
-                        return newCartProductEntity;
-                    });
+        Map<UUID, CartProductEntity> existingMap = existingProducts.stream()
+                .collect(Collectors.toMap(CartProductEntity::getProductId, entity -> entity));
 
-            productItem.setQuantity(productItem.getQuantity() + 1);
-            cartProductRepository.save(productItem);
+        List<CartProductEntity> toSave = new ArrayList<>();
 
-            cartDto = shoppingCartMapper.toDto(shoppingCartEntity);
-            warehouseClient.checkProductsWarehouse(cartDto);
+        for (Map.Entry<UUID, Integer> entry : products.entrySet()) {
+            UUID productId = entry.getKey();
+            Integer quantity = entry.getValue();
 
-        } catch (FeignException.NotFound ex) {
-            throw new NoSpecifiedProductInWarehouseException(
-                    "Товар не найден на складе: " + productId
-            );
+            CartProductEntity productItem = existingMap.get(productId);
+            if (productItem == null) {
+                // Новый продукт
+                productItem = new CartProductEntity();
+                productItem.setCartId(savedCart.getShoppingCartId());
+                productItem.setProductId(productId);
+                productItem.setShoppingCart(savedCart);
+                productItem.setQuantity(0);
+            }
+
+            productItem.setQuantity(productItem.getQuantity() + quantity);
+            toSave.add(productItem);
         }
+
+        cartProductRepository.saveAll(toSave);
+
+        List<CartProductEntity> allCartProducts = cartProductRepository.findByCartId(savedCart.getShoppingCartId());
+        savedCart.setCartProducts(allCartProducts);
+
+        ShoppingCartDto cartDto = shoppingCartMapper.toDto(savedCart);
+        warehouseClient.checkProductsWarehouse(cartDto);
+
         return cartDto;
     }
 

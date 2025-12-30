@@ -10,6 +10,7 @@ import ru.yandex.practicum.interaction_api.model.dto.request.RemoveProductsReque
 import ru.yandex.practicum.shopping_cart.services.ShoppingCartService;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @RestController
@@ -39,8 +40,8 @@ public class ShoppingCartController {
 
     @PutMapping
     @ResponseStatus(HttpStatus.OK)
-    public ShoppingCartDto addInShoppingCart(@RequestParam String username, @RequestBody ProductDto productDto) {
-        return shoppingCartService.addInShoppingCart(username, productDto);
+    public ShoppingCartDto addInShoppingCart(@RequestParam String username, @RequestBody Map<UUID, Integer> products) {
+        return shoppingCartService.addInShoppingCart(username, products);
     }
 
     @DeleteMapping
