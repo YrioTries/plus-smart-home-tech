@@ -92,7 +92,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
             throw new NotAuthorizedUserException("Имя пользователя не может быть пустым!");
         }
 
-        final UUID productId = product.productId();
+        final UUID productId = product.getProductId();
         ShoppingCartDto cartDto;
 
         try {

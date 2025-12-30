@@ -5,6 +5,8 @@ import lombok.Data;
 import java.util.Map;
 import java.util.UUID;
 
-
-public record ShoppingCartDto(UUID shoppingCartId, Map<UUID, Integer> products) {
+@Data
+public class ShoppingCartDto {
+    private UUID shoppingCartId;
+    private Map<UUID, Integer> products;
 }

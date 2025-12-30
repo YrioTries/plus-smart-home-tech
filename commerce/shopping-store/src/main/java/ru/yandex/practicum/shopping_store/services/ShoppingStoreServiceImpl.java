@@ -57,17 +57,17 @@ public class ShoppingStoreServiceImpl implements ShoppingStoreService{
     public ProductDto createProduct(ProductDto productDto) {
 
         ProductEntity productEntity = new ProductEntity();
-        productEntity.setProductName(productDto.productName());
-        productEntity.setDescription(productDto.description());
-        productEntity.setImageSrc(productDto.imageSrc());
-        productEntity.setQuantityState(productDto.quantityState());
+        productEntity.setProductName(productDto.getProductName());
+        productEntity.setDescription(productDto.getDescription());
+        productEntity.setImageSrc(productDto.getImageSrc());
+        productEntity.setQuantityState(productDto.getQuantityState());
         productEntity.setProductState(
-                productDto.productState() != null ?
-                        productDto.productState() :
+                productDto.getProductState() != null ?
+                        productDto.getProductState() :
                         ProductState.ACTIVE
         );
-        productEntity.setProductCategory(productDto.productCategory());
-        productEntity.setPrice(productDto.price());
+        productEntity.setProductCategory(productDto.getProductCategory());
+        productEntity.setPrice(productDto.getPrice());
 
         if (productEntity.getProductState() == null) {
             productEntity.setProductState(ProductState.ACTIVE);
@@ -81,15 +81,15 @@ public class ShoppingStoreServiceImpl implements ShoppingStoreService{
 
     @Override
     public ProductDto updateProduct(ProductDto productDto) {
-        ProductEntity productEntity = getProductOrThrow(productDto.productId());
+        ProductEntity productEntity = getProductOrThrow(productDto.getProductId());
 
-        productEntity.setProductName(productDto.productName());
-        productEntity.setDescription(productDto.description());
-        productEntity.setImageSrc(productDto.imageSrc());
-        productEntity.setQuantityState(productDto.quantityState());
-        productEntity.setProductState(productDto.productState());
-        productEntity.setProductCategory(productDto.productCategory());
-        productEntity.setPrice(productDto.price());
+        productEntity.setProductName(productDto.getProductName());
+        productEntity.setDescription(productDto.getDescription());
+        productEntity.setImageSrc(productDto.getImageSrc());
+        productEntity.setQuantityState(productDto.getQuantityState());
+        productEntity.setProductState(productDto.getProductState());
+        productEntity.setProductCategory(productDto.getProductCategory());
+        productEntity.setPrice(productDto.getPrice());
 
         productRepository.save(productEntity);
 
