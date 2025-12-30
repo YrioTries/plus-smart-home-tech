@@ -12,7 +12,7 @@ import java.util.UUID;
         injectionStrategy = InjectionStrategy.CONSTRUCTOR)
 public interface ShoppingCartMapper {
 
-    @Mapping(target = "shoppingCartId", source = "id")
+    @Mapping(target = "shoppingCartId", source = "shoppingCartId")
     @Mapping(target = "products", source = "cartProducts",
             qualifiedByName = "mapCartProductsToMap")
     ShoppingCartDto toDto(ShoppingCartEntity entity);
