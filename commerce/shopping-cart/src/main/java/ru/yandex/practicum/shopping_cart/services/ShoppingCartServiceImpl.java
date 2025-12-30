@@ -127,7 +127,6 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
             CartProductEntity productItem = existingMap.get(productId);
             if (productItem == null) {
-                // Новый продукт
                 productItem = new CartProductEntity();
                 productItem.setCartId(savedCart.getShoppingCartId());
                 productItem.setProductId(productId);
