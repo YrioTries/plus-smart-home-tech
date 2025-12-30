@@ -20,8 +20,8 @@ import java.util.UUID;
 public class ShoppingCartEntity {
     @Id
     @UuidGenerator
-    @Column(name = "id")
-    private UUID id;
+    @Column(name = "shoppingCartId")
+    private UUID shoppingCartId;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "state", length = 10)

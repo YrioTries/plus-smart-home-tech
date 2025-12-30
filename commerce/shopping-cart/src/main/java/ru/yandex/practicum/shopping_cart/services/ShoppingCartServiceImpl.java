@@ -44,8 +44,8 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     @Override
     public ShoppingCartDto getCurrentSoppingCart(String username) {
         ShoppingCartEntity shoppingCart = getCartOrThrow(username);
-        List<CartProductEntity> cartProductList = cartProductRepository.findByCartId(shoppingCart.getId());
-        shoppingCart.setCartProducts(cartProductList);  // Для mapper
+        List<CartProductEntity> cartProductList = cartProductRepository.findByCartId(shoppingCart.getShoppingCartId());
+        shoppingCart.setCartProducts(cartProductList);
         return shoppingCartMapper.toDto(shoppingCart);
     }
 
@@ -55,7 +55,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         validateActive(shoppingCart);
 
         for (UUID productId : request.getProductIds()) {
-            cartProductRepository.deleteByCartIdAndProductId(shoppingCart.getId(), productId);
+            cartProductRepository.deleteByCartIdAndProductId(shoppingCart.getShoppingCartId(), productId);
         }
 
         return getCurrentSoppingCart(username);
@@ -67,7 +67,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         validateActive(cart);
 
         CartProductEntity carProductEntity = cartProductRepository
-                .findByCartIdAndProductId(cart.getId(), request.getProductId())
+                .findByCartIdAndProductId(cart.getShoppingCartId(), request.getProductId())
                 .orElseThrow(() -> new NoProductsInShoppingCartException("Товар не найден в корзине"));
 
         carProductEntity.setQuantity(request.getNewQuantity());
@@ -97,10 +97,10 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         final UUID productId = product.getProductId();
 
         CartProductEntity productItem = cartProductRepository
-                .findByCartIdAndProductId(cart.getId(), productId)
+                .findByCartIdAndProductId(cart.getShoppingCartId(), productId)
                 .orElseGet(() -> {
                     CartProductEntity newCartProductEntity = new CartProductEntity();
-                    newCartProductEntity.setCartId(cart.getId());
+                    newCartProductEntity.setCartId(cart.getShoppingCartId());
                     newCartProductEntity.setProductId(productId);
                     newCartProductEntity.setQuantity(0);
                     newCartProductEntity.setShoppingCart(cart);
