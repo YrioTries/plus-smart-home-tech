@@ -43,7 +43,7 @@ public class WarehouseServiceImpl implements WarehouseService{
         double totalVolume = 0.0;
         boolean fragile = false;
 
-        for (var entry : shoppingCartDto.getProducts().entrySet()) {
+        for (var entry : shoppingCartDto.products().entrySet()) {
             UUID productId = entry.getKey();
             int qty = entry.getValue();
 

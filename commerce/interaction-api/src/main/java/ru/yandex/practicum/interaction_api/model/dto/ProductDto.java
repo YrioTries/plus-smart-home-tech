@@ -1,7 +1,6 @@
 package ru.yandex.practicum.interaction_api.model.dto;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 import ru.yandex.practicum.interaction_api.enums.ProductCategory;
 import ru.yandex.practicum.interaction_api.enums.ProductState;
 import ru.yandex.practicum.interaction_api.enums.QuantityState;
@@ -9,15 +8,8 @@ import ru.yandex.practicum.interaction_api.enums.QuantityState;
 import java.math.BigDecimal;
 import java.util.UUID;
 
-@Getter
-@Setter
-public class ProductDto {
-    private UUID productId;
-    private String productName;
-    private String description;
-    private String imageSrc;
-    private QuantityState quantityState;
-    private ProductState productState;
-    private ProductCategory productCategory;
-    private BigDecimal price;
+
+public record ProductDto(UUID productId, String productName, String description, String imageSrc,
+                         QuantityState quantityState, ProductState productState, ProductCategory productCategory,
+                         BigDecimal price) {
 }

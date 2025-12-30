@@ -3,7 +3,6 @@ package ru.yandex.practicum.shopping_cart.services;
 import feign.FeignException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.yandex.practicum.error_handler.exception.CartNotFoundException;
 import ru.yandex.practicum.error_handler.exception.NoProductsInShoppingCartException;
 import ru.yandex.practicum.error_handler.exception.NoSpecifiedProductInWarehouseException;
 import ru.yandex.practicum.error_handler.exception.NotAuthorizedUserException;
@@ -93,7 +92,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
             throw new NotAuthorizedUserException("Имя пользователя не может быть пустым!");
         }
 
-        final UUID productId = product.getProductId();
+        final UUID productId = product.productId();
         ShoppingCartDto cartDto;
 
         try {
