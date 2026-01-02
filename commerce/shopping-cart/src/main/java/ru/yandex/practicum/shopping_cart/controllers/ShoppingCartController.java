@@ -1,52 +1,48 @@
 package ru.yandex.practicum.shopping_cart.controllers;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import ru.yandex.practicum.interaction_api.model.dto.ProductDto;
-import ru.yandex.practicum.interaction_api.model.dto.ShoppingCartDto;
-import ru.yandex.practicum.interaction_api.model.dto.request.ChangeProductQuantityRequest;
-import ru.yandex.practicum.interaction_api.model.dto.request.RemoveProductsRequest;
+import ru.yandex.practicum.interaction_api.model.dto.shopping_cart.ShoppingCartDto;
+import ru.yandex.practicum.interaction_api.model.dto.shopping_cart.ChangeProductQuantityRequest;
 import ru.yandex.practicum.shopping_cart.services.ShoppingCartService;
 
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+@Slf4j
 @RestController
+@RequestMapping("/api/v1/shopping-cart")
 @RequiredArgsConstructor
-@RequestMapping(path = "/api/v1/shopping-cart")
 public class ShoppingCartController {
 
-    private final ShoppingCartService shoppingCartService;
+    private final ShoppingCartService service;
 
     @GetMapping
-    @ResponseStatus(HttpStatus.OK)
-    public ShoppingCartDto getCurrentSoppingCart(@RequestParam String username) {
-        return shoppingCartService.getCurrentSoppingCart(username);
+    public ShoppingCartDto getCart(@RequestParam String username) {
+        return service.getCart(username);
     }
 
     @PutMapping
-    @ResponseStatus(HttpStatus.OK)
-    public ShoppingCartDto addInShoppingCart(@RequestParam String username, @RequestBody Map<UUID, Integer> products) {
-        return shoppingCartService.addInShoppingCart(username, products);
+    public ShoppingCartDto addProductToCart(@RequestParam String username, @RequestBody Map<UUID, Integer> products) {
+        return service.addProductToCart(username, products);
     }
 
-    @DeleteMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deactivateShoppingCart(@RequestParam String username) {
-        shoppingCartService.deactivateShoppingCart(username);
+    @DeleteMapping
+    public void deactivateCart(@RequestParam String username) {
+        service.deactivateCart(username);
     }
 
     @PostMapping("/remove")
-    @ResponseStatus(HttpStatus.OK)
-    public ShoppingCartDto removeFromShoppingCart(@RequestParam String username, @RequestBody List<UUID> products) {
-        return shoppingCartService.removeFromShoppingCart(username, products);
+    public ShoppingCartDto removeProductFromCart(@RequestParam String username, @RequestBody List<UUID> products) {
+        return service.removeProductFromCart(username, products);
     }
 
     @PostMapping("/change-quantity")
-    @ResponseStatus(HttpStatus.OK)
     public ShoppingCartDto changeProductQuantity(@RequestParam String username, @RequestBody ChangeProductQuantityRequest request) {
-        return shoppingCartService.changeProductQuantity(username, request);
+        return service.changeProductQuantity(username, request);
     }
 }

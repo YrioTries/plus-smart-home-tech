@@ -1,102 +1,82 @@
 package ru.yandex.practicum.warehouse.services;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import ru.yandex.practicum.error_handler.exception.NoSpecifiedProductInWarehouseException;
 import ru.yandex.practicum.error_handler.exception.ProductInShoppingCartLowQuantityInWarehouse;
+import ru.yandex.practicum.error_handler.exception.ProductInWarehouseNotFoundException;
 import ru.yandex.practicum.error_handler.exception.SpecifiedProductAlreadyInWarehouseException;
-import ru.yandex.practicum.interaction_api.model.dto.AddressDto;
-import ru.yandex.practicum.interaction_api.model.dto.BookedProductsDto;
-import ru.yandex.practicum.interaction_api.model.dto.ShoppingCartDto;
-import ru.yandex.practicum.interaction_api.model.dto.request.AddProductToWarehouseRequest;
-import ru.yandex.practicum.interaction_api.model.dto.request.NewProductInWarehouseRequest;
-import ru.yandex.practicum.warehouse.entity.WarehouseProductEntity;
+import ru.yandex.practicum.interaction_api.model.dto.warehouse.*;
+import ru.yandex.practicum.interaction_api.model.dto.warehouse.DimensionDto;
+import ru.yandex.practicum.interaction_api.model.dto.shopping_cart.ShoppingCartDto;
+import ru.yandex.practicum.warehouse.WarehouseApplication;
+import ru.yandex.practicum.warehouse.entity.ProductInWarehouse;
+import ru.yandex.practicum.warehouse.mapper.ProductInWarehouseMapper;
 import ru.yandex.practicum.warehouse.repositories.WarehouseRepository;
 
-import java.security.SecureRandom;
 import java.util.UUID;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
-public class WarehouseServiceImpl implements WarehouseService{
+public class WarehouseServiceImpl implements WarehouseService {
+
     private final WarehouseRepository warehouseRepository;
 
-    private static final String[] ADDRESSES =
-            new String[] {"ADDRESS_1", "ADDRESS_2"};
-    private static final String CURRENT_ADDRESS =
-            ADDRESSES[new SecureRandom().nextInt(ADDRESSES.length)];
-
     @Override
-    public AddressDto getAddress() {
-        AddressDto dto = new AddressDto();
-        dto.setCountry(CURRENT_ADDRESS);
-        dto.setCity(CURRENT_ADDRESS);
-        dto.setStreet(CURRENT_ADDRESS);
-        dto.setHouse(CURRENT_ADDRESS);
-        dto.setFlat(CURRENT_ADDRESS);
-        return dto;
+    public ProductInWarehouseDto addNewProduct(NewProductInWarehouseRequest newProduct) {
+        if (isProductInWarehouse(newProduct.getProductId())) {
+            throw new SpecifiedProductAlreadyInWarehouseException("Продукт с id " + newProduct.getProductId() + " уже добавлен на склад!");
+        }
+
+        return ProductInWarehouseMapper.toDto(warehouseRepository.save(ProductInWarehouseMapper.toEntity(newProduct)));
     }
 
     @Override
-    public BookedProductsDto checkProductsWarehouse(ShoppingCartDto shoppingCartDto) {
-        double totalWeight = 0.0;
-        double totalVolume = 0.0;
-        boolean fragile = false;
+    public BookedProductsDto checkQuantityForCart(ShoppingCartDto shoppingCart) {
+        BookedProductsDto bookedProductsDto = BookedProductsDto.builder().build();
 
-        for (var entry : shoppingCartDto.getProducts().entrySet()) {
-            UUID productId = entry.getKey();
-            int qty = entry.getValue();
+        shoppingCart.getProducts().forEach((productId, quantity) -> {
+            ProductInWarehouse productInWarehouse = getProductInWarehouse(productId);
 
-            WarehouseProductEntity wp = warehouseRepository.findById(productId)
-                    .orElseThrow(() -> new NoSpecifiedProductInWarehouseException("Товар не найден на складе: "
-                            + productId));
-
-            if (wp.getQuantity() < qty)
-                throw new ProductInShoppingCartLowQuantityInWarehouse("Недостаточно товара на складе: "
-                        + productId);
-
-            double volumeOne = wp.getWidth() * wp.getHeight() * wp.getDepth();
-            totalVolume += volumeOne * qty;
-            totalWeight += wp.getWeight() * qty;
-            if (wp.isFragile()) {
-                fragile = true;
+            if (quantity > productInWarehouse.getQuantity()) {
+                throw new ProductInShoppingCartLowQuantityInWarehouse("Товара с id " + productId + " в корзине больше, чем доступно на складе!");
             }
-        }
 
-        BookedProductsDto bookedProductsDto = new BookedProductsDto();
-        bookedProductsDto.setDeliveryWeight(totalWeight);
-        bookedProductsDto.setDeliveryVolume(totalVolume);
-        bookedProductsDto.setFragile(fragile);
+            bookedProductsDto.setDeliveryWeight(bookedProductsDto.getDeliveryWeight()+ productInWarehouse.getWeight());
+            bookedProductsDto.setDeliveryVolume(bookedProductsDto.getDeliveryVolume()+calculateVolume(productInWarehouse));
+        });
+
         return bookedProductsDto;
     }
 
     @Override
-    public void acceptProductToWareHouse(AddProductToWarehouseRequest request) {
-        WarehouseProductEntity entity = warehouseRepository.findById(request.getProductId())
-                .orElseThrow(() -> new NoSpecifiedProductInWarehouseException(
-                        "Товар не найден на складе: " + request.getProductId()));
+    public void acceptProduct(AddProductToWarehouseRequest request) {
 
-        int current = entity.getQuantity() == null ? 0 : entity.getQuantity();
-        entity.setQuantity(current + request.getQuantity());
+        ProductInWarehouse productInWarehouse = getProductInWarehouse(request.getProductId());
+        productInWarehouse.setQuantity(productInWarehouse.getQuantity()+request.getQuantity());
 
-        warehouseRepository.save(entity);
+        warehouseRepository.save(productInWarehouse);
+
+        log.info("Продукт с id {} в количестве {} принят на склад!", productInWarehouse.getProductId(), productInWarehouse.getQuantity());
     }
 
     @Override
-    public void addProductToWareHouse(NewProductInWarehouseRequest request) {
-        if (warehouseRepository.existsById(request.getProductId()))
-            throw new SpecifiedProductAlreadyInWarehouseException("Товар уже есть на складе: "
-                    + request.getProductId());
+    public AddressDto getAddress() {
+        return WarehouseApplication.getRandomAddress();
+    }
 
-        WarehouseProductEntity warehouseProductEntity = new WarehouseProductEntity();
-        warehouseProductEntity.setProductId(request.getProductId());
-        warehouseProductEntity.setFragile(request.isFragile());
-        warehouseProductEntity.setWidth(request.getDimension().getWidth());
-        warehouseProductEntity.setHeight(request.getDimension().getHeight());
-        warehouseProductEntity.setDepth(request.getDimension().getDepth());
-        warehouseProductEntity.setWeight(request.getWeight());
-        warehouseProductEntity.setQuantity(0);
+    private boolean isProductInWarehouse(UUID productId) {
+        return warehouseRepository.existsById(productId);
+    }
 
-        warehouseRepository.save(warehouseProductEntity);
+    private Double calculateVolume(ProductInWarehouse product) {
+        DimensionDto dimension = product.getDimension();
+        return dimension.getHeight()*dimension.getDepth()*dimension.getWidth();
+    }
+
+    private ProductInWarehouse getProductInWarehouse(UUID productId) {
+        return warehouseRepository.findById(productId)
+                .orElseThrow(() -> new ProductInWarehouseNotFoundException("Продукт с id " + productId + " не найден на складе!"));
     }
 }

@@ -1,31 +1,38 @@
 package ru.yandex.practicum.shopping_cart.entity;
 
-import org.mapstruct.*;
-import ru.yandex.practicum.interaction_api.model.dto.ShoppingCartDto;
+import lombok.experimental.UtilityClass;
+import ru.yandex.practicum.interaction_api.model.dto.shopping_cart.ShoppingCartDto;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-@Mapper(componentModel = "spring",
-        injectionStrategy = InjectionStrategy.CONSTRUCTOR)
-public interface ShoppingCartMapper {
+@UtilityClass
+public class ShoppingCartMapper {
 
-    @Mapping(target = "shoppingCartId", source = "shoppingCartId")
-    @Mapping(target = "products", source = "cartProducts",
-            qualifiedByName = "mapCartProductsToMap")
-    ShoppingCartDto toDto(ShoppingCartEntity entity);
+    public static ShoppingCartDto toDto(ShoppingCartEntity shoppingCart) {
+        return ShoppingCartDto.builder()
+                .shoppingCartId(shoppingCart.getShoppingCartId())
+                .products(getProductsMap(shoppingCart.getItems()))
+                .build();
+    }
 
-    @Named("mapCartProductsToMap")
-    default Map<UUID, Integer> mapCartProductsToMap(List<CartProductEntity> cartProducts) {
-        Map<UUID, Integer> result = new HashMap<>();
-        if (cartProducts == null) return result;
+    private Map<UUID, Integer> getProductsMap(List<ShoppingCartItem> products) {
+        Map<UUID, Integer> productsMap = new HashMap<>();
 
-        for (CartProductEntity cart : cartProducts) {
-            if (cart == null || cart.getProductId() == null || cart.getQuantity() == null) continue;
-            result.put(cart.getProductId(), cart.getQuantity());
-        }
-        return result;
+        products.forEach(product -> productsMap.put(product.getProductId(), product.getQuantity()));
+        return productsMap;
+    }
+
+    private List<ShoppingCartItem> getProductsList(Map<UUID, Integer> products) {
+        return products.entrySet().stream()
+                .map(entry -> {
+                    ShoppingCartItem item = new ShoppingCartItem();
+                    item.setProductId(entry.getKey());
+                    item.setQuantity(entry.getValue());
+                    return item;
+                })
+                .collect(Collectors.toList());
     }
 }

@@ -1,3 +1,6 @@
+server:
+  port: 0
+
 spring:
   application:
     name: config-server
@@ -8,13 +11,16 @@ spring:
       server:
         native:
           searchLocations:
-            - "classpath:config/telemetry/{application}"
-            - "classpath:config/commerce/{application}"
-            - "classpath:config/feign-client/{application}"
-server:
-  port: 8888
+            - classpath:config/telemetry/{application}
+            - classpath:config/commerce/{application}
 
 eureka:
   client:
     serviceUrl:
       defaultZone: http://localhost:8761/eureka/
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info

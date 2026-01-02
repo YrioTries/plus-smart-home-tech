@@ -1,45 +1,37 @@
 package ru.yandex.practicum.warehouse.controllers;
 
+
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import ru.yandex.practicum.interaction_api.clients.WarehouseClient;
-import ru.yandex.practicum.interaction_api.model.dto.AddressDto;
-import ru.yandex.practicum.interaction_api.model.dto.BookedProductsDto;
-import ru.yandex.practicum.interaction_api.model.dto.ShoppingCartDto;
-import ru.yandex.practicum.interaction_api.model.dto.request.AddProductToWarehouseRequest;
-import ru.yandex.practicum.interaction_api.model.dto.request.NewProductInWarehouseRequest;
+import ru.yandex.practicum.interaction_api.model.dto.warehouse.*;
+import ru.yandex.practicum.interaction_api.model.dto.shopping_cart.ShoppingCartDto;
 import ru.yandex.practicum.warehouse.services.WarehouseService;
 
 @RestController
+@RequestMapping("/api/v1/warehouse")
 @RequiredArgsConstructor
-@RequestMapping(path = "/api/v1/warehouse")
-public class WarehouseController implements WarehouseClient {
+public class WarehouseController {
 
-    private final WarehouseService warehouseService;
+    private final WarehouseService service;
 
-    @Override
     @GetMapping("/address")
     public AddressDto getAddress() {
-        return warehouseService.getAddress();
+        return service.getAddress();
     }
 
-    @Override
-    @PostMapping("/check")
-    public BookedProductsDto checkProductsWarehouse(@RequestBody ShoppingCartDto shoppingCartDto) {
-        return warehouseService.checkProductsWarehouse(shoppingCartDto);
-    }
-
-    @Override
-    @PostMapping("/add")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void acceptProductToWareHouse(@RequestBody AddProductToWarehouseRequest request) {
-        warehouseService.acceptProductToWareHouse(request);
-    }
-
-    @Override
     @PutMapping
-    public void addProductToWareHouse(@RequestBody NewProductInWarehouseRequest request) {
-        warehouseService.addProductToWareHouse(request);
+    public ProductInWarehouseDto addNewProduct(@RequestBody NewProductInWarehouseRequest newProductInWarehouseRequest) {
+        return service.addNewProduct(newProductInWarehouseRequest);
+    }
+
+    @PostMapping("/check")
+    public BookedProductsDto checkQuantityForCart(@RequestBody ShoppingCartDto shoppingCart) {
+        return service.checkQuantityForCart(shoppingCart);
+    }
+
+    @PostMapping("/add")
+    public void acceptProduct(@RequestBody @Valid AddProductToWarehouseRequest request) {
+        service.acceptProduct(request);
     }
 }
