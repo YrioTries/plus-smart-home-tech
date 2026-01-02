@@ -7,12 +7,12 @@ import ru.yandex.practicum.interaction_api.model.dto.warehouse.DimensionDto;
 import java.util.UUID;
 
 @Entity
-@Table(name = "warehouse_products")
 @Getter
 @Setter
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
+@Table(name = "warehouse_products")
 public class ProductInWarehouse {
 
     @Id

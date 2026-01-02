@@ -10,8 +10,8 @@ import ru.yandex.practicum.interaction_api.model.enums.ProductCategory;
 import ru.yandex.practicum.interaction_api.model.enums.ProductState;
 import ru.yandex.practicum.interaction_api.model.dto.shopping_store.ProductDto;
 import ru.yandex.practicum.interaction_api.model.dto.shopping_store.SetProductQuantityStateRequest;
-import ru.yandex.practicum.shopping_store.entity.Product;
-import ru.yandex.practicum.shopping_store.entity.ProductMapper;
+import ru.yandex.practicum.shopping_store.entity.ProductDao;
+import ru.yandex.practicum.shopping_store.mappers.ProductMapper;
 import ru.yandex.practicum.shopping_store.repositories.ShoppingStoreRepository;
 
 import java.util.UUID;
@@ -25,7 +25,7 @@ public class ShoppingStoreServiceImpl implements ShoppingStoreService {
 
     @Override
     public Page<ProductDto> getProducts(ProductCategory category, Pageable pageable) {
-        Page<Product> products = repository.findAllByProductCategory(category, pageable);
+        Page<ProductDao> products = repository.findAllByProductCategory(category, pageable);
         return products.map(ProductMapper::toDto);
     }
 
@@ -36,35 +36,35 @@ public class ShoppingStoreServiceImpl implements ShoppingStoreService {
 
     @Override
     public ProductDto createProduct(ProductDto productDto) {
-        Product newProduct = ProductMapper.toEntity(productDto);
-        return ProductMapper.toDto(repository.save(newProduct));
+        ProductDao newProductDao = ProductMapper.toEntity(productDto);
+        return ProductMapper.toDto(repository.save(newProductDao));
     }
 
     @Override
     public ProductDto updateProduct(ProductDto productDto) {
-        Product oldProduct = productExists(productDto.getProductId());
-        return ProductMapper.toDto(repository.save(ProductMapper.updateFields(oldProduct, productDto)));
+        ProductDao oldProductDao = productExists(productDto.getProductId());
+        return ProductMapper.toDto(repository.save(ProductMapper.updateFields(oldProductDao, productDto)));
     }
 
     @Override
     public Boolean removeProduct(UUID productId) {
-        Product product = productExists(productId);
+        ProductDao productDao = productExists(productId);
 
-        product.setProductState(ProductState.DEACTIVATE);
-        repository.save(product);
+        productDao.setProductState(ProductState.DEACTIVATE);
+        repository.save(productDao);
         return true;
     }
 
     @Override
     public Boolean setQuantity(SetProductQuantityStateRequest request) {
-        Product product = productExists(request.getProductId());
+        ProductDao productDao = productExists(request.getProductId());
 
-        product.setQuantityState(request.getQuantityState());
-        repository.save(product);
+        productDao.setQuantityState(request.getQuantityState());
+        repository.save(productDao);
         return true;
     }
 
-    private Product productExists(UUID productId) {
+    private ProductDao productExists(UUID productId) {
         try {
             return repository.findById(productId)
                     .orElseThrow(() -> new ProductNotFoundException("Товар с id " + productId + " не найден!"));

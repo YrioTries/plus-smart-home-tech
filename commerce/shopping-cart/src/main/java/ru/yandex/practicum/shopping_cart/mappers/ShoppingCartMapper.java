@@ -2,7 +2,7 @@ package ru.yandex.practicum.shopping_cart.mappers;
 
 import lombok.experimental.UtilityClass;
 import ru.yandex.practicum.interaction_api.model.dto.shopping_cart.ShoppingCartDto;
-import ru.yandex.practicum.shopping_cart.entity.ShoppingCartEntity;
+import ru.yandex.practicum.shopping_cart.entity.ShoppingCartDao;
 import ru.yandex.practicum.shopping_cart.entity.ShoppingCartItem;
 
 import java.util.HashMap;
@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 @UtilityClass
 public class ShoppingCartMapper {
 
-    public static ShoppingCartDto toDto(ShoppingCartEntity shoppingCart) {
+    public static ShoppingCartDto toDto(ShoppingCartDao shoppingCart) {
         return ShoppingCartDto.builder()
                 .shoppingCartId(shoppingCart.getShoppingCartId())
                 .products(getProductsMap(shoppingCart.getItems()))

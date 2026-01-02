@@ -9,13 +9,13 @@ import java.util.UUID;
 
 public interface ShoppingCartService {
 
-    ShoppingCartDto getCart(String username);
+    ShoppingCartDto getShoppingCart(String username);
 
-    ShoppingCartDto addProductToCart(String username, Map<UUID, Integer> products);
+    ShoppingCartDto addProductToShoppingCart(String username, Map<UUID, Integer> products);
 
-    void deactivateCart(String username);
+    void deactivateShoppingCart(String username);
 
-    ShoppingCartDto removeProductFromCart(String username, List<UUID> products);
+    ShoppingCartDto removeProductFromShoppingCart(String username, List<UUID> products);
 
     ShoppingCartDto changeProductQuantity(String username, ChangeProductQuantityRequest request);
 }

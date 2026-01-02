@@ -11,21 +11,16 @@ import ru.yandex.practicum.interaction_api.model.enums.ShoppingCartState;
 import java.util.List;
 import java.util.UUID;
 
-import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.UuidGenerator;
-
-import java.util.List;
-import java.util.UUID;
 
 @Entity
-@Table(name = "shopping_cart")
 @Getter
 @Setter
-@AllArgsConstructor
-@NoArgsConstructor
 @Builder
-public class ShoppingCartEntity {
+@NoArgsConstructor
+@AllArgsConstructor
+@Table(name = "shopping_cart")
+public class ShoppingCartDao {
 
     @Id
     @UuidGenerator

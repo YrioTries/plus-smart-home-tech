@@ -6,18 +6,15 @@ import lombok.Setter;
 
 import java.util.UUID;
 
-import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.UUID;
-
 @Entity
-@Table(name = "shopping_cart_item")
 @Getter
 @Setter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
+@Table(name = "shopping_cart_item")
 public class ShoppingCartItem {
 
     @Id
@@ -26,7 +23,7 @@ public class ShoppingCartItem {
 
     @ManyToOne
     @JoinColumn(name = "shopping_cart_id", nullable = false)
-    private ShoppingCartEntity shoppingCart;
+    private ShoppingCartDao shoppingCart;
 
     @Column(name = "product_id", nullable = false)
     private UUID productId;

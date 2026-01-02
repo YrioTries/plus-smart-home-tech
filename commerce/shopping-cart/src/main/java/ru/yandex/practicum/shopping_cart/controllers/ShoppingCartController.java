@@ -22,23 +22,23 @@ public class ShoppingCartController {
 
     @GetMapping
     public ShoppingCartDto getCart(@RequestParam String username) {
-        return service.getCart(username);
+        return service.getShoppingCart(username);
     }
 
     @PutMapping
     public ShoppingCartDto addProductToCart(@RequestParam String username, @RequestBody Map<UUID, Integer> products) {
-        return service.addProductToCart(username, products);
+        return service.addProductToShoppingCart(username, products);
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping
     public void deactivateCart(@RequestParam String username) {
-        service.deactivateCart(username);
+        service.deactivateShoppingCart(username);
     }
 
     @PostMapping("/remove")
     public ShoppingCartDto removeProductFromCart(@RequestParam String username, @RequestBody List<UUID> products) {
-        return service.removeProductFromCart(username, products);
+        return service.removeProductFromShoppingCart(username, products);
     }
 
     @PostMapping("/change-quantity")

@@ -11,13 +11,13 @@ import java.math.BigDecimal;
 import java.util.UUID;
 
 @Entity
-@Table(name = "shopping_store")
 @Getter
 @Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Product {
+@Table(name = "shopping_store")
+public class ProductDao {
 
     @Id
     @UuidGenerator
