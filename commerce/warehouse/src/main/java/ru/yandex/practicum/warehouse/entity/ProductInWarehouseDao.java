@@ -13,7 +13,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "warehouse_products")
-public class ProductInWarehouse {
+public class ProductInWarehouseDao {
 
     @Id
     @Column(name = "product_id")

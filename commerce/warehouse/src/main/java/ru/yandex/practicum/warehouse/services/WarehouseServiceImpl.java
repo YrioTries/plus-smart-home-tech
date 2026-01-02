@@ -10,7 +10,7 @@ import ru.yandex.practicum.interaction_api.model.dto.warehouse.*;
 import ru.yandex.practicum.interaction_api.model.dto.warehouse.DimensionDto;
 import ru.yandex.practicum.interaction_api.model.dto.shopping_cart.ShoppingCartDto;
 import ru.yandex.practicum.warehouse.WarehouseApplication;
-import ru.yandex.practicum.warehouse.entity.ProductInWarehouse;
+import ru.yandex.practicum.warehouse.entity.ProductInWarehouseDao;
 import ru.yandex.practicum.warehouse.mapper.ProductInWarehouseMapper;
 import ru.yandex.practicum.warehouse.repositories.WarehouseRepository;
 
@@ -40,12 +40,12 @@ public class WarehouseServiceImpl implements WarehouseService {
     @Override
     public void acceptProduct(AddProductToWarehouseRequest request) {
 
-        ProductInWarehouse productInWarehouse = getProductInWarehouse(request.getProductId());
-        productInWarehouse.setQuantity(productInWarehouse.getQuantity()+request.getQuantity());
+        ProductInWarehouseDao productInWarehouseDao = getProductInWarehouse(request.getProductId());
+        productInWarehouseDao.setQuantity(productInWarehouseDao.getQuantity()+request.getQuantity());
 
-        warehouseRepository.save(productInWarehouse);
+        warehouseRepository.save(productInWarehouseDao);
 
-        log.info("Продукт с id {} в количестве {} принят на склад!", productInWarehouse.getProductId(), productInWarehouse.getQuantity());
+        log.info("Продукт с id {} в количестве {} принят на склад!", productInWarehouseDao.getProductId(), productInWarehouseDao.getQuantity());
     }
 
     @Override
@@ -53,14 +53,14 @@ public class WarehouseServiceImpl implements WarehouseService {
         BookedProductsDto bookedProductsDto = BookedProductsDto.builder().build();
 
         shoppingCart.getProducts().forEach((productId, quantity) -> {
-            ProductInWarehouse productInWarehouse = getProductInWarehouse(productId);
+            ProductInWarehouseDao productInWarehouseDao = getProductInWarehouse(productId);
 
-            if (quantity > productInWarehouse.getQuantity()) {
+            if (quantity > productInWarehouseDao.getQuantity()) {
                 throw new ProductInShoppingCartLowQuantityInWarehouse("Товара с id " + productId + " в корзине больше, чем доступно на складе!");
             }
 
-            bookedProductsDto.setDeliveryWeight(bookedProductsDto.getDeliveryWeight()+ productInWarehouse.getWeight());
-            bookedProductsDto.setDeliveryVolume(bookedProductsDto.getDeliveryVolume()+calculateVolume(productInWarehouse));
+            bookedProductsDto.setDeliveryWeight(bookedProductsDto.getDeliveryWeight()+ productInWarehouseDao.getWeight());
+            bookedProductsDto.setDeliveryVolume(bookedProductsDto.getDeliveryVolume()+calculateVolume(productInWarehouseDao));
         });
 
         return bookedProductsDto;
@@ -71,12 +71,12 @@ public class WarehouseServiceImpl implements WarehouseService {
         return warehouseRepository.existsById(productId);
     }
 
-    private Double calculateVolume(ProductInWarehouse product) {
+    private Double calculateVolume(ProductInWarehouseDao product) {
         DimensionDto dimension = product.getDimension();
         return dimension.getHeight()*dimension.getDepth()*dimension.getWidth();
     }
 
-    private ProductInWarehouse getProductInWarehouse(UUID productId) {
+    private ProductInWarehouseDao getProductInWarehouse(UUID productId) {
         return warehouseRepository.findById(productId)
                 .orElseThrow(() -> new ProductInWarehouseNotFoundException("Продукт с id " + productId + " не найден на складе!"));
     }
