@@ -1,12 +1,15 @@
-package ru.yandex.practicum.shopping_cart.entity;
+package ru.yandex.practicum.shopping_cart.mappers;
 
 import lombok.experimental.UtilityClass;
 import ru.yandex.practicum.interaction_api.model.dto.shopping_cart.ShoppingCartDto;
+import ru.yandex.practicum.shopping_cart.entity.ShoppingCartEntity;
+import ru.yandex.practicum.shopping_cart.entity.ShoppingCartItem;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @UtilityClass
 public class ShoppingCartMapper {

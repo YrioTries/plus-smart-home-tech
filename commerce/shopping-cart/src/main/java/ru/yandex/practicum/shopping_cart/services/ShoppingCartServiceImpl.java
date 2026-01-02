@@ -12,7 +12,7 @@ import ru.yandex.practicum.interaction_api.model.dto.shopping_cart.ShoppingCartD
 import ru.yandex.practicum.interaction_api.model.dto.shopping_cart.ChangeProductQuantityRequest;
 import ru.yandex.practicum.shopping_cart.entity.ShoppingCartItem;
 import ru.yandex.practicum.shopping_cart.entity.ShoppingCartEntity;
-import ru.yandex.practicum.shopping_cart.entity.ShoppingCartMapper;
+import ru.yandex.practicum.shopping_cart.mappers.ShoppingCartMapper;
 import ru.yandex.practicum.shopping_cart.repositories.ShoppingCartRepository;
 
 import java.util.*;
