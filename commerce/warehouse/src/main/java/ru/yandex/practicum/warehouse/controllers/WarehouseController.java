@@ -9,8 +9,8 @@ import ru.yandex.practicum.interaction_api.model.dto.shopping_cart.ShoppingCartD
 import ru.yandex.practicum.warehouse.services.WarehouseService;
 
 @RestController
-@RequestMapping("/api/v1/warehouse")
 @RequiredArgsConstructor
+@RequestMapping("/api/v1/warehouse")
 public class WarehouseController {
 
     private final WarehouseService service;

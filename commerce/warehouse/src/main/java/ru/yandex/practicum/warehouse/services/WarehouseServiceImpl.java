@@ -24,12 +24,28 @@ public class WarehouseServiceImpl implements WarehouseService {
     private final WarehouseRepository warehouseRepository;
 
     @Override
+    public AddressDto getAddress() {
+        return WarehouseApplication.getRandomAddress();
+    }
+
+    @Override
     public ProductInWarehouseDto addNewProduct(NewProductInWarehouseRequest newProduct) {
         if (isProductInWarehouse(newProduct.getProductId())) {
             throw new SpecifiedProductAlreadyInWarehouseException("Продукт с id " + newProduct.getProductId() + " уже добавлен на склад!");
         }
 
         return ProductInWarehouseMapper.toDto(warehouseRepository.save(ProductInWarehouseMapper.toEntity(newProduct)));
+    }
+
+    @Override
+    public void acceptProduct(AddProductToWarehouseRequest request) {
+
+        ProductInWarehouse productInWarehouse = getProductInWarehouse(request.getProductId());
+        productInWarehouse.setQuantity(productInWarehouse.getQuantity()+request.getQuantity());
+
+        warehouseRepository.save(productInWarehouse);
+
+        log.info("Продукт с id {} в количестве {} принят на склад!", productInWarehouse.getProductId(), productInWarehouse.getQuantity());
     }
 
     @Override
@@ -50,21 +66,6 @@ public class WarehouseServiceImpl implements WarehouseService {
         return bookedProductsDto;
     }
 
-    @Override
-    public void acceptProduct(AddProductToWarehouseRequest request) {
-
-        ProductInWarehouse productInWarehouse = getProductInWarehouse(request.getProductId());
-        productInWarehouse.setQuantity(productInWarehouse.getQuantity()+request.getQuantity());
-
-        warehouseRepository.save(productInWarehouse);
-
-        log.info("Продукт с id {} в количестве {} принят на склад!", productInWarehouse.getProductId(), productInWarehouse.getQuantity());
-    }
-
-    @Override
-    public AddressDto getAddress() {
-        return WarehouseApplication.getRandomAddress();
-    }
 
     private boolean isProductInWarehouse(UUID productId) {
         return warehouseRepository.existsById(productId);
