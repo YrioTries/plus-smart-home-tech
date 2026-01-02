@@ -11,6 +11,10 @@ import java.util.Random;
 
 @SpringBootApplication
 @EnableFeignClients(basePackages = "ru.yandex.practicum.interaction_api")
+@EntityScan({
+        "ru.practicum.warehouse.entity",
+        "ru.practicum.shopping_store.entity"
+})
 public class WarehouseApplication {
     private static final String[] ADDRESSES = {"ADDRESS_1", "ADDRESS_2"};
 
