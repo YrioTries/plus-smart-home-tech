@@ -95,6 +95,8 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     }
 
     private ShoppingCartDao cartExistsByUsername(String username) {
+        validateUserAuthorize(username);
+
         ShoppingCartDao shoppingCart = shoppingCartRepository.findByOwner(username)
                 .orElseThrow(() -> new CartNotFoundException("Корзина для пользователя " + username + " не найдена!"));
 

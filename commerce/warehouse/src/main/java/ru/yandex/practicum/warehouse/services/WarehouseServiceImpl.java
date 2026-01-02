@@ -66,7 +66,6 @@ public class WarehouseServiceImpl implements WarehouseService {
         return bookedProductsDto;
     }
 
-
     private boolean isProductInWarehouse(UUID productId) {
         return warehouseRepository.existsById(productId);
     }
