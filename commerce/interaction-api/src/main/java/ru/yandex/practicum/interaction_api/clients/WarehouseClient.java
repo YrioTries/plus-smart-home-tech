@@ -12,6 +12,6 @@ public interface WarehouseClient {
     @GetMapping("/api/v1/warehouse/address")
     AddressDto getWarehouseAddress();
 
-    @PostMapping("/api/v1/warehouse/check")
+    @PostMapping ("/api/v1/warehouse/check")
     BookedProductsDto checkQuantityForCart(@RequestBody ShoppingCartDto shoppingCartDto);
 }
