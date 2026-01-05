@@ -7,8 +7,8 @@ import ru.yandex.practicum.kafka.telemetry.event.*;
 @Component
 public class SensorEventMapper {
 
-    public SensorEvent toAvro(SensorEventDto eventDto) {
-        SensorEvent.Builder sensorEventBuilder = SensorEvent.newBuilder()
+    public SensorEventAvro toAvro(SensorEventDto eventDto) {
+        SensorEventAvro.Builder sensorEventBuilder = SensorEventAvro.newBuilder()
                 .setId(eventDto.getId())
                 .setHubId(eventDto.getHubId())
                 .setTimestamp(eventDto.getTimestamp().toEpochMilli());
@@ -17,7 +17,7 @@ public class SensorEventMapper {
         switch (eventDto.getType()) {
             case CLIMATE_SENSOR_EVENT:
                 ClimateSensorEventDto climateDto = (ClimateSensorEventDto) eventDto;
-                ClimateSensorEvent climateEvent = ClimateSensorEvent.newBuilder()
+                ClimateSensorEventAvro climateEvent = ClimateSensorEventAvro.newBuilder()
                         .setTemperatureC(climateDto.getTemperatureC())
                         .setHumidity(climateDto.getHumidity())
                         .setCo2Level(climateDto.getCo2Level())
@@ -27,7 +27,7 @@ public class SensorEventMapper {
 
             case LIGHT_SENSOR_EVENT:
                 LightSensorEventDto lightDto = (LightSensorEventDto) eventDto;
-                LightSensorEvent lightEvent = LightSensorEvent.newBuilder()
+                LightSensorEventAvro lightEvent = LightSensorEventAvro.newBuilder()
                         .setLinkQuality(lightDto.getLinkQuality())
                         .setLuminosity(lightDto.getLuminosity())
                         .build();
@@ -36,7 +36,7 @@ public class SensorEventMapper {
 
             case MOTION_SENSOR_EVENT:
                 MotionSensorEventDto motionDto = (MotionSensorEventDto) eventDto;
-                MotionSensorEvent motionEvent = MotionSensorEvent.newBuilder()
+                MotionSensorEventAvro motionEvent = MotionSensorEventAvro.newBuilder()
                         .setLinkQuality(motionDto.getLinkQuality())
                         .setMotion(motionDto.getMotion())
                         .setVoltage(motionDto.getVoltage())
@@ -46,7 +46,7 @@ public class SensorEventMapper {
 
             case SWITCH_SENSOR_EVENT:
                 SwitchSensorEventDto switchDto = (SwitchSensorEventDto) eventDto;
-                SwitchSensorEvent switchEvent = SwitchSensorEvent.newBuilder()
+                SwitchSensorEventAvro switchEvent = SwitchSensorEventAvro.newBuilder()
                         .setState(switchDto.getState())
                         .build();
                 sensorEventBuilder.setPayload(switchEvent);
@@ -54,7 +54,7 @@ public class SensorEventMapper {
 
             case TEMPERATURE_SENSOR_EVENT:
                 TemperatureSensorEventDto tempDto = (TemperatureSensorEventDto) eventDto;
-                TemperatureSensorEvent tempEvent = TemperatureSensorEvent.newBuilder()
+                TemperatureSensorEventAvro tempEvent = TemperatureSensorEventAvro.newBuilder()
                         .setTemperatureC(tempDto.getTemperatureC())
                         .setTemperatureF(tempDto.getTemperatureF())
                         .build();

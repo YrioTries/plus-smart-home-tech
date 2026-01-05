@@ -12,4 +12,25 @@
     <artifactId>commerce</artifactId>
     <packaging>pom</packaging>
 
+    <modules>
+        <module>shopping-cart</module>
+        <module>shopping-store</module>
+        <module>warehouse</module>
+        <module>interaction-api</module>
+        <module>error-handler</module>
+    </modules>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct</artifactId>
+        </dependency>
+    </dependencies>
+
 </project>

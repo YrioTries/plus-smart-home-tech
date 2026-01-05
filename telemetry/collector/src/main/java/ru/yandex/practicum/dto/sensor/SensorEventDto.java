@@ -4,11 +4,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import ru.yandex.practicum.kafka.telemetry.event.SensorType;
+import ru.yandex.practicum.kafka.telemetry.event.SensorTypeAvro;
 
 import java.time.Instant;
 
@@ -40,5 +39,5 @@ public abstract class SensorEventDto {
     private Instant timestamp = Instant.now();
 
     @JsonProperty("type")
-    public abstract SensorType getType();
+    public abstract SensorTypeAvro getType();
 }
