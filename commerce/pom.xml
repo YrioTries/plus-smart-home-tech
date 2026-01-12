@@ -20,6 +20,7 @@
         <module>error-handler</module>
         <module>payment</module>
         <module>order</module>
+        <module>delivery</module>
     </modules>
 
     <dependencies>
