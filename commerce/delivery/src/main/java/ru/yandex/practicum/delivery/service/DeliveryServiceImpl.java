@@ -110,26 +110,40 @@ public class DeliveryServiceImpl implements DeliveryService {
     }
 
     private BigDecimal calculateDelivery(DeliveryDao delivery, OrderDto order) {
+        log.debug("Начало расчёта стоимости доставки для заказа: {}", order.getOrderId());
         BigDecimal deliveryPrice = BASE_DELIVERY_COST;
+        log.debug("Базовая стоимость доставки: {}", deliveryPrice);
 
+        // Проверка адреса
         if (isAddressContains(delivery.getFromAddress(), "ADDRESS_1")) {
-            deliveryPrice = deliveryPrice.multiply(BigDecimal.valueOf(1)).add(BASE_DELIVERY_COST);
-        }
-        else if (isAddressContains(delivery.getFromAddress(), "ADDRESS_2")) {
+            deliveryPrice = deliveryPrice.multiply(BigDecimal.ONE).add(BASE_DELIVERY_COST);
+            log.debug("Стоимость увеличена из-за ADDRESS_1: {}", deliveryPrice);
+        } else if (isAddressContains(delivery.getFromAddress(), "ADDRESS_2")) {
             deliveryPrice = deliveryPrice.multiply(BigDecimal.valueOf(2)).add(BASE_DELIVERY_COST);
+            log.debug("Стоимость увеличена из-за ADDRESS_2: {}", deliveryPrice);
         }
 
+        // Учёт хрупкости
         if (order.getFragile()) {
-            deliveryPrice = deliveryPrice.add(deliveryPrice.multiply(FRAGILE_RATIO));
+            BigDecimal fragileCost = deliveryPrice.multiply(FRAGILE_RATIO);
+            deliveryPrice = deliveryPrice.add(fragileCost);
+            log.debug("Стоимость увеличена из-за хрупкости: {}", deliveryPrice);
         }
 
-        deliveryPrice = deliveryPrice.add(BigDecimal.valueOf(order.getDeliveryWeight()).multiply(WEIGHT_RATIO));
-        deliveryPrice = deliveryPrice.add(BigDecimal.valueOf(order.getDeliveryVolume()).multiply(VOLUME_RATIO));
+        // Учёт веса и объёма
+        BigDecimal weightCost = BigDecimal.valueOf(order.getDeliveryWeight()).multiply(WEIGHT_RATIO);
+        BigDecimal volumeCost = BigDecimal.valueOf(order.getDeliveryVolume()).multiply(VOLUME_RATIO);
+        deliveryPrice = deliveryPrice.add(weightCost).add(volumeCost);
+        log.debug("Стоимость с учётом веса и объёма: {}", deliveryPrice);
 
+        // Проверка улиц
         if (!delivery.getFromAddress().getStreet().equals(delivery.getToAddress().getStreet())) {
-            deliveryPrice = deliveryPrice.add(deliveryPrice.multiply(ADDRESS_RATIO));
+            BigDecimal addressCost = deliveryPrice.multiply(ADDRESS_RATIO);
+            deliveryPrice = deliveryPrice.add(addressCost);
+            log.debug("Стоимость увеличена из-за разных улиц: {}", deliveryPrice);
         }
 
+        log.info("Итоговая стоимость доставки для заказа {}: {}", order.getOrderId(), deliveryPrice);
         return deliveryPrice;
     }
 }
