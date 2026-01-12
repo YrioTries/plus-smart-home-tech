@@ -3,9 +3,9 @@ package ru.yandex.practicum.shopping_store.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.UuidGenerator;
-import ru.yandex.practicum.interaction_api.model.enums.ProductCategory;
-import ru.yandex.practicum.interaction_api.model.enums.ProductState;
-import ru.yandex.practicum.interaction_api.model.enums.QuantityState;
+import ru.yandex.practicum.interaction_api.model.shopping_store.dto.ProductCategory;
+import ru.yandex.practicum.interaction_api.model.shopping_store.dto.ProductState;
+import ru.yandex.practicum.interaction_api.model.warehouse.dto.QuantityState;
 
 import java.math.BigDecimal;
 import java.util.UUID;

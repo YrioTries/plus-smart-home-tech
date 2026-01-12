@@ -3,7 +3,7 @@ package ru.yandex.practicum.delivery.model;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.UuidGenerator;
-import ru.yandex.practicum.interaction_api.model.dto.delivery.DeliveryState;
+import ru.yandex.practicum.interaction_api.model.delivery.dto.DeliveryState;
 
 import java.util.UUID;
 

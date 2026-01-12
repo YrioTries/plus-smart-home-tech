@@ -2,7 +2,7 @@ package ru.yandex.practicum.warehouse.model.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import ru.yandex.practicum.interaction_api.model.dto.warehouse.DimensionDto;
+import ru.yandex.practicum.interaction_api.model.warehouse.dto.DimensionDto;
 
 import java.util.UUID;
 

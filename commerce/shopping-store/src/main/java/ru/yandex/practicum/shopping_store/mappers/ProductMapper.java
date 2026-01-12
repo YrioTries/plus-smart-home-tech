@@ -1,10 +1,10 @@
 package ru.yandex.practicum.shopping_store.mappers;
 
 import lombok.experimental.UtilityClass;
-import ru.yandex.practicum.interaction_api.model.enums.ProductCategory;
-import ru.yandex.practicum.interaction_api.model.enums.ProductState;
-import ru.yandex.practicum.interaction_api.model.enums.QuantityState;
-import ru.yandex.practicum.interaction_api.model.dto.shopping_store.ProductDto;
+import ru.yandex.practicum.interaction_api.model.shopping_store.dto.ProductCategory;
+import ru.yandex.practicum.interaction_api.model.shopping_store.dto.ProductState;
+import ru.yandex.practicum.interaction_api.model.warehouse.dto.QuantityState;
+import ru.yandex.practicum.interaction_api.model.shopping_store.dto.ProductDto;
 import ru.yandex.practicum.shopping_store.entity.ProductDao;
 
 @UtilityClass

@@ -2,9 +2,9 @@ package ru.yandex.practicum.order.service;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import ru.yandex.practicum.interaction_api.model.dto.order.CreateNewOrderRequest;
-import ru.yandex.practicum.interaction_api.model.dto.order.OrderDto;
-import ru.yandex.practicum.interaction_api.model.dto.order.ProductReturnRequest;
+import ru.yandex.practicum.interaction_api.model.order.dto.request.CreateNewOrderRequest;
+import ru.yandex.practicum.interaction_api.model.order.dto.OrderDto;
+import ru.yandex.practicum.interaction_api.model.order.dto.request.ProductReturnRequest;
 
 import java.util.UUID;
 

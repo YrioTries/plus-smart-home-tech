@@ -3,8 +3,8 @@ package ru.yandex.practicum.delivery.model.mapper;
 import lombok.experimental.UtilityClass;
 import ru.yandex.practicum.delivery.model.Delivery;
 import ru.yandex.practicum.delivery.model.DeliveryAddress;
-import ru.yandex.practicum.interaction_api.model.dto.delivery.DeliveryDto;
-import ru.yandex.practicum.interaction_api.model.dto.warehouse.AddressDto;
+import ru.yandex.practicum.interaction_api.model.delivery.dto.DeliveryDto;
+import ru.yandex.practicum.interaction_api.model.warehouse.dto.AddressDto;
 
 @UtilityClass
 public class DeliveryMapper {

@@ -1,7 +1,7 @@
 package ru.yandex.practicum.payment.model.mapper;
 
 import lombok.experimental.UtilityClass;
-import ru.yandex.practicum.interaction_api.model.dto.payment.PaymentDto;
+import ru.yandex.practicum.interaction_api.model.payment.dto.PaymentDto;
 import ru.yandex.practicum.payment.model.entity.Payment;
 
 @UtilityClass

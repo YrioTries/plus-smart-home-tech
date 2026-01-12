@@ -1,7 +1,7 @@
 package ru.yandex.practicum.payment.service;
 
-import ru.yandex.practicum.interaction_api.model.dto.order.OrderDto;
-import ru.yandex.practicum.interaction_api.model.dto.payment.PaymentDto;
+import ru.yandex.practicum.interaction_api.model.order.dto.OrderDto;
+import ru.yandex.practicum.interaction_api.model.payment.dto.PaymentDto;
 
 import java.math.BigDecimal;
 import java.util.UUID;

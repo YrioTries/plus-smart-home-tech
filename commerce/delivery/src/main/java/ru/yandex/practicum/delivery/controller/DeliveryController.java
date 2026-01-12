@@ -5,8 +5,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.delivery.service.DeliveryService;
-import ru.yandex.practicum.interaction_api.model.dto.delivery.DeliveryDto;
-import ru.yandex.practicum.interaction_api.model.dto.order.OrderDto;
+import ru.yandex.practicum.interaction_api.model.delivery.dto.DeliveryDto;
+import ru.yandex.practicum.interaction_api.model.order.dto.OrderDto;
 
 import java.math.BigDecimal;
 import java.util.UUID;

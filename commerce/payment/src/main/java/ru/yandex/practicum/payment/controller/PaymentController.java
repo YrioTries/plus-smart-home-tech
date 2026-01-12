@@ -4,8 +4,8 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import ru.yandex.practicum.interaction_api.model.dto.order.OrderDto;
-import ru.yandex.practicum.interaction_api.model.dto.payment.PaymentDto;
+import ru.yandex.practicum.interaction_api.model.order.dto.OrderDto;
+import ru.yandex.practicum.interaction_api.model.payment.dto.PaymentDto;
 import ru.yandex.practicum.payment.service.PaymentService;
 
 import java.math.BigDecimal;

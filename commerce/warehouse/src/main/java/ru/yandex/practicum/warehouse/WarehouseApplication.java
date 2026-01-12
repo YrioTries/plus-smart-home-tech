@@ -4,7 +4,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.cloud.openfeign.EnableFeignClients;
-import ru.yandex.practicum.interaction_api.model.dto.warehouse.AddressDto;
+import ru.yandex.practicum.interaction_api.model.warehouse.dto.AddressDto;
 
 import java.security.SecureRandom;
 import java.util.Random;

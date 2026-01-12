@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.hibernate.annotations.UuidGenerator;
-import ru.yandex.practicum.interaction_api.model.dto.payment.PaymentStatus;
+import ru.yandex.practicum.interaction_api.model.payment.dto.PaymentStatus;
 
 import java.math.BigDecimal;
 import java.util.UUID;

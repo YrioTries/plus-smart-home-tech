@@ -1,7 +1,7 @@
 package ru.yandex.practicum.warehouse.model.mapper;
 
 import lombok.experimental.UtilityClass;
-import ru.yandex.practicum.interaction_api.model.dto.warehouse.BookedProductsDto;
+import ru.yandex.practicum.interaction_api.model.warehouse.dto.BookedProductsDto;
 import ru.yandex.practicum.warehouse.model.entity.OrderBooking;
 
 @UtilityClass

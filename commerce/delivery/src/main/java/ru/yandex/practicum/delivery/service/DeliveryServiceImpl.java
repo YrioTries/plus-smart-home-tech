@@ -8,12 +8,12 @@ import ru.yandex.practicum.delivery.model.DeliveryAddress;
 import ru.yandex.practicum.delivery.model.mapper.DeliveryMapper;
 import ru.yandex.practicum.delivery.model.repository.DeliveryRepository;
 import ru.yandex.practicum.error_handler.exception.delivery.NoDeliveryFoundException;
-import ru.yandex.practicum.interaction_api.clients.WarehouseClient;
-import ru.yandex.practicum.interaction_api.model.dto.delivery.DeliveryDto;
-import ru.yandex.practicum.interaction_api.model.dto.delivery.DeliveryState;
-import ru.yandex.practicum.interaction_api.model.dto.order.OrderDto;
-import ru.yandex.practicum.interaction_api.model.dto.order.client.OrderClient;
-import ru.yandex.practicum.interaction_api.model.dto.warehouse.request.ShippedToDeliveryRequest;
+import ru.yandex.practicum.interaction_api.model.warehouse.client.WarehouseClient;
+import ru.yandex.practicum.interaction_api.model.delivery.dto.DeliveryDto;
+import ru.yandex.practicum.interaction_api.model.delivery.dto.DeliveryState;
+import ru.yandex.practicum.interaction_api.model.order.dto.OrderDto;
+import ru.yandex.practicum.interaction_api.model.order.client.OrderClient;
+import ru.yandex.practicum.interaction_api.model.warehouse.dto.request.ShippedToDeliveryRequest;
 
 import java.math.BigDecimal;
 import java.util.UUID;

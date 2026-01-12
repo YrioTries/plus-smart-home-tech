@@ -5,7 +5,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.UuidGenerator;
-import ru.yandex.practicum.interaction_api.model.dto.order.OrderState;
+import ru.yandex.practicum.interaction_api.model.order.dto.OrderState;
 
 import java.math.BigDecimal;
 import java.util.Map;

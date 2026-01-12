@@ -7,10 +7,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import ru.yandex.practicum.interaction_api.model.enums.ProductCategory;
-import ru.yandex.practicum.interaction_api.model.enums.QuantityState;
-import ru.yandex.practicum.interaction_api.model.dto.shopping_store.ProductDto;
-import ru.yandex.practicum.interaction_api.model.dto.shopping_store.SetProductQuantityStateRequest;
+import ru.yandex.practicum.interaction_api.model.shopping_store.dto.ProductCategory;
+import ru.yandex.practicum.interaction_api.model.warehouse.dto.QuantityState;
+import ru.yandex.practicum.interaction_api.model.shopping_store.dto.ProductDto;
+import ru.yandex.practicum.interaction_api.model.shopping_store.dto.SetProductQuantityStateRequest;
 import ru.yandex.practicum.shopping_store.services.ShoppingStoreService;
 
 import java.util.UUID;

@@ -1,7 +1,7 @@
 package ru.yandex.practicum.delivery.service;
 
-import ru.yandex.practicum.interaction_api.model.dto.delivery.DeliveryDto;
-import ru.yandex.practicum.interaction_api.model.dto.order.OrderDto;
+import ru.yandex.practicum.interaction_api.model.delivery.dto.DeliveryDto;
+import ru.yandex.practicum.interaction_api.model.order.dto.OrderDto;
 
 import java.math.BigDecimal;
 import java.util.UUID;

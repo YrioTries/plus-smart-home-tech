@@ -7,9 +7,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import ru.yandex.practicum.interaction_api.model.dto.order.CreateNewOrderRequest;
-import ru.yandex.practicum.interaction_api.model.dto.order.OrderDto;
-import ru.yandex.practicum.interaction_api.model.dto.order.ProductReturnRequest;
+import ru.yandex.practicum.interaction_api.model.order.dto.request.CreateNewOrderRequest;
+import ru.yandex.practicum.interaction_api.model.order.dto.OrderDto;
+import ru.yandex.practicum.interaction_api.model.order.dto.request.ProductReturnRequest;
 import ru.yandex.practicum.order.service.OrderService;
 
 import java.util.UUID;
