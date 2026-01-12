@@ -38,7 +38,6 @@ public class WarehouseServiceImpl implements WarehouseService {
     private final OrderBookingRepository orderBookingRepository;
 
     private final OrderClient orderClient;
-    private final DeliveryClient deliveryClient;
 
     @Override
     public ProductInWarehouseDto addNewProduct(NewProductInWarehouseRequest newProduct) {
