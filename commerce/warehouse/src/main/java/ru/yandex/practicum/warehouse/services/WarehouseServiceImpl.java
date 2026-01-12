@@ -8,7 +8,6 @@ import ru.yandex.practicum.error_handler.exception.ProductInWarehouseNotFoundExc
 import ru.yandex.practicum.error_handler.exception.SpecifiedProductAlreadyInWarehouseException;
 import ru.yandex.practicum.error_handler.exception.warehouse.ProductLowQuantityInWarehouse;
 import ru.yandex.practicum.error_handler.exception.warehouse.booking.NotOrderBookingFound;
-import ru.yandex.practicum.interaction_api.model.dto.delivery.client.DeliveryClient;
 import ru.yandex.practicum.interaction_api.model.dto.order.client.OrderClient;
 import ru.yandex.practicum.interaction_api.model.dto.warehouse.*;
 import org.springframework.transaction.annotation.Transactional;
