@@ -18,6 +18,7 @@
         <module>warehouse</module>
         <module>interaction-api</module>
         <module>error-handler</module>
+        <module>payment</module>
     </modules>
 
     <dependencies>
