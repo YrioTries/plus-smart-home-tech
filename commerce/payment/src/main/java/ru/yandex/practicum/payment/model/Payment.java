@@ -23,8 +23,8 @@ public class Payment {
     @Column(name = "payment_id")
     private UUID paymentId;
 
-    @Column(name = "total_payment", nullable = false)
     @NotNull
+    @Column(name = "total_payment", nullable = false)
     private BigDecimal totalPayment;
 
     @Column(name = "total_product", nullable = false)
