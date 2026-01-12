@@ -3,6 +3,7 @@ package ru.yandex.practicum.payment.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.yandex.practicum.error_handler.exception.shopping_store.ProductNotFoundException;
 import ru.yandex.practicum.error_handler.exception.payment.PaymentNotFound;
 import ru.yandex.practicum.interaction_api.model.order.dto.OrderDto;
@@ -22,6 +23,7 @@ import java.util.UUID;
 @Slf4j
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class PaymentServiceImpl implements PaymentService {
 
     private final PaymentRepository repository;
@@ -32,6 +34,7 @@ public class PaymentServiceImpl implements PaymentService {
     private final BigDecimal TAX = BigDecimal.valueOf(0.1);
 
     @Override
+    @Transactional
     public PaymentDto goToPayment(OrderDto order) {
         PaymentDao newPayment = PaymentDao.builder()
                 .totalProduct(order.getProductPrice())
@@ -57,6 +60,7 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
+    @Transactional
     public void createRefund(UUID paymentId) {
 
         PaymentDao payment = getPayment(paymentId);
@@ -96,6 +100,7 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
+    @Transactional
     public void failedPayment(UUID paymentId) {
 
         PaymentDao payment = getPayment(paymentId);
