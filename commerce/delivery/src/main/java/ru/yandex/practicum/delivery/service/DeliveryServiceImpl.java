@@ -3,6 +3,7 @@ package ru.yandex.practicum.delivery.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.yandex.practicum.delivery.model.entity.DeliveryDao;
 import ru.yandex.practicum.delivery.model.entity.DeliveryAddress;
 import ru.yandex.practicum.delivery.model.mapper.DeliveryMapper;
@@ -21,6 +22,7 @@ import java.util.UUID;
 @Slf4j
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class DeliveryServiceImpl implements DeliveryService {
 
     private final DeliveryRepository repository;
@@ -35,11 +37,13 @@ public class DeliveryServiceImpl implements DeliveryService {
     private final BigDecimal ADDRESS_RATIO = BigDecimal.valueOf(0.2);
 
     @Override
+    @Transactional
     public DeliveryDto createDelivery(DeliveryDto delivery) {
         return DeliveryMapper.toDto(repository.save(DeliveryMapper.toEntity(delivery)));
     }
 
     @Override
+    @Transactional
     public void successfulDelivery(UUID deliveryId) {
         DeliveryDao delivery = getDelivery(deliveryId);
 
@@ -53,6 +57,7 @@ public class DeliveryServiceImpl implements DeliveryService {
     }
 
     @Override
+    @Transactional
     public void pickedDelivery(UUID deliveryId) {
         DeliveryDao delivery = getDelivery(deliveryId);
 
