@@ -12,8 +12,13 @@ import ru.yandex.practicum.error_handler.exception.*;
 import ru.yandex.practicum.error_handler.exception.delivery.NoDeliveryFoundException;
 import ru.yandex.practicum.error_handler.exception.order.NoOrderFoundException;
 import ru.yandex.practicum.error_handler.exception.payment.PaymentNotFound;
+import ru.yandex.practicum.error_handler.exception.shopping_cart.NoProductsInShoppingCartException;
+import ru.yandex.practicum.error_handler.exception.shopping_store.ProductNotFoundException;
+import ru.yandex.practicum.error_handler.exception.warehouse.NoSpecifiedProductInWarehouseException;
 import ru.yandex.practicum.error_handler.exception.warehouse.ProductLowQuantityInWarehouse;
+import ru.yandex.practicum.error_handler.exception.warehouse.SpecifiedProductAlreadyInWarehouseException;
 import ru.yandex.practicum.error_handler.exception.warehouse.booking.NotOrderBookingFound;
+import ru.yandex.practicum.error_handler.exception.warehouse.ProductInShoppingCartLowQuantityInWarehouse;
 
 @Slf4j
 @RestControllerAdvice

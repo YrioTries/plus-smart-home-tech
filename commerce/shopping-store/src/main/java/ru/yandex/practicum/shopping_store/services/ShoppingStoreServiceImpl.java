@@ -5,7 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import ru.yandex.practicum.error_handler.exception.ProductNotFoundException;
+import ru.yandex.practicum.error_handler.exception.shopping_store.ProductNotFoundException;
 import ru.yandex.practicum.interaction_api.model.enums.ProductCategory;
 import ru.yandex.practicum.interaction_api.model.enums.ProductState;
 import ru.yandex.practicum.interaction_api.model.dto.shopping_store.ProductDto;

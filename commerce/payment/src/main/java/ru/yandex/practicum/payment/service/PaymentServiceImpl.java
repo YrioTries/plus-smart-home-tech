@@ -3,7 +3,7 @@ package ru.yandex.practicum.payment.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import ru.yandex.practicum.error_handler.exception.ProductNotFoundException;
+import ru.yandex.practicum.error_handler.exception.shopping_store.ProductNotFoundException;
 import ru.yandex.practicum.error_handler.exception.payment.PaymentNotFound;
 import ru.yandex.practicum.interaction_api.model.dto.order.OrderDto;
 import ru.yandex.practicum.interaction_api.model.dto.order.client.OrderClient;

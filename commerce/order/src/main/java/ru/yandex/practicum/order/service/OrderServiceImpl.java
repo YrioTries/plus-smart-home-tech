@@ -6,7 +6,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import ru.yandex.practicum.error_handler.exception.NoSpecifiedProductInWarehouseException;
+import ru.yandex.practicum.error_handler.exception.warehouse.NoSpecifiedProductInWarehouseException;
 import ru.yandex.practicum.error_handler.exception.NotAuthorizedUserException;
 import ru.yandex.practicum.error_handler.exception.order.NoOrderFoundException;
 import ru.yandex.practicum.error_handler.exception.warehouse.ProductLowQuantityInWarehouse;
