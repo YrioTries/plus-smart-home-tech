@@ -20,7 +20,7 @@ import ru.yandex.practicum.interaction_api.model.warehouse.dto.request.AssemblyP
 import ru.yandex.practicum.interaction_api.model.warehouse.dto.request.NewProductInWarehouseRequest;
 import ru.yandex.practicum.interaction_api.model.warehouse.dto.request.ShippedToDeliveryRequest;
 import ru.yandex.practicum.warehouse.WarehouseStarter;
-import ru.yandex.practicum.warehouse.model.entity.OrderBooking;
+import ru.yandex.practicum.warehouse.model.entity.OrderBookingDao;
 import ru.yandex.practicum.warehouse.model.entity.ProductInWarehouseDao;
 import ru.yandex.practicum.warehouse.model.mapper.OrderBookingMapper;
 import ru.yandex.practicum.warehouse.model.mapper.ProductInWarehouseMapper;
@@ -86,7 +86,7 @@ public class WarehouseServiceImpl implements WarehouseService {
     @Override
     public void shippedProducts(ShippedToDeliveryRequest request) {
 
-        OrderBooking orderBooking = orderBookingRepository.findById(request.getOrderId())
+        OrderBookingDao orderBooking = orderBookingRepository.findById(request.getOrderId())
                 .orElseThrow(() -> new NotOrderBookingFound("Забронированные товары для заказа с id " + request.getOrderId() + " не найдены!"));
 
         orderBooking.setDeliveryId(request.getDeliveryId());
@@ -153,7 +153,7 @@ public class WarehouseServiceImpl implements WarehouseService {
             }
         }
 
-        OrderBooking newOrderBooking = OrderBooking.builder()
+        OrderBookingDao newOrderBooking = OrderBookingDao.builder()
                 .products(request.getProducts())
                 .deliveryWeight(deliveryWeight)
                 .deliveryVolume(deliveryVolume)

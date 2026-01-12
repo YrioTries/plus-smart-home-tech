@@ -27,7 +27,7 @@ public class ShoppingCartDao {
     private UUID shoppingCartId;
 
     @OneToMany(mappedBy = "shoppingCart", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ShoppingCartItem> items;
+    private List<ShoppingCartItemDao> items;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)

@@ -21,7 +21,7 @@ import ru.yandex.practicum.interaction_api.model.payment.dto.PaymentDto;
 import ru.yandex.practicum.interaction_api.model.payment.client.PaymentClient;
 import ru.yandex.practicum.interaction_api.model.warehouse.dto.request.AssemblyProductsForOrderRequest;
 import ru.yandex.practicum.interaction_api.model.warehouse.dto.BookedProductsDto;
-import ru.yandex.practicum.order.model.entity.Order;
+import ru.yandex.practicum.order.model.entity.OrderDao;
 import ru.yandex.practicum.order.model.mapper.OrderMapper;
 import ru.yandex.practicum.order.model.repository.OrderRepository;
 
@@ -44,7 +44,7 @@ public class OrderServiceImpl implements OrderService {
             throw new NotAuthorizedUserException("Поле username не может быть пустым!");
         }
 
-        Page<Order> orders = repository.findByUsername(username, pageable);
+        Page<OrderDao> orders = repository.findByUsername(username, pageable);
         return orders.map(OrderMapper::toDto);
     }
 
@@ -67,13 +67,13 @@ public class OrderServiceImpl implements OrderService {
             throw new NotAuthorizedUserException("Поле username не может быть пустым!");
         }
 
-        Order newOrder = Order.builder()
+        OrderDao newOrder = OrderDao.builder()
                 .shoppingCartId(request.getShoppingCart().getShoppingCartId())
                 .products(request.getShoppingCart().getProducts())
                 .username(username)
                 .build();
 
-        Order order = saveOrder(newOrder);
+        OrderDao order = saveOrder(newOrder);
 
         try {
             BookedProductsDto bookedProducts = warehouseClient.assemblyProducts(AssemblyProductsForOrderRequest.builder()
@@ -127,7 +127,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public OrderDto returnOrder(ProductReturnRequest request) {
 
-        Order order = getOrder(request.getOrderId());
+        OrderDao order = getOrder(request.getOrderId());
 
         warehouseClient.returnProducts(request.getProducts());
         order.setState(OrderState.PRODUCT_RETURNED);
@@ -138,7 +138,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public OrderDto paymentOrder(UUID orderId) {
 
-        Order order = getOrder(orderId);
+        OrderDao order = getOrder(orderId);
         order.setState(OrderState.PAID);
 
         return OrderMapper.toDto(repository.save(order));
@@ -147,7 +147,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public OrderDto failedPaymentOrder(UUID orderId) {
 
-        Order order = getOrder(orderId);
+        OrderDao order = getOrder(orderId);
         order.setState(OrderState.PAYMENT_FAILED);
 
         return OrderMapper.toDto(repository.save(order));
@@ -156,7 +156,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public OrderDto deliveryOrder(UUID orderId) {
 
-        Order order = getOrder(orderId);
+        OrderDao order = getOrder(orderId);
         order.setState(OrderState.DELIVERED);
 
         return OrderMapper.toDto(repository.save(order));
@@ -165,7 +165,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public OrderDto failedDeliveryOrder(UUID orderId) {
 
-        Order order = getOrder(orderId);
+        OrderDao order = getOrder(orderId);
         order.setState(OrderState.DELIVERY_FAILED);
 
         return OrderMapper.toDto(repository.save(order));
@@ -174,7 +174,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public OrderDto completedOrder(UUID orderId) {
 
-        Order order = getOrder(orderId);
+        OrderDao order = getOrder(orderId);
         order.setState(OrderState.COMPLETED);
 
         return OrderMapper.toDto(repository.save(order));
@@ -183,7 +183,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public OrderDto calculateTotalOrder(UUID orderId) {
 
-        Order order = getOrder(orderId);
+        OrderDao order = getOrder(orderId);
         order.setTotalPrice(paymentClient.calculateTotalCost(OrderMapper.toDto(order)));
 
         return OrderMapper.toDto(repository.save(order));
@@ -192,7 +192,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public OrderDto calculateDeliveryOrder(UUID orderId) {
 
-        Order order = getOrder(orderId);
+        OrderDao order = getOrder(orderId);
         order.setDeliveryPrice(deliveryClient.calculateDeliveryCost(OrderMapper.toDto(order)));
 
         return OrderMapper.toDto(repository.save(order));
@@ -201,7 +201,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public OrderDto assemblyOrder(UUID orderId) {
 
-        Order order = getOrder(orderId);
+        OrderDao order = getOrder(orderId);
         order.setState(OrderState.ASSEMBLED);
 
         return OrderMapper.toDto(repository.save(order));
@@ -209,18 +209,18 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public OrderDto failedAssemblyOrder(UUID orderId) {
-        Order order = getOrder(orderId);
+        OrderDao order = getOrder(orderId);
         order.setState(OrderState.ASSEMBLY_FAILED);
 
         return OrderMapper.toDto(repository.save(order));
     }
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public Order saveOrder(Order newOrder) {
+    public OrderDao saveOrder(OrderDao newOrder) {
         return repository.save(newOrder);
     }
 
-    private Order getOrder(UUID orderId) {
+    private OrderDao getOrder(UUID orderId) {
         return repository.findById(orderId)
                 .orElseThrow(() -> new NoOrderFoundException("Заказ с id " + orderId + " не найден!"));
     }

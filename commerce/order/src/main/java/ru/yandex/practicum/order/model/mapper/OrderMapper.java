@@ -2,12 +2,12 @@ package ru.yandex.practicum.order.model.mapper;
 
 import lombok.experimental.UtilityClass;
 import ru.yandex.practicum.interaction_api.model.order.dto.OrderDto;
-import ru.yandex.practicum.order.model.entity.Order;
+import ru.yandex.practicum.order.model.entity.OrderDao;
 
 @UtilityClass
 public class OrderMapper {
 
-    public static OrderDto toDto(Order order) {
+    public static OrderDto toDto(OrderDao order) {
         if (order == null) {
             return null;
         }
@@ -28,12 +28,12 @@ public class OrderMapper {
                 .build();
     }
 
-    public static Order fromDto(OrderDto dto, String username) {
+    public static OrderDao fromDto(OrderDto dto, String username) {
         if (dto == null) {
             return null;
         }
 
-        return Order.builder()
+        return OrderDao.builder()
                 .orderId(dto.getOrderId())
                 .shoppingCartId(dto.getShoppingCartId())
                 .products(dto.getProducts())

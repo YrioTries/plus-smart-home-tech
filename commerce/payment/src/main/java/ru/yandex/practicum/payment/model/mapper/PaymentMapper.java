@@ -2,12 +2,12 @@ package ru.yandex.practicum.payment.model.mapper;
 
 import lombok.experimental.UtilityClass;
 import ru.yandex.practicum.interaction_api.model.payment.dto.PaymentDto;
-import ru.yandex.practicum.payment.model.entity.Payment;
+import ru.yandex.practicum.payment.model.entity.PaymentDao;
 
 @UtilityClass
 public class PaymentMapper {
 
-    public static PaymentDto toDto(Payment payment) {
+    public static PaymentDto toDto(PaymentDao payment) {
         if (payment == null) {
             return null;
         }
@@ -22,12 +22,12 @@ public class PaymentMapper {
                 .build();
     }
 
-    public static Payment toEntity(PaymentDto dto) {
+    public static PaymentDao toEntity(PaymentDto dto) {
         if (dto == null) {
             return null;
         }
 
-        return Payment.builder()
+        return PaymentDao.builder()
                 .paymentId(dto.getPaymentId())
                 .totalPayment(dto.getTotalPayment())
                 .totalProduct(dto.getTotalProduct())

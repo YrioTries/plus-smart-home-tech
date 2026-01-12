@@ -14,7 +14,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "order_bookings")
-public class OrderBooking {
+public class OrderBookingDao {
 
     @Id
     @UuidGenerator

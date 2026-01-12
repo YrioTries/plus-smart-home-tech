@@ -3,7 +3,7 @@ package ru.yandex.practicum.shopping_cart.model.mapper;
 import lombok.experimental.UtilityClass;
 import ru.yandex.practicum.interaction_api.model.shopping_cart.dto.ShoppingCartDto;
 import ru.yandex.practicum.shopping_cart.model.entity.ShoppingCartDao;
-import ru.yandex.practicum.shopping_cart.model.entity.ShoppingCartItem;
+import ru.yandex.practicum.shopping_cart.model.entity.ShoppingCartItemDao;
 
 import java.util.HashMap;
 import java.util.List;
@@ -21,17 +21,17 @@ public class ShoppingCartMapper {
                 .build();
     }
 
-    private Map<UUID, Integer> getProductsMap(List<ShoppingCartItem> products) {
+    private Map<UUID, Integer> getProductsMap(List<ShoppingCartItemDao> products) {
         Map<UUID, Integer> productsMap = new HashMap<>();
 
         products.forEach(product -> productsMap.put(product.getProductId(), product.getQuantity()));
         return productsMap;
     }
 
-    private List<ShoppingCartItem> getProductsList(Map<UUID, Integer> products) {
+    private List<ShoppingCartItemDao> getProductsList(Map<UUID, Integer> products) {
         return products.entrySet().stream()
                 .map(entry -> {
-                    ShoppingCartItem item = new ShoppingCartItem();
+                    ShoppingCartItemDao item = new ShoppingCartItemDao();
                     item.setProductId(entry.getKey());
                     item.setQuantity(entry.getValue());
                     return item;

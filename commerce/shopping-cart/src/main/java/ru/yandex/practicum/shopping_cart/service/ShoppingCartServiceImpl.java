@@ -10,7 +10,7 @@ import ru.yandex.practicum.interaction_api.model.warehouse.client.WarehouseClien
 import ru.yandex.practicum.interaction_api.model.shopping_cart.dto.ShoppingCartState;
 import ru.yandex.practicum.interaction_api.model.shopping_cart.dto.ShoppingCartDto;
 import ru.yandex.practicum.interaction_api.model.shopping_cart.dto.request.ChangeProductQuantityRequest;
-import ru.yandex.practicum.shopping_cart.model.entity.ShoppingCartItem;
+import ru.yandex.practicum.shopping_cart.model.entity.ShoppingCartItemDao;
 import ru.yandex.practicum.shopping_cart.model.entity.ShoppingCartDao;
 import ru.yandex.practicum.shopping_cart.model.mapper.ShoppingCartMapper;
 import ru.yandex.practicum.shopping_cart.model.repository.ShoppingCartRepository;
@@ -83,7 +83,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
         ShoppingCartDao shoppingCart = cartExistsByUsername(username);
 
-        for (ShoppingCartItem item : shoppingCart.getItems()) {
+        for (ShoppingCartItemDao item : shoppingCart.getItems()) {
             if (item.getProductId().equals(request.getProductId())) {
                 item.setQuantity(request.getNewQuantity());
                 break;
@@ -110,15 +110,15 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     private ShoppingCartDao addProductsToShoppingCart(ShoppingCartDao shoppingCart, Map<UUID, Integer> products) {
 
         Map<UUID, Integer> validProducts = new HashMap<>(products);
-        Map<UUID, ShoppingCartItem> itemMap = shoppingCart.getItems().stream()
-                .collect(Collectors.toMap(ShoppingCartItem::getProductId, Function.identity()));
+        Map<UUID, ShoppingCartItemDao> itemMap = shoppingCart.getItems().stream()
+                .collect(Collectors.toMap(ShoppingCartItemDao::getProductId, Function.identity()));
 
         validProducts.forEach((productId, quantity) -> {
             if (itemMap.containsKey(productId)) {
-                ShoppingCartItem existingItem = itemMap.get(productId);
+                ShoppingCartItemDao existingItem = itemMap.get(productId);
                 existingItem.setQuantity(existingItem.getQuantity() + quantity);
             } else {
-                ShoppingCartItem newItem = ShoppingCartItem.builder()
+                ShoppingCartItemDao newItem = ShoppingCartItemDao.builder()
                         .shoppingCart(shoppingCart)
                         .productId(productId)
                         .quantity(quantity)

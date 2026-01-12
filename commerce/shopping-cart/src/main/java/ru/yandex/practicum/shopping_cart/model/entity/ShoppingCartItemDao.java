@@ -15,7 +15,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "shopping_cart_item")
-public class ShoppingCartItem {
+public class ShoppingCartItemDao {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

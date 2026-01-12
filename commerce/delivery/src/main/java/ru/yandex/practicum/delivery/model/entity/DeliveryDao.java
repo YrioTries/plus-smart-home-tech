@@ -8,13 +8,13 @@ import ru.yandex.practicum.interaction_api.model.delivery.dto.DeliveryState;
 import java.util.UUID;
 
 @Entity
-@Table(name = "deliveries")
 @Getter
 @Setter
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
-public class Delivery {
+@Table(name = "deliveries")
+public class DeliveryDao {
 
     @Id
     @UuidGenerator

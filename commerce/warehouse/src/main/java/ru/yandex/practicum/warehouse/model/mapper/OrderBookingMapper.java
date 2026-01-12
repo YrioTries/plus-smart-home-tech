@@ -2,12 +2,12 @@ package ru.yandex.practicum.warehouse.model.mapper;
 
 import lombok.experimental.UtilityClass;
 import ru.yandex.practicum.interaction_api.model.warehouse.dto.BookedProductsDto;
-import ru.yandex.practicum.warehouse.model.entity.OrderBooking;
+import ru.yandex.practicum.warehouse.model.entity.OrderBookingDao;
 
 @UtilityClass
 public class OrderBookingMapper {
 
-    public static BookedProductsDto toDto(OrderBooking booking) {
+    public static BookedProductsDto toDto(OrderBookingDao booking) {
         if (booking == null) return null;
 
         return BookedProductsDto.builder()
@@ -17,10 +17,10 @@ public class OrderBookingMapper {
                 .build();
     }
 
-    public static OrderBooking toEntity(BookedProductsDto dto) {
+    public static OrderBookingDao toEntity(BookedProductsDto dto) {
         if (dto == null) return null;
 
-        return OrderBooking.builder()
+        return OrderBookingDao.builder()
                 .deliveryWeight(dto.getDeliveryWeight() != null ? dto.getDeliveryWeight() : 0.0)
                 .deliveryVolume(dto.getDeliveryVolume() != null ? dto.getDeliveryVolume() : 0.0)
                 .fragile(dto.getFragile() != null ? dto.getFragile() : false)
