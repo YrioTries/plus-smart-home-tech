@@ -1,4 +1,4 @@
-package ru.yandex.practicum.payment.model;
+package ru.yandex.practicum.payment.model.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;

@@ -1,7 +1,7 @@
-package ru.yandex.practicum.warehouse.repositories;
+package ru.yandex.practicum.warehouse.model.repositories;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import ru.yandex.practicum.warehouse.entity.ProductInWarehouseDao;
+import ru.yandex.practicum.warehouse.model.entity.ProductInWarehouseDao;
 
 import java.util.UUID;
 

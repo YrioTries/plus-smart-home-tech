@@ -19,6 +19,7 @@
         <module>interaction-api</module>
         <module>error-handler</module>
         <module>payment</module>
+        <module>order</module>
     </modules>
 
     <dependencies>

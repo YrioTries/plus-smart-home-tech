@@ -11,9 +11,9 @@ import ru.yandex.practicum.interaction_api.model.dto.payment.PaymentDto;
 import ru.yandex.practicum.interaction_api.model.dto.payment.PaymentStatus;
 import ru.yandex.practicum.interaction_api.model.dto.shopping_store.ProductDto;
 import ru.yandex.practicum.interaction_api.model.dto.shopping_store.client.ShoppingStoreClient;
-import ru.yandex.practicum.payment.mapper.PaymentMapper;
-import ru.yandex.practicum.payment.model.Payment;
-import ru.yandex.practicum.payment.repository.PaymentRepository;
+import ru.yandex.practicum.payment.model.mapper.PaymentMapper;
+import ru.yandex.practicum.payment.model.entity.Payment;
+import ru.yandex.practicum.payment.model.repository.PaymentRepository;
 
 import java.math.BigDecimal;
 import java.util.Map;
