@@ -21,7 +21,7 @@ import ru.yandex.practicum.interaction_api.model.payment.dto.PaymentDto;
 import ru.yandex.practicum.interaction_api.model.payment.client.PaymentClient;
 import ru.yandex.practicum.interaction_api.model.warehouse.dto.request.AssemblyProductsForOrderRequest;
 import ru.yandex.practicum.interaction_api.model.warehouse.dto.BookedProductsDto;
-import ru.yandex.practicum.order.model.Order;
+import ru.yandex.practicum.order.model.entity.Order;
 import ru.yandex.practicum.order.model.mapper.OrderMapper;
 import ru.yandex.practicum.order.model.repository.OrderRepository;
 

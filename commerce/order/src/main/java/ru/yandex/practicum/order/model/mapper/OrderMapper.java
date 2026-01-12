@@ -2,7 +2,7 @@ package ru.yandex.practicum.order.model.mapper;
 
 import lombok.experimental.UtilityClass;
 import ru.yandex.practicum.interaction_api.model.order.dto.OrderDto;
-import ru.yandex.practicum.order.model.Order;
+import ru.yandex.practicum.order.model.entity.Order;
 
 @UtilityClass
 public class OrderMapper {

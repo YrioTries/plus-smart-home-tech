@@ -10,9 +10,9 @@ import ru.yandex.practicum.interaction_api.model.shopping_store.dto.ProductCateg
 import ru.yandex.practicum.interaction_api.model.shopping_store.dto.ProductState;
 import ru.yandex.practicum.interaction_api.model.shopping_store.dto.ProductDto;
 import ru.yandex.practicum.interaction_api.model.shopping_store.dto.SetProductQuantityStateRequest;
-import ru.yandex.practicum.shopping_store.entity.ProductDao;
-import ru.yandex.practicum.shopping_store.mappers.ProductMapper;
-import ru.yandex.practicum.shopping_store.repositories.ShoppingStoreRepository;
+import ru.yandex.practicum.shopping_store.model.entity.ProductDao;
+import ru.yandex.practicum.shopping_store.model.mapper.ProductMapper;
+import ru.yandex.practicum.shopping_store.model.repository.ShoppingStoreRepository;
 
 import java.util.UUID;
 
