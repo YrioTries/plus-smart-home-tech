@@ -111,6 +111,7 @@ public class DeliveryServiceImpl implements DeliveryService {
 
     private BigDecimal calculateDelivery(DeliveryDao delivery, OrderDto order) {
         log.debug("Начало расчёта стоимости доставки для заказа: {}", order.getOrderId());
+        log.debug("Идентификационный номер доставки: {}", delivery.getDeliveryId());
         BigDecimal deliveryPrice = BASE_DELIVERY_COST;
         log.debug("Базовая стоимость доставки: {}", deliveryPrice);
 
