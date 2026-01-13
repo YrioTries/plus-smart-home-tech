@@ -13,11 +13,11 @@
     <packaging>pom</packaging>
 
     <modules>
+        <module>interaction-api</module>
+        <module>error-handler</module>
         <module>shopping-cart</module>
         <module>shopping-store</module>
         <module>warehouse</module>
-        <module>interaction-api</module>
-        <module>error-handler</module>
         <module>payment</module>
         <module>order</module>
         <module>delivery</module>

@@ -114,7 +114,6 @@ public class DeliveryServiceImpl implements DeliveryService {
         BigDecimal deliveryPrice = BASE_DELIVERY_COST;
         log.debug("Базовая стоимость доставки: {}", deliveryPrice);
 
-        // Проверка адреса
         if (isAddressContains(delivery.getFromAddress(), "ADDRESS_1")) {
             deliveryPrice = deliveryPrice.multiply(BigDecimal.ONE).add(BASE_DELIVERY_COST);
             log.debug("Стоимость увеличена из-за ADDRESS_1: {}", deliveryPrice);
@@ -123,20 +122,18 @@ public class DeliveryServiceImpl implements DeliveryService {
             log.debug("Стоимость увеличена из-за ADDRESS_2: {}", deliveryPrice);
         }
 
-        // Учёт хрупкости
         if (order.getFragile()) {
             BigDecimal fragileCost = deliveryPrice.multiply(FRAGILE_RATIO);
             deliveryPrice = deliveryPrice.add(fragileCost);
             log.debug("Стоимость увеличена из-за хрупкости: {}", deliveryPrice);
         }
 
-        // Учёт веса и объёма
         BigDecimal weightCost = BigDecimal.valueOf(order.getDeliveryWeight()).multiply(WEIGHT_RATIO);
         BigDecimal volumeCost = BigDecimal.valueOf(order.getDeliveryVolume()).multiply(VOLUME_RATIO);
         deliveryPrice = deliveryPrice.add(weightCost).add(volumeCost);
         log.debug("Стоимость с учётом веса и объёма: {}", deliveryPrice);
 
-        // Проверка улиц
+
         if (!delivery.getFromAddress().getStreet().equals(delivery.getToAddress().getStreet())) {
             BigDecimal addressCost = deliveryPrice.multiply(ADDRESS_RATIO);
             deliveryPrice = deliveryPrice.add(addressCost);
