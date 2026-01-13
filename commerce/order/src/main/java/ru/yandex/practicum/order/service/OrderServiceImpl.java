@@ -30,6 +30,7 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class OrderServiceImpl implements OrderService {
 
     private final OrderRepository repository;
@@ -61,6 +62,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    @Transactional
     public OrderDto createOrder(String username, CreateNewOrderRequest request) {
 
         if (username == null) {
@@ -125,6 +127,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    @Transactional
     public OrderDto returnOrder(ProductReturnRequest request) {
 
         OrderDao order = getOrder(request.getOrderId());
@@ -136,6 +139,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    @Transactional
     public OrderDto paymentOrder(UUID orderId) {
 
         OrderDao order = getOrder(orderId);
@@ -145,6 +149,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    @Transactional
     public OrderDto failedPaymentOrder(UUID orderId) {
 
         OrderDao order = getOrder(orderId);
@@ -154,6 +159,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    @Transactional
     public OrderDto deliveryOrder(UUID orderId) {
 
         OrderDao order = getOrder(orderId);
@@ -163,6 +169,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    @Transactional
     public OrderDto failedDeliveryOrder(UUID orderId) {
 
         OrderDao order = getOrder(orderId);
@@ -172,6 +179,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    @Transactional
     public OrderDto completedOrder(UUID orderId) {
 
         OrderDao order = getOrder(orderId);
@@ -181,6 +189,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    @Transactional
     public OrderDto calculateTotalOrder(UUID orderId) {
 
         OrderDao order = getOrder(orderId);
@@ -190,6 +199,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    @Transactional
     public OrderDto calculateDeliveryOrder(UUID orderId) {
 
         OrderDao order = getOrder(orderId);
@@ -199,6 +209,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    @Transactional
     public OrderDto assemblyOrder(UUID orderId) {
 
         OrderDao order = getOrder(orderId);
@@ -208,6 +219,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    @Transactional
     public OrderDto failedAssemblyOrder(UUID orderId) {
         OrderDao order = getOrder(orderId);
         order.setState(OrderState.ASSEMBLY_FAILED);

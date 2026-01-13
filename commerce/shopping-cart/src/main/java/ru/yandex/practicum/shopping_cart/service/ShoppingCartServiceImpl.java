@@ -3,6 +3,7 @@ package ru.yandex.practicum.shopping_cart.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.yandex.practicum.error_handler.exception.shopping_cart.CartNotFoundException;
 import ru.yandex.practicum.error_handler.exception.shopping_cart.DeactivatedCartException;
 import ru.yandex.practicum.error_handler.exception.NotAuthorizedUserException;
@@ -22,6 +23,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class ShoppingCartServiceImpl implements ShoppingCartService {
 
     private final ShoppingCartRepository shoppingCartRepository;
@@ -34,6 +36,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     }
 
     @Override
+    @Transactional
     public ShoppingCartDto addProductToShoppingCart(String username, Map<UUID, Integer> products) {
         validateUserAuthorize(username);
 
@@ -58,6 +61,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     }
 
     @Override
+    @Transactional
     public void deactivateShoppingCart(String username) {
         validateUserAuthorize(username);
 
@@ -68,6 +72,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     }
 
     @Override
+    @Transactional
     public ShoppingCartDto removeProductFromShoppingCart(String username, List<UUID> products) {
         validateUserAuthorize(username);
 
@@ -78,6 +83,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     }
 
     @Override
+    @Transactional
     public ShoppingCartDto changeProductQuantity(String username, ChangeProductQuantityRequest request) {
         validateUserAuthorize(username);
 
@@ -93,6 +99,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
         return ShoppingCartMapper.toDto(shoppingCartRepository.save(shoppingCart));
     }
+
 
     private ShoppingCartDao cartExistsByUsername(String username) {
         validateUserAuthorize(username);

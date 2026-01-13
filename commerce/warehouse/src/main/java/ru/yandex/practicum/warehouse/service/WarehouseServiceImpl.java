@@ -33,6 +33,7 @@ import java.util.UUID;
 @Slf4j
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class WarehouseServiceImpl implements WarehouseService {
 
     private final WarehouseRepository warehouseRepository;
@@ -41,6 +42,7 @@ public class WarehouseServiceImpl implements WarehouseService {
     private final OrderClient orderClient;
 
     @Override
+    @Transactional
     public ProductInWarehouseDto addNewProduct(NewProductInWarehouseRequest newProduct) {
         if (isProductInWarehouse(newProduct.getProductId())) {
             throw new SpecifiedProductAlreadyInWarehouseException("Продукт с id " + newProduct.getProductId() + " уже добавлен на склад!");
@@ -68,6 +70,7 @@ public class WarehouseServiceImpl implements WarehouseService {
     }
 
     @Override
+    @Transactional
     public void acceptProduct(AddProductToWarehouseRequest request) {
 
         ProductInWarehouseDao productInWarehouse = getProductInWarehouse(request.getProductId());
@@ -84,6 +87,7 @@ public class WarehouseServiceImpl implements WarehouseService {
     }
 
     @Override
+    @Transactional
     public void shippedProducts(ShippedToDeliveryRequest request) {
 
         OrderBookingDao orderBooking = orderBookingRepository.findById(request.getOrderId())
