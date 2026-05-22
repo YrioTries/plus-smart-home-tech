@@ -1,0 +1,9 @@
+package ru.yandex.practicum.warehouse.model.repository;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import ru.yandex.practicum.warehouse.model.entity.ProductInWarehouseDao;
+
+import java.util.UUID;
+
+public interface WarehouseRepository extends JpaRepository<ProductInWarehouseDao, UUID> {
+}

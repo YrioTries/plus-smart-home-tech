@@ -5,20 +5,22 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import ru.yandex.practicum.error_handler.exception.ProductNotFoundException;
-import ru.yandex.practicum.interaction_api.model.enums.ProductCategory;
-import ru.yandex.practicum.interaction_api.model.enums.ProductState;
-import ru.yandex.practicum.interaction_api.model.dto.shopping_store.ProductDto;
-import ru.yandex.practicum.interaction_api.model.dto.shopping_store.SetProductQuantityStateRequest;
-import ru.yandex.practicum.shopping_store.entity.ProductDao;
-import ru.yandex.practicum.shopping_store.mappers.ProductMapper;
-import ru.yandex.practicum.shopping_store.repositories.ShoppingStoreRepository;
+import org.springframework.transaction.annotation.Transactional;
+import ru.yandex.practicum.error_handler.exception.shopping_store.ProductNotFoundException;
+import ru.yandex.practicum.interaction_api.model.shopping_store.dto.ProductCategory;
+import ru.yandex.practicum.interaction_api.model.shopping_store.dto.ProductState;
+import ru.yandex.practicum.interaction_api.model.shopping_store.dto.ProductDto;
+import ru.yandex.practicum.interaction_api.model.shopping_store.dto.SetProductQuantityStateRequest;
+import ru.yandex.practicum.shopping_store.model.entity.ProductDao;
+import ru.yandex.practicum.shopping_store.model.mapper.ProductMapper;
+import ru.yandex.practicum.shopping_store.model.repository.ShoppingStoreRepository;
 
 import java.util.UUID;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class ShoppingStoreServiceImpl implements ShoppingStoreService {
 
     private final ShoppingStoreRepository repository;
@@ -35,18 +37,21 @@ public class ShoppingStoreServiceImpl implements ShoppingStoreService {
     }
 
     @Override
+    @Transactional
     public ProductDto createProduct(ProductDto productDto) {
         ProductDao newProductDao = ProductMapper.toEntity(productDto);
         return ProductMapper.toDto(repository.save(newProductDao));
     }
 
     @Override
+    @Transactional
     public ProductDto updateProduct(ProductDto productDto) {
         ProductDao oldProductDao = productExists(productDto.getProductId());
         return ProductMapper.toDto(repository.save(ProductMapper.updateFields(oldProductDao, productDto)));
     }
 
     @Override
+    @Transactional
     public Boolean removeProduct(UUID productId) {
         ProductDao productDao = productExists(productId);
 
@@ -56,6 +61,7 @@ public class ShoppingStoreServiceImpl implements ShoppingStoreService {
     }
 
     @Override
+    @Transactional
     public Boolean setQuantity(SetProductQuantityStateRequest request) {
         ProductDao productDao = productExists(request.getProductId());
 

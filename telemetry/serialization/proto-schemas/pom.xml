@@ -42,9 +42,12 @@
             <artifactId>grpc-stub</artifactId>
             <version>1.63.0</version>
         </dependency>
+
+        <dependency>
+            <groupId>net.devh</groupId>
+            <artifactId>grpc-server-spring-boot-starter</artifactId>
+        </dependency>
     </dependencies>
-
-
 
     <build>
         <plugins>
@@ -94,7 +97,6 @@
 <!--                    </execution>-->
 <!--                </executions>-->
 <!--            </plugin>-->
-
 
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
