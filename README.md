@@ -319,6 +319,51 @@ GET http://shopping-cart:8080/api/v1/shopping-cart/user123
   - `CartNotFoundException`, `DeactivatedCartException`
 - Обработка `FeignException`, `HttpMessageNotReadableException`
 
+#### 3.8. `interaction-api` — API взаимодействия микросервисов
+**Централизованный модуль с DTO, клиентами Feign и общими моделями для коммуникации между микросервисами commerce.**
+### Назначение модуля interaction-api:
+
+* Единое место для DTO, используемых несколькими сервисами
+* Feign клиенты для синхронного HTTP взаимодействия
+* Избежание дублирования кода между микросервисами
+* Централизованная валидация через Jakarta Validation
+* Документация API через аннотации
+
+### Пример:
+#### DeliveryDto
+```java
+@Data
+@Builder
+public class DeliveryDto {
+    private UUID deliveryId;
+    @NotNull private AddressDto fromAddress;
+    @NotNull private AddressDto toAddress;
+    @NotNull private UUID orderId;
+    @NotNull @Builder.Default
+    private DeliveryState deliveryState = DeliveryState.CREATED;
+}
+```
+#### PaymentClient (Feign)
+```java
+@FeignClient(name = "payment")
+public interface PaymentClient {
+
+    @PostMapping("/api/v1/payment")
+    PaymentDto goToPayment(@RequestBody @Valid OrderDto order);
+
+    @PostMapping("/api/v1/payment/refund")
+    void refund(@RequestBody UUID paymentId);
+
+    @PostMapping("/api/v1/payment/totalCost")
+    BigDecimal calculateTotalCost(@RequestBody @Valid OrderDto order);
+
+    @PostMapping("/api/v1/payment/productCost")
+    BigDecimal calculateProductCost(@RequestBody @Valid OrderDto order);
+}
+```
+
+
+
 ## 🚀 Быстрый старт
 
 ### Требования
