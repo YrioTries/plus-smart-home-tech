@@ -24,50 +24,36 @@
 
 
 ## 🏗️ Архитектура
-```markdown
-┌─────────────────────────────────────────────────────────────────────────────┐
-│ INFRASTRUCTURE                                                              │
-│ ┌─────────────┐ ┌─────────────┐ ┌─────────────┐                             │
-│ │ Config      │ │ Discovery   │ │ Gateway     │                             │
-│ │ Server      │ │ Server      │ │ Server      │                             │
-│ └─────────────┘ └─────────────┘ └─────────────┘                             │
-└─────────────────────────────────────────────────────────────────────────────┘
-                                       │ 
-                                       ▼
-┌─────────────────────────────────────────────────────────────────────────────┐
-│ TELEMETRY                                                                   │
-│ ┌─────────────┐    ┌─────────────┐    ┌─────────────┐                       │
-│ │ Collector   │───▶│ Kafka       │───▶│ Aggregator │                       │
-│ │ (gRPC)      │    │ Sensors     │    │             │                       │
-│ └─────────────┘    └─────────────┘    └──────┬──────┘                       │
-│                                              │                              │
-│                                              ▼                              │
-│                                   ┌─────────────────────┐                   │
-│                                   │ Kafka Snapshots     │                   │
-│                                   └──────────┬──────────┘                   │
-│                                              │                              │
-│                                              ▼                              │
-│                    ┌─────────────┐    ┌─────────────┐ ┌─────────────┐       │
-│                    │ Analyzer    │◀───│ Kafka       │ │ PostgreSQL  │       │
-│                    │ (gRPC)→Hub  │    │ Hubs        │ │ Scenarios   │       │
-│                    └─────────────┘    └─────────────┘ └─────────────┘       │
-└─────────────────────────────────────────────────────────────────────────────┘
-                                     │
-                                     ▼
-┌─────────────────────────────────────────────────────────────────────────────┐
-│ COMMERCE                                                                    │
-│ ┌───────────┐ ┌───────────┐ ┌───────────┐ ┌───────────┐                     │
-│ │ Shopping  │ │ Order     │ │ Payment   │ │ Delivery  │                     │
-│ │ Store     │ │           │ │           │ │           │                     │
-│ └───────────┘ └───────────┘ └───────────┘ └───────────┘                     │
-│ ┌───────────┐ ┌───────────┐ ┌───────────┐ ┌───────────┐                     │
-│ │ Shopping  │ │ Warehouse │ │ Error     │ │Interaction│                     │
-│ │ Cart      │ │           │ │ Handler   │ │API        │                     │
-│ └───────────┘ └───────────┘ └───────────┘ └───────────┘                     │
-└─────────────────────────────────────────────────────────────────────────────┘
-```
+### plus-smart-home-tech:
+- commerce:
+  - delivery
+  - error-handler
+  - interaction-api
+  - order
+  - payment
+  - shopping-cart
+  - shopping-store
+  - warehouse
+
+- infra:
+  - config-server
+  - discovery-server
+  - gateway
+
+- telemetry
+  - aggregator
+  - analyzer
+  - collector
+  - serialization
 
 ## 🛠️ Технологический стек
+
+### 🌐 Spring Ecosystem
+- Spring Boot 3.3.0
+- Spring Cloud 2023.0.3
+- Spring Data JPA
+- Spring Web / Validation
+- Spring Actuator
 
 ### 🗄️ Базы данных
 - PostgreSQL 42.7.3
@@ -78,7 +64,7 @@
 - Jakarta Validation 3.0.2
 - SpringDoc OpenAPI 2.6.0 (Swagger)
 
-### 📡 Микросервисы & Messaging
+### 📡 Messaging
 - Spring Cloud Circuit Breaker (Resilience4j)
 - Kafka Clients 3.6.1
 - Avro 1.11.3
