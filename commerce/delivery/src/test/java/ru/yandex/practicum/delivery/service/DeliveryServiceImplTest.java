@@ -5,7 +5,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.transaction.annotation.Transactional;
+import ru.yandex.practicum.delivery.model.entity.DeliveryAddress;
 import ru.yandex.practicum.delivery.model.entity.DeliveryDao;
 import ru.yandex.practicum.delivery.model.repository.DeliveryRepository;
 import ru.yandex.practicum.interaction_api.model.delivery.dto.DeliveryDto;
@@ -14,8 +14,8 @@ import ru.yandex.practicum.interaction_api.model.order.client.OrderClient;
 import ru.yandex.practicum.interaction_api.model.order.dto.OrderDto;
 import ru.yandex.practicum.interaction_api.model.warehouse.client.WarehouseClient;
 import ru.yandex.practicum.interaction_api.model.warehouse.dto.AddressDto;
-import ru.yandex.practicum.interaction_api.model.warehouse.dto.request.ShippedToDeliveryRequest;
 
+import java.math.BigDecimal;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -43,8 +43,20 @@ class DeliveryServiceImplTest {
     @Test
     void createDelivery_shouldSaveAndReturnDto() {
         DeliveryDto dto = DeliveryDto.builder()
-                .fromAddress(AddressDto.builder().country("RU").city("Samara").street("Lenina").house("1").flat("1").build())
-                .toAddress(AddressDto.builder().country("RU").city("Moscow").street("Tverskaya").house("2").flat("10").build())
+                .fromAddress(AddressDto.builder()
+                        .country("RU")
+                        .city("Samara")
+                        .street("Lenina")
+                        .house("1")
+                        .flat("1")
+                        .build())
+                .toAddress(AddressDto.builder()
+                        .country("RU")
+                        .city("Moscow")
+                        .street("Tverskaya")
+                        .house("2")
+                        .flat("10")
+                        .build())
                 .orderId(UUID.randomUUID())
                 .build();
 
@@ -111,4 +123,40 @@ class DeliveryServiceImplTest {
         verify(warehouseClient).shippedOrder(any());
     }
 
+    @Test
+    void calculateDeliveryCost_shouldCalculateCorrectly() {
+        UUID deliveryId = UUID.randomUUID();
+
+        DeliveryDao delivery = DeliveryDao.builder()
+                .deliveryId(deliveryId)
+                .fromAddress(DeliveryAddress.builder()
+                        .country("ADDRESS_1")
+                        .city("Samara")
+                        .street("Lenina")
+                        .house("1")
+                        .flat("1")
+                        .build())
+                .toAddress(DeliveryAddress.builder()
+                        .country("RU")
+                        .city("Moscow")
+                        .street("Tverskaya")
+                        .house("2")
+                        .flat("10")
+                        .build())
+                .build();
+
+        OrderDto order = OrderDto.builder()
+                .deliveryId(deliveryId)
+                .fragile(true)
+                .deliveryWeight(10.0)
+                .deliveryVolume(2.0)
+                .build();
+
+        when(repository.findById(deliveryId)).thenReturn(Optional.of(delivery));
+
+        BigDecimal result = service.calculateDeliveryCost(order);
+
+        assertNotNull(result);
+        verify(repository).findById(deliveryId);
+    }
 }

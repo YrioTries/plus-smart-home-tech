@@ -22,6 +22,29 @@
 - [Быстрый старт](#-быстрый-старт)
 - [Структура проекта](#-структура-проекта)
 
+```mermaid
+graph TD
+    subgraph Telemetry
+        Collector -->|gRPC| Sensors
+        Collector -->|Avro/Kafka| Aggregator
+        Aggregator -->|Snapshots| Analyzer
+        Analyzer -->|gRPC| HubRouter
+    end
+    
+    subgraph Commerce
+        Order --> Payment
+        Order --> Delivery
+        Order --> Warehouse
+    end
+    
+    subgraph Infra
+        Gateway --> ConfigServer
+        Gateway --> DiscoveryServer
+    end
+    
+    Telemetry <-->|Events| Commerce
+    Commerce <-->|HTTP/Feign| Infra
+```
 
 ## 🏗️ Архитектура
 ### plus-smart-home-tech:
@@ -348,15 +371,146 @@ public interface PaymentClient {
 }
 ```
 
+## 🧪 Тестирование
+
+|Тип тестов|Инструменты|Покрытие|
+|----------|-----------|--------|
+|Юнит-тесты|`JUnit 5, Mockito`|Сервисы, утилиты, мапперы|
+|Интеграционные|`@SpringBootTest, Testcontainers`|Контроллеры, репозитории|
+|Контрактные|`Feign Client mocks, DTO валидация`|Межсервисное взаимодействие|
+|Конфигурационные|`@TestPropertySource, WireMock`|Внешние зависимости|
+
+
+### Пример теста контроллера:
+
+```java
+    @WebMvcTest(DeliveryController.class)
+    class DeliveryControllerTest {
+        
+        @Test
+        void calculateDeliveryCost_shouldReturnPrice() throws Exception {
+            OrderDto order = OrderDto.builder()
+                .fragile(true)
+                .deliveryWeight(10.0)
+                .deliveryVolume(2.0)
+                .build();
+            
+            when(service.calculateDeliveryCost(any()))
+                .thenReturn(BigDecimal.valueOf(15.5));
+            
+            mockMvc.perform(post("/api/v1/delivery/cost")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(order)))
+                .andExpect(status().isOk())
+                .andExpect(content().string("15.5"));
+    }
+}
+```
+### Пример теста сервиса:
+
+```java
+    @ExtendWith(MockitoExtension.class)
+    class DeliveryServiceImplTest {
+    
+        @Mock
+        private DeliveryRepository repository;
+    
+        @Mock
+        private OrderClient orderClient;
+    
+        @Mock
+        private WarehouseClient warehouseClient;
+    
+        @InjectMocks
+        private DeliveryServiceImpl service;
+    
+        @Test
+        void successfulDelivery_shouldSetDeliveredAndNotifyOrder() {
+          UUID deliveryId = UUID.randomUUID();
+          UUID orderId = UUID.randomUUID();
+      
+          DeliveryDao delivery = DeliveryDao.builder()
+                  .deliveryId(deliveryId)
+                  .deliveryState(DeliveryState.IN_PROGRESS)
+                  .build();
+      
+          OrderDto order = OrderDto.builder()
+                  .orderId(orderId)
+                  .build();
+      
+          when(repository.findById(deliveryId)).thenReturn(Optional.of(delivery));
+          when(orderClient.getOrderByDelivery(deliveryId)).thenReturn(order);
+      
+          service.successfulDelivery(deliveryId);
+      
+          assertEquals(DeliveryState.DELIVERED, delivery.getDeliveryState());
+          verify(repository).save(delivery);
+          verify(orderClient).deliveryOrder(orderId);
+  }
+}
+```
+
+## 🐳 Docker & Контейнеризация
+**Проект использует Confluent Platform 7.4.3 для работы с Apache Kafka и Schema Registry.
+Сервисы docker-compose.yml**
+
+```yaml
+    services:
+    kafka:
+      image: confluentinc/confluent-local:7.4.3
+      ports:
+        - "9092:9092"  # Клиентские подключения
+        - "9101:9101"  # JMX для мониторинга
+      environment:
+        KAFKA_ADVERTISED_LISTENERS: 'PLAINTEXT://kafka:29092,PLAINTEXT_HOST://localhost:9092'
+        KAFKA_PROCESS_ROLES: 'broker,controller'  # KRaft mode (без ZooKeeper)
+
+    schema-registry:
+      image: confluentinc/cp-schema-registry:7.4.3
+      ports:
+        - "8081:8081"  # REST API для управления схемами Avro
+      depends_on: [kafka]
+
+    kafka-init-topics:
+      # Авто-создание топиков при старте
+      topics:
+        - telemetry.sensors.v1    # События датчиков
+        - telemetry.snapshots.v1  # Снапшоты состояний
+        - telemetry.hubs.v1       # События хабов
+```
+### infra/config-server/Dockerfile
+
+  ```dockerfile
+    FROM eclipse-temurin:21-jdk-alpine
+
+    WORKDIR /app
+
+    COPY target/config-server-0.0.1-SNAPSHOT.jar app.jar
+
+    ENTRYPOINT ["java", "-jar", "app.jar"]
+```
+### infra/discovery-server/Dockerfile
+
+```dockerfile
+    FROM eclipse-temurin:21-jdk-alpine
+
+    WORKDIR /app
+
+    COPY target/discovery-server-0.0.1-SNAPSHOT.jar app.jar
+
+    EXPOSE 8761
+
+    ENTRYPOINT ["java", "-jar", "app.jar"]
+```
 
 
 ## 🚀 Быстрый старт
 
 ### Требования
-- Java 21
+- Java 21 SDK
 - Maven 3.8+
-- PostgreSQL 15+
-- Docker (опционально)
+- Docker 24+ & Docker Compose v2
+- PostgreSQL 15+ (локально или в Docker)
 
 ### Установка
 
