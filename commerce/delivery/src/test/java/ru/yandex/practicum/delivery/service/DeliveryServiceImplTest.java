@@ -6,6 +6,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.transaction.annotation.Transactional;
+import ru.yandex.practicum.delivery.model.entity.DeliveryAddress;
 import ru.yandex.practicum.delivery.model.entity.DeliveryDao;
 import ru.yandex.practicum.delivery.model.repository.DeliveryRepository;
 import ru.yandex.practicum.interaction_api.model.delivery.dto.DeliveryDto;
@@ -16,6 +17,7 @@ import ru.yandex.practicum.interaction_api.model.warehouse.client.WarehouseClien
 import ru.yandex.practicum.interaction_api.model.warehouse.dto.AddressDto;
 import ru.yandex.practicum.interaction_api.model.warehouse.dto.request.ShippedToDeliveryRequest;
 
+import java.math.BigDecimal;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -109,6 +111,43 @@ class DeliveryServiceImplTest {
         verify(repository).save(delivery);
         verify(orderClient).assemblyOrder(orderId);
         verify(warehouseClient).shippedOrder(any());
+    }
+
+    @Test
+    void calculateDeliveryCost_shouldCalculateCorrectly() {
+        UUID deliveryId = UUID.randomUUID();
+
+        DeliveryDao delivery = DeliveryDao.builder()
+                .deliveryId(deliveryId)
+                .fromAddress(DeliveryAddress.builder()
+                        .country("ADDRESS_1")
+                        .city("Samara")
+                        .street("Lenina")
+                        .house("1")
+                        .flat("1")
+                        .build())
+                .toAddress(DeliveryAddress.builder()
+                        .country("RU")
+                        .city("Moscow")
+                        .street("Tverskaya")
+                        .house("2")
+                        .flat("10")
+                        .build())
+                .build();
+
+        OrderDto order = OrderDto.builder()
+                .deliveryId(deliveryId)
+                .fragile(true)
+                .deliveryWeight(10.0)
+                .deliveryVolume(2.0)
+                .build();
+
+        when(repository.findById(deliveryId)).thenReturn(Optional.of(delivery));
+
+        BigDecimal result = service.calculateDeliveryCost(order);
+
+        assertNotNull(result);
+        verify(repository).findById(deliveryId);
     }
 
 }
