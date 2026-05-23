@@ -22,7 +22,7 @@
 - [Быстрый старт](#-быстрый-старт)
 - [Структура проекта](#-структура-проекта)
 
-graph TD
+```graph TD
     subgraph Telemetry
         Collector -->|gRPC| Sensors
         Collector -->|Avro/Kafka| Aggregator
@@ -47,6 +47,7 @@ graph TD
     Commerce <-->|HTTP/Feign| Infra
     User -->|REST| Gateway
     Gateway -->|Routing| Commerce
+```
 
 ## 🏗️ Архитектура
 ### plus-smart-home-tech:
