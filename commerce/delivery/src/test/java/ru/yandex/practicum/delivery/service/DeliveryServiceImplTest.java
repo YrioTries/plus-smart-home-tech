@@ -5,7 +5,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.transaction.annotation.Transactional;
 import ru.yandex.practicum.delivery.model.entity.DeliveryAddress;
 import ru.yandex.practicum.delivery.model.entity.DeliveryDao;
 import ru.yandex.practicum.delivery.model.repository.DeliveryRepository;
@@ -15,7 +14,6 @@ import ru.yandex.practicum.interaction_api.model.order.client.OrderClient;
 import ru.yandex.practicum.interaction_api.model.order.dto.OrderDto;
 import ru.yandex.practicum.interaction_api.model.warehouse.client.WarehouseClient;
 import ru.yandex.practicum.interaction_api.model.warehouse.dto.AddressDto;
-import ru.yandex.practicum.interaction_api.model.warehouse.dto.request.ShippedToDeliveryRequest;
 
 import java.math.BigDecimal;
 import java.util.Optional;
@@ -45,8 +43,20 @@ class DeliveryServiceImplTest {
     @Test
     void createDelivery_shouldSaveAndReturnDto() {
         DeliveryDto dto = DeliveryDto.builder()
-                .fromAddress(AddressDto.builder().country("RU").city("Samara").street("Lenina").house("1").flat("1").build())
-                .toAddress(AddressDto.builder().country("RU").city("Moscow").street("Tverskaya").house("2").flat("10").build())
+                .fromAddress(AddressDto.builder()
+                        .country("RU")
+                        .city("Samara")
+                        .street("Lenina")
+                        .house("1")
+                        .flat("1")
+                        .build())
+                .toAddress(AddressDto.builder()
+                        .country("RU")
+                        .city("Moscow")
+                        .street("Tverskaya")
+                        .house("2")
+                        .flat("10")
+                        .build())
                 .orderId(UUID.randomUUID())
                 .build();
 
@@ -149,5 +159,4 @@ class DeliveryServiceImplTest {
         assertNotNull(result);
         verify(repository).findById(deliveryId);
     }
-
 }
