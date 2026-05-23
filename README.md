@@ -22,7 +22,6 @@
 - [Быстрый старт](#-быстрый-старт)
 - [Структура проекта](#-структура-проекта)
 
-```mermaid
 graph TD
     subgraph Telemetry
         Collector -->|gRPC| Sensors
@@ -35,6 +34,8 @@ graph TD
         Order --> Payment
         Order --> Delivery
         Order --> Warehouse
+        ShoppingCart --> Warehouse
+        ShoppingStore --> Warehouse
     end
     
     subgraph Infra
@@ -44,7 +45,8 @@ graph TD
     
     Telemetry <-->|Events| Commerce
     Commerce <-->|HTTP/Feign| Infra
-```
+    User -->|REST| Gateway
+    Gateway -->|Routing| Commerce
 
 ## 🏗️ Архитектура
 ### plus-smart-home-tech:
