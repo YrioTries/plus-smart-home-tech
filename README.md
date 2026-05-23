@@ -21,15 +21,51 @@
 - [Модуль commerce](#-модуль-commerce)
 - [Быстрый старт](#-быстрый-старт)
 - [Структура проекта](#-структура-проекта)
-- [Лицензия](#-лицензия)
 
 
 ## 🏗️ Архитектура
-
-### Инфраструктурные сервисы (`infra`)
-- **Config Server** — централизованное управление конфигурациями
-- **Discovery Server (Eureka)** — сервис регистрации и обнаружения микросервисов
-- **Gateway Server** — API Gateway для маршрутизации запросов
+```markdown
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ INFRASTRUCTURE                                                              │
+│ ┌─────────────┐ ┌─────────────┐ ┌─────────────┐                             │
+│ │ Config      │ │ Discovery   │ │ Gateway     │                             │
+│ │ Server      │ │ Server      │ │ Server      │                             │
+│ └─────────────┘ └─────────────┘ └─────────────┘                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+                                       │ 
+                                       ▼
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ TELEMETRY                                                                   │
+│ ┌─────────────┐    ┌─────────────┐    ┌─────────────┐                       │
+│ │ Collector   │───▶│ Kafka       │───▶│ Aggregator │                       │
+│ │ (gRPC)      │    │ Sensors     │    │             │                       │
+│ └─────────────┘    └─────────────┘    └──────┬──────┘                       │
+│                                              │                              │
+│                                              ▼                              │
+│                                   ┌─────────────────────┐                   │
+│                                   │ Kafka Snapshots     │                   │
+│                                   └──────────┬──────────┘                   │
+│                                              │                              │
+│                                              ▼                              │
+│                    ┌─────────────┐    ┌─────────────┐ ┌─────────────┐       │
+│                    │ Analyzer    │◀───│ Kafka       │ │ PostgreSQL  │       │
+│                    │ (gRPC)→Hub  │    │ Hubs        │ │ Scenarios   │       │
+│                    └─────────────┘    └─────────────┘ └─────────────┘       │
+└─────────────────────────────────────────────────────────────────────────────┘
+                                     │
+                                     ▼
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ COMMERCE                                                                    │
+│ ┌───────────┐ ┌───────────┐ ┌───────────┐ ┌───────────┐                     │
+│ │ Shopping  │ │ Order     │ │ Payment   │ │ Delivery  │                     │
+│ │ Store     │ │           │ │           │ │           │                     │
+│ └───────────┘ └───────────┘ └───────────┘ └───────────┘                     │
+│ ┌───────────┐ ┌───────────┐ ┌───────────┐ ┌───────────┐                     │
+│ │ Shopping  │ │ Warehouse │ │ Error     │ │Interaction│                     │
+│ │ Cart      │ │           │ │ Handler   │ │API        │                     │
+│ └───────────┘ └───────────┘ └───────────┘ └───────────┘                     │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
 
 ## 🛠️ Технологический стек
 
@@ -51,7 +87,7 @@
 ## 📦 Модули проекта
 
 ### 1. `telemetry` — телеметрия и анализ
-#### 1.1. **Collector** — сбор данных
+#### 1.1. `Collector` — сбор данных
 Принимает события от датчиков и хабов через gRPC, конвертирует в Avro и отправляет в Kafka.
 
 **gRPC эндпоинты:**
@@ -62,7 +98,14 @@ service CollectorController {
 } 
 ```
 
-#### Поддерживаемые типы датчиков:
+**gRPC сервис для отправки команд:**
+```protobuf
+service HubRouterController {
+    rpc handleDeviceAction (DeviceActionRequest) returns (Empty);
+}
+```
+
+### Поддерживаемые типы датчиков:
 
 - Motion Sensor (движение)
 - Temperature Sensor (температура)
@@ -70,23 +113,132 @@ service CollectorController {
 - Climate Sensor (температура, влажность, CO2)
 - Switch Sensor (переключатель)
 
+### 📋 Типы условий
+
+| Тип (ConditionTypeAvro) | Описание | Источник данных |
+|-------------|------|----------------|
+| `MOTION` | `Движение` | `MotionSensorEventAvro.motion` |
+| `LUMINOSITY` | `Освещённость` | `LightSensorEventAvro.luminosity` |
+| `TEMPERATURE` | `Температура` | `ClimateSensorEventAvro.temperatureC` |
+| `HUMIDITY` | `Влажность` | `ClimateSensorEventAvro.humidity` |
+| `CO2LEVEL` | `Уровень CO2` | `ClimateSensorEventAvro.co2Level` |
+| `SWITCH` | `Переключатель` | `SwitchSensorEventAvro.state` |
+
+**Операции сравнения: EQUALS, GREATER_THAN, LOWER_THAN**
+
+### Поддерживаемые действия:
+| Тип  | Описание |
+|-----------|------|
+| `ACTIVATE` | `активировать устройство` |
+|`DEACTIVATE`|`деактивировать устройство`|
+|`INVERSE`|`инвертировать состояние`|
+|`SET_VALUE`|`установить значение`|
 #### Топики Kafka:
 
 - `telemetry.sensors.v1` — события датчиков
 
 - `telemetry.hubs.v1` — события хабов (добавление/удаление устройств, сценарии)
 
-#### Конвертеры gRPC → Avro:
+### Конвертеры gRPC → Avro:
 
+**Сенсоры:**
 - ClimateToAvroConverter
 - TemperatureToAvroConverter
 - LightToAvroConverter
 - SwitchToAvroConverter
 - MotionToAvroConverter
+
+**Хабы:**
 - DeviceAddedToAvroConverter
 - DeviceRemoveToAvroConverter
 - ScenarioAddedToAvroConverter
 - ScenarioRemoveToAvroConverter
+
+### Конфигурация
+```yaml
+grpc:
+  server:
+    port: 59091
+
+spring:
+  kafka:
+    bootstrap-servers: localhost:9092
+    topics:
+      sensors-topic-name: telemetry.sensors.v1
+      hubs-topic-name: telemetry.hubs.v1
+```
+#### 1.2. `Aggregator` — агрегация событий
+**Сервис-агрегатор, потребляющий события датчиков из Kafka, поддерживающий актуальное состояние всех сенсоров и формирующий снапшоты.**
+
+|Роль	| Топик	| Тип сообщения|
+|-------|-------|--------------|
+|`Входящий`|	`telemetry.sensors.v1`	| `SensorEventAvro`|
+|`Исходящий` |	`telemetry.snapshots.v1`|	`SensorsSnapshotAvro`|
+
+### Структура снапшота:
+```
+record SensorsSnapshotAvro {
+    string hubId;                           // ID хаба
+    long timestamp;                         // Время последнего обновления
+    map<SensorStateAvro> sensorsState;      // Состояние всех сенсоров
+}
+
+record SensorStateAvro {
+    long timestamp;                         // Время последнего события
+    union {                                 // Данные сенсора
+        ClimateSensorEventAvro,
+        LightSensorEventAvro,
+        MotionSensorEventAvro,
+        SwitchSensorEventAvro,
+        TemperatureSensorEventAvro
+    } data;
+}
+```
+
+### Логика работы:
+* Подписка на топик telemetry.sensors.v1
+* Получение события датчика
+* Обновление состояния в Map<String, SensorsSnapshotAvro>
+* При изменении состояния → отправка снапшота в telemetry.snapshots.v1
+
+### Компоненты
+|Класс|Ответственность|
+|-----|---------------|
+|`AggregationStarter`|Основной цикл обработки, polling Kafka|
+|`CheckUpdateState`|Хранение и обновление состояния сенсоров|
+|`SnapshotProducer`|Отправка снапшотов в Kafka|
+|`KafkaConsumerConfig`|Настройка consumers|
+|`KafkaSnapshotProducerConfig`|Настройка producer|
+
+#### 1.3. `Analyzer` — анализ и сценарии
+**Сервис-анализатор, потребляющий снапшоты и hub-события из Kafka, проверяющий условия сценариев и отправляющий команды на устройства через gRPC.**
+### Топики Kafka
+|Топик|	Тип сообщения	|Описание|
+|-----|-----------------|--------|
+|telemetry.snapshots.v1	|SensorsSnapshotAvro	|Снапшоты состояния сенсоров|
+|telemetry.hubs.v1|	HubEventAvro	|События хабов (сценарии)|
+
+### gRPC сервис для отправки команд
+```protobuf
+service HubRouterController {
+    rpc handleDeviceAction (DeviceActionRequest) returns (Empty);
+}
+```
+### Структура DeviceActionRequest
+```
+message DeviceActionRequest {
+    string hub_id = 1;
+    string scenario_name = 2;
+    DeviceActionProto action = 3;
+    google.protobuf.Timestamp timestamp = 4;
+}
+
+message DeviceActionProto {
+    string sensor_id = 1;
+    ActionTypeProto type = 2;
+    optional int32 value = 3;
+}
+```
 
 ### 2. `infra`
 Управление устройствами инфраструктуры (освещение, отопление, кондиционирование, доступ).
@@ -166,9 +318,6 @@ GET http://shopping-cart:8080/api/v1/shopping-cart/user123
   - `ProductLowQuantityInWarehouse`, `NoSpecifiedProductInWarehouseException`
   - `CartNotFoundException`, `DeactivatedCartException`
 - Обработка `FeignException`, `HttpMessageNotReadableException`
-
-
-
 
 ## 🚀 Быстрый старт
 
