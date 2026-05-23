@@ -22,31 +22,34 @@
 - [Быстрый старт](#-быстрый-старт)
 - [Структура проекта](#-структура-проекта)
 
-```graph TD
+ 
+```mermaid
+    graph TD
     subgraph Telemetry
-        Collector -->|gRPC| Sensors
-        Collector -->|Avro/Kafka| Aggregator
-        Aggregator -->|Snapshots| Analyzer
-        Analyzer -->|gRPC| HubRouter
-    end
-    
-    subgraph Commerce
-        Order --> Payment
-        Order --> Delivery
-        Order --> Warehouse
-        ShoppingCart --> Warehouse
-        ShoppingStore --> Warehouse
-    end
-    
-    subgraph Infra
-        Gateway --> ConfigServer
-        Gateway --> DiscoveryServer
-    end
-    
-    Telemetry <-->|Events| Commerce
-    Commerce <-->|HTTP/Feign| Infra
-    User -->|REST| Gateway
-    Gateway -->|Routing| Commerce
+            Collector -->|gRPC| Sensors
+            Collector -->|Avro/Kafka| Aggregator
+            Aggregator -->|Snapshots| Analyzer
+            Analyzer -->|gRPC| HubRouter
+        end
+        
+        subgraph Commerce
+            Order --> Payment
+            Order --> Delivery
+            Order --> Warehouse
+            ShoppingCart --> Warehouse
+            ShoppingStore --> Warehouse
+        end
+        
+        subgraph Infra
+            Gateway --> ConfigServer
+            Gateway --> DiscoveryServer
+        end
+        
+        Telemetry <-->|Events| Commerce
+        Commerce <-->|HTTP/Feign| Infra
+        User -->|REST| Gateway
+        Gateway -->|Routing| Commerce
+
 ```
 
 ## 🏗️ Архитектура
